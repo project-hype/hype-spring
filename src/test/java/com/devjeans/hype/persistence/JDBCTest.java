@@ -2,8 +2,10 @@ package com.devjeans.hype.persistence;
 
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Properties;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,11 +30,18 @@ public class JDBCTest {
 	
 	@Test
 	public void testConnection() {
-		try (Connection con = DriverManager.getConnection(
-				"jdbc:oracle:thin:@localhost:1521/XEPDB1",
-				"hype",
-				"devjeanshype0616"
-				)) {
+		Properties properties = new Properties();
+        try {
+			properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
+		} catch (IOException e) {
+			fail(e.getMessage());
+		}
+
+        String url = properties.getProperty("jdbc_url");
+        String username = properties.getProperty("database_username");
+        String password = properties.getProperty("database_password");
+		try (
+				Connection con = DriverManager.getConnection(url, username, password)) {
 				log.info(con);
 			} catch (Exception e) {
 				fail(e.getMessage());
