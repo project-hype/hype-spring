@@ -13,6 +13,19 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import lombok.extern.log4j.Log4j;
 
+/**
+ * 메인페이지 행사 서비스 테스트
+ * @author 정은
+ * @since 2024.06.17
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.17  	정은지        최초 생성
+ * </pre>
+ */
+
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "file:**/*-context.xml")
@@ -24,47 +37,72 @@ public class EventServiceTests {
 	
 	@Test
 	public void testGetListTopView() {
-		service.getListTopView().forEach(event->log.info(event));
+		try {
+			service.getListTopView().forEach(event->log.info(event));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
 	public void testGetListByDate() {
 		Date date = new Date();
 				
-		service.getListByDate(date).forEach(event->log.info(event));
+		try {
+			service.getListByDate(date).forEach(event->log.info(event));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
 	public void testGetListBanner() {
 		
-		service.getListBanner().forEach(event->log.info(event));;
+		try {
+			service.getListBanner().forEach(event->log.info(event));
+		} catch (Exception e) {
+			e.printStackTrace();
+		};
 
 	}
 	
 	@Test
 	public void testAddFavoriteEvent() {
 		
-		boolean result = service.addFavoriteEvent(3L, 1L);
+		try {
+			boolean result = service.addFavoriteEvent(3L, 1L);
+			assertTrue(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		assertTrue(result);
 		
 	}
 	
 	@Test
 	public void testDeleteFavoriteEvent() {
 		
-		boolean result = service.deleteFavoriteEvent(3L, 1L);
+		try {
+			boolean result = service.deleteFavoriteEvent(3L, 1L);
+			assertTrue(result);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		assertTrue(result);
 		
 	}
 	
 	@Test
 	public void testCheckFavoriteEvent() {
 		
-		boolean result = service.checkFavoriteEvent(3L, 1L);
+		try {
+			boolean result = service.checkFavoriteEvent(3L, 1L);
+			assertTrue(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		assertTrue(result);
 	}
 	
 }

@@ -11,7 +11,7 @@
  * <pre>
  * 수정일        	수정자        수정내용
  * ==========  =========    =========
- * 2024.06.17  정은지         최초 생성
+ * 2024.06.17   정은지         최초 생성
  * </pre>
  -->
 <mapper namespace="com.devjeans.hype.event.mapper.EventMapper">
@@ -89,27 +89,30 @@
 	</select>
 	
 	<select id="getEventsByDate" resultMap="event" parameterType="java.util.Date">
-		SELECT     T1.EVENT_ID,
-		           T1.BRANCH_ID,
-		           T1.EVENT_TYPE_ID,
-		           T1.IMAGE_URL,
-		           T1.TITLE,
-		           T1.START_DATE,
-		           T1.END_DATE,
-		           T2.BRANCH_NAME,
-		           T3.EVENT_TYPE_NAME,
-		           T1.VIEW_COUNT
+		SELECT     T1.event_id,
+		           T1.branch_id,
+		           T1.event_type_id,
+		           T1.image_url,
+		           T1.title,
+		           T1.start_date,
+		           T1.end_date,
+		           T2.branch_name,
+		           T3.event_type_name,
+		           T1.view_count
 		FROM       EVENT T1
-		LEFT JOIN BRANCH T2
-		ON         T2.BRANCH_ID = T1.BRANCH_ID
-		LEFT JOIN EVENT_TYPE T3
-		ON         T3.EVENT_TYPE_ID = T1.EVENT_TYPE_ID
-		WHERE      #{date} BETWEEN T1.START_DATE AND        T1.END_DATE
+				   LEFT JOIN BRANCH T2
+				ON         T2.branch_id = T1.branch_id
+				   LEFT JOIN EVENT_TYPE T3
+		ON         T3.event_type_id = T1.event_type_id
+		WHERE      #{date} BETWEEN T1.start_date AND T1.end_date
 		FETCH FIRST 6 ROWS ONLY
 	</select>
 	
 	<select id="getBannerEvents" resultMap="banner">
-		SELECT T2.image_url,
+		SELECT T2.event_id,
+		       T2.branch_id,
+		       T2.event_type_id,
+		       T2.image_url,
 		       T2.title,
 		       T2.start_date,
 		       T2.end_date,
@@ -120,9 +123,9 @@
 		       INNER JOIN EVENT T2
 		               ON T2.event_id = T1.event_id
 		       LEFT JOIN BRANCH T3
-		               ON T3.branch_id = T2.branch_id
+		              ON T3.branch_id = T2.branch_id
 		       LEFT JOIN EVENT_TYPE T4
-		               ON T4.event_type_id = T2.event_type_id
+		              ON T4.event_type_id = T2.event_type_id
 		ORDER  BY T1.order_priority 
 	</select>
 	
@@ -141,10 +144,7 @@
 	</delete>
 	
 	<select id="getCheckFavorite">
-		SELECT 
-		    CASE WHEN COUNT(*) > 0 THEN 1
-		    ELSE 0
-		    END AS CHK
+		SELECT count(*)
 		FROM FAVORITE
 		WHERE member_id = #{memberId} AND event_id = #{eventId}
 	</select>
