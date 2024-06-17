@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+ 
+ <!-- 
+ * 어드민 행사관리 Mybatis 매퍼
+ * @author 조영욱
+ * @since 2024.06.17 
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.06.17  	조영욱        최초 생성
+ * </pre>
+ -->
 <mapper namespace="com.devjeans.hype.event.mapper.AdminEventMapper">
+	<!-- ********************************** -->
+	<!-- ******    Event CRUD 시작    ****** -->
+	<!-- ********************************** -->
 	<select id="selectEventById" resultType="EventVO">
 		SELECT 
 			event_id,
@@ -66,4 +81,128 @@
 		FROM EVENT
 		WHERE event_id = #{eventId}
 	</delete>
+	
+	<!-- ********************************** -->
+	<!-- ******     Event CRUD 끝    ****** -->
+	<!-- ********************************** -->
+	
+	<!-- ********************************** -->
+	<!-- ******  Category CRUD 시작   ****** -->
+	<!-- ********************************** -->
+	
+	<select id="selectCategoryById" resultType="CategoryVO">
+		SELECT 
+			category_id,
+			category_name
+		FROM CATEGORY
+		WHERE category_id = #{categoryId}
+	</select>
+	
+	<insert id="insertCategory">
+		INSERT INTO CATEGORY (
+			category_id,
+			category_name
+		)
+		VALUES (
+			SEQ_CATEGORY.NEXTVAL,
+			#{categoryName}
+		)
+	</insert>
+	
+	<update id="updateCategory">
+		UPDATE CATEGORY
+		SET category_name = #{categoryName}
+		WHERE category_id = #{categoryId}
+	</update>
+	
+	<delete id="deleteCategory">
+		DELETE
+		FROM CATEGORY
+		WHERE category_id = #{categoryId}
+	</delete>
+	
+	<!-- ********************************** -->
+	<!-- ******   Category CRUD 끝   ****** -->
+	<!-- ********************************** -->
+	
+	<!-- ********************************** -->
+	<!-- ******   Hashtag CRUD 시작   ****** -->
+	<!-- ********************************** -->
+	
+	<select id="selectHashtagById" resultType="HashtagVO">
+		SELECT 
+			hashtag_id,
+			hashtag_name
+		FROM HASHTAG
+		WHERE hashtag_id = #{hashtagId}
+	</select>
+	
+	<insert id="insertHashtag">
+		INSERT INTO HASHTAG (
+			hashtag_id,
+			hashtag_name
+		)
+		VALUES (
+			SEQ_HASHTAG.NEXTVAL,
+			#{hashtagName}
+		)
+	</insert>
+	
+	<update id="updateHashtag">
+		UPDATE HASHTAG
+		SET hashtag_name = #{hashtagName}
+		WHERE hashtag_id = #{hashtagId}
+	</update>
+	
+	<delete id="deleteHashtag">
+		DELETE
+		FROM HASHTAG
+		WHERE hashtag_id = #{hashtagId}
+	</delete>
+	
+	<!-- ********************************** -->
+	<!-- ******   Hashtag CRUD 끝   ******* -->
+	<!-- ********************************** -->
+	
+	<!-- ********************************** -->
+	<!-- ****  EventHashtag CRUD 시작   **** -->
+	<!-- ********************************** -->
+	
+	<select id="selectEventHashtagByEventId" resultType="EventHashtagVO">
+		SELECT 
+			event_id,
+			hashtag_id
+		FROM EVENT_HASHTAG
+		WHERE event_id = #{eventId}
+	</select>
+	
+	<select id="selectEventHashtagByHashtagId" resultType="EventHashtagVO">
+		SELECT 
+			event_id,
+			hashtag_id
+		FROM EVENT_HASHTAG
+		WHERE hashtag_id = #{hashtagId}
+	</select>
+	
+	<insert id="insertEventHashtag">
+		INSERT INTO EVENT_HASHTAG (
+			event_id,
+			hashtag_id
+		)
+		VALUES (
+			#{eventId},
+			#{hashtagId}
+		)
+	</insert>
+	
+	<delete id="deleteEventHashtag">
+		DELETE
+		FROM EVENT_HASHTAG
+		WHERE event_id = #{eventID}
+			AND hashtag_id = #{hashtagId}
+	</delete>
+	
+	<!-- ********************************** -->
+	<!-- *****  EventHashtag CRUD 끝   ***** -->
+	<!-- ********************************** -->
 </mapper>
