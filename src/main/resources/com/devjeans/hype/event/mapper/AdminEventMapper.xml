@@ -18,21 +18,115 @@
 	<!-- ********************************** -->
 	<!-- ******    Event CRUD 시작    ****** -->
 	<!-- ********************************** -->
-	<select id="selectEventById" resultType="EventVO">
+	<select id="selectEventById" resultMap="event">
 		SELECT 
-			event_id,
-			branch_id,
-			event_type_id,
-			category_id,
-			title,
-			content,
-			image_url,
-			start_date,
-			end_date,
-			view_count
-			detail_address 
-		FROM EVENT
+			E.event_id,
+			E.branch_id,
+				B.branch_id,
+				B.city_id,
+				B.branch_name,
+				B.address,
+					C.city_id,
+					C.city_name,
+			E.event_type_id,
+				ET.event_type_name,
+			E.category_id,
+				CA.category_name,
+			E.title,
+			E.content,
+			E.image_url,
+			E.start_date,
+			E.end_date,
+			E.view_count,
+			E.detail_address
+		FROM EVENT E
+		LEFT JOIN BRANCH B
+			ON E.branch_id = B.branch_id
+		LEFT JOIN CITY C
+			ON B.city_id = C.city_id
+		LEFT JOIN EVENT_TYPE ET
+			ON E.event_type_id = ET.event_type_id
+		LEFT JOIN CATEGORY CA
+			ON E.category_id = CA.category_id
 		WHERE event_id = #{eventId}
+	</select>
+	
+	
+	<!-- ************* Event resultMap start ************* -->
+	<resultMap type="EventTypeVO" id="eventType">
+		<result column="event_type_id" property="eventTypeId" />
+		<result column="event_type_name" property="eventTypeName" />
+	</resultMap>
+	
+	<resultMap type="CityVO" id="city">
+		<result column="city_id" property="cityId" />
+		<result column="city_name" property="cityName" />
+	</resultMap>
+	
+	<resultMap type="BranchVO" id="branch">
+		<result column="branch_id" property="branchId" />
+		<result column="city_id" property="cityId" />
+		<result column="branch_name" property="branchName" />
+		<result column="address" property="address" />
+		<collection property="city" resultMap="city"/>
+	</resultMap>
+	
+	<resultMap type="CategoryVO" id="category">
+		<result column="category_id" property="categoryId" />
+		<result column="category_name" property="categoryName" />
+	</resultMap>
+	
+	<resultMap type="EventVO" id="event">
+		<id column="event_id" property="eventId" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="image_url" property="imageUrl" />
+ 		<result column="branch_id" property="branchId" />
+ 		<result column="category_id" property="categoryId" />
+		<result column="event_type_id" property="eventTypeId" /> 
+		<result column="start_date" property="startDate" />
+		<result column="end_date" property="endDate" />
+		<result column="view_count" property="viewCount" />
+		<result column="detail_address" property="detailAddress" />
+		<collection property="eventType" resultMap="eventType"/>
+		<collection property="branch" resultMap="branch"/>
+		<collection property="category" resultMap="category"/>
+	</resultMap>
+	<!-- ************* Event resultMap end ************* -->
+	
+	<select id="selectEventListWithPaging" resultMap="event">
+		SELECT 
+			E.event_id,
+			E.branch_id,
+				B.branch_id,
+				B.city_id,
+				B.branch_name,
+				B.address,
+					C.city_id,
+					C.city_name,
+			E.event_type_id,
+				ET.event_type_name,
+			E.category_id,
+				CA.category_name,
+			E.title,
+			E.content,
+			E.image_url,
+			E.start_date,
+			E.end_date,
+			E.view_count,
+			E.detail_address
+		FROM EVENT E
+		LEFT JOIN BRANCH B
+			ON E.branch_id = B.branch_id
+		LEFT JOIN CITY C
+			ON B.city_id = C.city_id
+		LEFT JOIN EVENT_TYPE ET
+			ON E.event_type_id = ET.event_type_id
+		LEFT JOIN CATEGORY CA
+			ON E.category_id = CA.category_id
+		ORDER BY event_id DESC
+		OFFSET (#{page}-1) * #{amount}
+		ROWS FETCH FIRST #{amount} ROWS ONLY
 	</select>
 	
 	<insert id="insertEvent">
@@ -98,6 +192,13 @@
 		WHERE category_id = #{categoryId}
 	</select>
 	
+	<select id="selectAllCategory">
+		SELECT 
+			category_id,
+			category_name
+		FROM CATEGORY
+	</select>
+	
 	<insert id="insertCategory">
 		INSERT INTO CATEGORY (
 			category_id,
@@ -135,6 +236,13 @@
 			hashtag_name
 		FROM HASHTAG
 		WHERE hashtag_id = #{hashtagId}
+	</select>
+	
+	<select id="selectAllHashtag">
+		SELECT 
+			hashtag_id,
+			hashtag_name
+		FROM HASHTAG
 	</select>
 	
 	<insert id="insertHashtag">

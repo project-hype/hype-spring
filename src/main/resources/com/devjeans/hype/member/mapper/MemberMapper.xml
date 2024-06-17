@@ -8,13 +8,23 @@
 		FROM MEMBER
 	</select>
 	
-	<select id="getMember" resultType="MemberVO">
-		SELECT *
+	<select id="getMemberByLoginId" resultType="MemberVO">
+		SELECT 
+			member_id,
+			is_admin,
+			login_id,
+			name,
+			password,
+			gender,
+			birthdate,
+			create_date,
+			city_id,
+			prefer_branch_id
 		FROM MEMBER
 		WHERE login_id = #{loginId}
 	</select>
 	
-	<insert id="insertMember" parameterType="MemberVO">
+	<insert id="insertMember">
 		INSERT INTO MEMBER (member_id, login_id, name, password, gender, birthdate, city_id, prefer_branch_id)
 		VALUES (
 			seq_member.nextval,
@@ -33,5 +43,12 @@
 		WHERE member_id = #{memberId}
 	</delete>
 	
-	
+	<update id="updateMember">
+		UPDATE MEMBER
+		SET
+			password = #{password},
+			city_id = #{cityId},
+			prefer_branch_id = #{preferBranchId}
+		WHERE member_id = #{memberId}
+	</update>
 </mapper>
