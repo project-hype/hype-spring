@@ -86,8 +86,8 @@
 					<artifactId>jmxri</artifactId>
 				</exclusion>
 			</exclusions>
-			<scope>runtime</scope>
-		</dependency>
+<!-- 			<scope>runtime</scope>
+ -->		</dependency>
 
 		<!-- @Inject -->
 		<dependency>
