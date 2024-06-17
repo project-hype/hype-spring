@@ -13,6 +13,18 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import lombok.extern.java.Log;
 
+/**
+ * 스프링 시큐리티 LoginSuccess 핸들러
+ * @author 임원정
+ * @since 2024.06.17
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.17  	임원정        최초 생성
+ * </pre>
+ */
 @Log
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {@Override
 	

@@ -4,11 +4,15 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import org.modelmapper.ModelMapper;
+
+import com.devjeans.hype.event.domain.EventVO;
+
 import lombok.Data;
 
 @Data
-public class CreateEventRequest {
-
+public class AdminModifyEventRequest {
+	
 	@NotNull
 	private Long eventId;
 	@NotNull
@@ -28,7 +32,10 @@ public class CreateEventRequest {
 	@NotNull
 	private Date endDate;
 	@NotNull
-	private int viewCount;
-	@NotNull
 	private String detailAddress;
+	
+	public EventVO toEventVO() {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(this, EventVO.class);
+	}
 }

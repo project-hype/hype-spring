@@ -7,7 +7,7 @@ import com.devjeans.hype.event.domain.EventVO;
 import lombok.Data;
 
 /**
- * 행사 디테일 DTO
+ * 행사 디테일 DTO (어드민)
  * @author 조영욱
  * @since 2024.06.17
  * @version 1.0
@@ -20,7 +20,7 @@ import lombok.Data;
  */
 
 @Data
-public class GetEventDetailResponse {
+public class AdminGetEventDetailResponse {
 
 	Long eventId;
 	Long branchId;
@@ -37,7 +37,7 @@ public class GetEventDetailResponse {
 	int viewCount;
 	String Address;
 	
-	public GetEventDetailResponse(EventVO event) {
+	public AdminGetEventDetailResponse(EventVO event) {
 		this.eventId = event.getEventId();
 		this.branchId = event.getBranchId();
 		this.branchName = event.getBranch().getBranchName();

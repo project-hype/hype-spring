@@ -1,27 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+
+ <!-- 
+ * 회원 Mybatis 매퍼
+ * @author 임원정
+ * @since 2024.06.17 
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.06.17  	임원정        최초 생성
+ * </pre>
+ -->
 <mapper namespace="com.devjeans.hype.member.mapper.MemberMapper">
-	<select id="getMemberList" resultType="MemberVO">
-		SELECT *
-		FROM MEMBER
-	</select>
+	<!-- ************* Member resultMap start ************* -->
+	<resultMap type="MemberVO" id="member">
+		<id column="member_id" property="memberId" />
+		<result column="is_admin" property="isAdmin" />
+		<result column="login_id" property="loginId" />
+		<result column="name" property="name" />
+		<result column="password" property="password" />
+		<result column="gender" property="gender" />
+		<result column="birthdate" property="birthdate" />
+		<result column="create_date" property="createDate" />
+		<result column="city_id" property="cityId" />
+		<result column="prefer_branch_id" property="preferBranchId" />
+		<collection property="city" resultMap="city"/>
+		<collection property="branch" resultMap="branch"/>
+	</resultMap>
 	
-	<select id="getMemberByLoginId" resultType="MemberVO">
-		SELECT 
-			member_id,
-			is_admin,
-			login_id,
-			name,
-			password,
-			gender,
-			birthdate,
-			create_date,
-			city_id,
-			prefer_branch_id
+	<resultMap type="CityVO" id="city">
+		<result column="city_id" property="cityId" />
+		<result column="city_name" property="cityName" />
+	</resultMap>
+	
+	<resultMap type="BranchVO" id="branch">
+		<result column="branch_id" property="branchId" />
+		<result column="city_id" property="cityId" />
+		<result column="branch_name" property="branchName" />
+		<result column="address" property="address" />
+		<collection property="city" resultMap="city"/>
+	</resultMap>
+	
+	<resultMap type="CategoryVO" id="category">
+		<result column="category_id" property="categoryId" />
+		<result column="category_name" property="categoryName" />
+	</resultMap>
+	
+	<resultMap type="MemberCategoryVO" id="memberCategory">
+		<result column="member_id" property="memberId" />
+		<result column="category_id" property="categoryId" />
+		<collection property="category" resultMap="category"/>
+	</resultMap>
+	
+	<!-- ************* Member resultMap end ************* -->
+	
+	<!-- ********************************** -->
+	<!-- ******    Member CRUD 시작   ****** -->
+	<!-- ********************************** -->	
+	<select id="selectMemberByLoginId" resultType="MemberVO">
+		SELECT login_id
 		FROM MEMBER
 		WHERE login_id = #{loginId}
+	</select>
+	
+	<select id="selectMemberById" resultMap="member">
+		SELECT 
+			M.member_id,
+			M.is_admin,
+			M.login_id,
+			M.name,
+			M.password,
+			M.gender,
+			M.birthdate,
+			M.create_date,
+			M.city_id,
+				C.city_name,
+			M.prefer_branch_id,
+				B.branch_name
+		FROM MEMBER M
+		LEFT JOIN CITY C
+			ON M.city_id = C.city_id
+		LEFT JOIN BRANCH B
+			ON M.prefer_branch_id = B.branch_id
+		WHERE member_id = #{memberId}
 	</select>
 	
 	<insert id="insertMember">
@@ -51,4 +115,42 @@
 			prefer_branch_id = #{preferBranchId}
 		WHERE member_id = #{memberId}
 	</update>
+	<!-- ********************************** -->
+	<!-- ******    Member CRUD 끝     ****** -->
+	<!-- ********************************** -->
+	
+	<!-- ********************************** -->
+	<!-- ****  MemberCategory CRUD 시작  *** -->
+	<!-- ********************************** -->
+	<select id="selectMemberCategoryListByMemberId" resultMap="memberCategory">
+		SELECT
+			MC.member_id,
+			MC.category_id,
+			C.category_name
+		FROM MEMBER_CATEGORY MC
+		LEFT JOIN CATEGORY C
+			ON MC.category_id = C.category_id
+		WHERE member_id = #{memberId}
+	</select>
+	
+	<insert id="insertMemberCategory">
+		INSERT INTO MEMBER_CATEGORY	(
+			member_id,
+			category_id
+		)
+		VALUES (
+			#{memberId},
+			#{categoryId}
+		)
+	</insert>
+	
+	<delete id="deleteMemberCategory">
+		DELETE
+		FROM MEMBER_CATEGORY
+		WHERE member_id = #{memberId}
+			AND category_id = #{categoryId}
+	</delete>
+	<!-- ********************************** -->
+	<!-- ****  MemberCategory CRUD 끝   *** -->
+	<!-- ********************************** -->
 </mapper>
