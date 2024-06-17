@@ -1,6 +1,7 @@
 package com.devjeans.hype.event.service;
 
-import java.text.SimpleDateFormat;
+import static org.junit.Assert.*;
+
 import java.util.Date;
 
 import org.junit.Test;
@@ -23,19 +24,47 @@ public class EventServiceTests {
 	
 	@Test
 	public void testGetListTopView() {
-		service.getListTopView().forEach(event -> log.info(event));
+		service.getListTopView().forEach(event->log.info(event));
 	}
 	
 	@Test
 	public void testGetListByDate() {
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd"); 
 		Date date = new Date();
-		
-		String now = sdf1.format(date);
-		
-		log.info(now);
-		service.getListByDate(date).forEach(event -> log.info(event));
+				
+		service.getListByDate(date).forEach(event->log.info(event));
 	}
 	
+	@Test
+	public void testGetListBanner() {
+		
+		service.getListBanner().forEach(event->log.info(event));;
+
+	}
+	
+	@Test
+	public void testAddFavoriteEvent() {
+		
+		boolean result = service.addFavoriteEvent(3L, 1L);
+		
+		assertTrue(result);
+		
+	}
+	
+	@Test
+	public void testDeleteFavoriteEvent() {
+		
+		boolean result = service.deleteFavoriteEvent(3L, 1L);
+		
+		assertTrue(result);
+		
+	}
+	
+	@Test
+	public void testCheckFavoriteEvent() {
+		
+		boolean result = service.checkFavoriteEvent(3L, 1L);
+		
+		assertTrue(result);
+	}
 	
 }

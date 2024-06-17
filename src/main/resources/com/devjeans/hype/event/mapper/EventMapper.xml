@@ -1,37 +1,152 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
-<mapper namespace="com.devjeans.hype.event.mapper.EventMapper">
-	
-<!-- 	<resultMap type="EventVO" id="eventVO">
-		<id column="eventId"
-	</resultMap> -->
 
+ <!-- 
+ * 메인페이지 행사 조회 Mybatis 매퍼
+ * @author 정은지
+ * @since 2024.06.17 
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ==========  =========    =========
+ * 2024.06.17  정은지         최초 생성
+ * </pre>
+ -->
+<mapper namespace="com.devjeans.hype.event.mapper.EventMapper">
+<!-- ************* Event resultMap start ************* -->
+	<resultMap type="EventTypeVO" id="eventType">
+		<result column="event_type_id" property="eventTypeId" />
+		<result column="event_type_name" property="eventTypeName" />
+	</resultMap>
+	
+	<resultMap type="CityVO" id="city">
+		<result column="city_id" property="cityId" />
+		<result column="city_name" property="cityName" />
+	</resultMap>
+	
+	<resultMap type="BranchVO" id="branch">
+		<result column="branch_id" property="branchId" />
+		<result column="city_id" property="cityId" />
+		<result column="branch_name" property="branchName" />
+		<result column="address" property="address" />
+		<collection property="city" resultMap="city"/>
+	</resultMap>
+	
+	<resultMap type="CategoryVO" id="category">
+		<result column="category_id" property="categoryId" />
+		<result column="category_name" property="categoryName" />
+	</resultMap>
+	
+	<resultMap type="BannerVO" id="banner">
+		<result column="event_id" property="eventId" />
+		<result column="order_priority" property="orderPriority" />
+		<collection property="event" resultMap="event"/>
+	</resultMap>
+	
+	<resultMap type="EventVO" id="event">
+		<id column="event_id" property="eventId" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="image_url" property="imageUrl" />
+ 		<result column="branch_id" property="branchId" />
+ 		<result column="category_id" property="categoryId" />
+		<result column="event_type_id" property="eventTypeId" /> 
+		<result column="start_date" property="startDate" />
+		<result column="end_date" property="endDate" />
+		<result column="view_count" property="viewCount" />
+		<result column="detail_address" property="detailAddress" />
+		<collection property="eventType" resultMap="eventType"/>
+		<collection property="branch" resultMap="branch"/>
+		<collection property="category" resultMap="category"/>
+	</resultMap>
+	<!-- ************* Event resultMap end ************* -->
+	
 	<select id="getDual2" resultType="Object">
 		SELECT dummy FROM DUAL
 	</select>
 	
-	<select id="getTopViewEvents" resultType="EventVO">
-		SELECT T1.event_id, T1.branch_id, T1.event_type_id, T1.image_url, T1.title, T1.start_date, T1.end_date, T2.branch_name, T3.event_type_name, T1.view_count
-		FROM EVENT T1
-		INNER JOIN BRANCH T2
-		ON T2.branch_id = T1.branch_id
-		INNER JOIN EVENT_TYPE T3
-		ON T3.EVENT_TYPE_ID = T1.EVENT_TYPE_ID
-		WHERE TO_CHAR(SYSDATE, 'YYYY-MM-DD') BETWEEN T1.start_date AND T1.end_date
-		ORDER BY T1.view_count DESC
-		FETCH FIRST 10 ROWS ONLY
+	<select id="getTopViewEvents" resultMap="event">
+		SELECT T1.event_id,
+		       T1.branch_id,
+		       T1.event_type_id,
+		       T1.image_url,
+		       T1.title,
+		       T1.start_date,
+		       T1.end_date,
+		       T2.branch_name,
+		       T3.event_type_name,
+		       T1.view_count
+		FROM   EVENT T1
+		       LEFT JOIN BRANCH T2
+		               ON T2.branch_id = T1.branch_id
+		       LEFT JOIN EVENT_TYPE T3
+		               ON T3.event_type_id = T1.event_type_id
+		WHERE  TO_CHAR(sysdate, 'YYYY-MM-DD') BETWEEN T1.start_date AND T1.end_date
+		ORDER  BY T1.view_count DESC
+		FETCH FIRST 10 ROWS ONLY 
 	</select>
 	
-	<select id="getEventsByDate" resultType="EventVO" parameterType="java.util.Date">
-		SELECT T1.image_url, T1.title, T1.start_date, T1.end_date, T2.branch_name, T3.event_type_name
-		FROM EVENT T1
-		INNER JOIN BRANCH T2
-		ON T2.branch_id = T1.branch_id
-		INNER JOIN EVENT_TYPE T3
-		ON T3.EVENT_TYPE_ID = T1.EVENT_TYPE_ID
-		WHERE #{date} BETWEEN T1.start_date AND T1.end_date
+	<select id="getEventsByDate" resultMap="event" parameterType="java.util.Date">
+		SELECT     T1.EVENT_ID,
+		           T1.BRANCH_ID,
+		           T1.EVENT_TYPE_ID,
+		           T1.IMAGE_URL,
+		           T1.TITLE,
+		           T1.START_DATE,
+		           T1.END_DATE,
+		           T2.BRANCH_NAME,
+		           T3.EVENT_TYPE_NAME,
+		           T1.VIEW_COUNT
+		FROM       EVENT T1
+		LEFT JOIN BRANCH T2
+		ON         T2.BRANCH_ID = T1.BRANCH_ID
+		LEFT JOIN EVENT_TYPE T3
+		ON         T3.EVENT_TYPE_ID = T1.EVENT_TYPE_ID
+		WHERE      #{date} BETWEEN T1.START_DATE AND        T1.END_DATE
+		FETCH FIRST 6 ROWS ONLY
+	</select>
+	
+	<select id="getBannerEvents" resultMap="banner">
+		SELECT T2.image_url,
+		       T2.title,
+		       T2.start_date,
+		       T2.end_date,
+		       T3.branch_name,
+		       T4.event_type_name,
+		       T1.order_priority
+		FROM   BANNER T1
+		       INNER JOIN EVENT T2
+		               ON T2.event_id = T1.event_id
+		       LEFT JOIN BRANCH T3
+		               ON T3.branch_id = T2.branch_id
+		       LEFT JOIN EVENT_TYPE T4
+		               ON T4.event_type_id = T2.event_type_id
+		ORDER  BY T1.order_priority 
+	</select>
+	
+	<insert id="insertFavorite">
+		INSERT INTO FAVORITE
+		            (member_id,
+		             event_id)
+		VALUES      ( #{memberId},
+		              #{eventId}) 
+	</insert>
+	
+	<delete id="deleteFavorite">
+		DELETE FROM FAVORITE
+		WHERE  member_id = #{memberId}
+		       AND event_id = #{eventId} 
+	</delete>
+	
+	<select id="getCheckFavorite">
+		SELECT 
+		    CASE WHEN COUNT(*) > 0 THEN 1
+		    ELSE 0
+		    END AS CHK
+		FROM FAVORITE
+		WHERE member_id = #{memberId} AND event_id = #{eventId}
 	</select>
 	
 </mapper>

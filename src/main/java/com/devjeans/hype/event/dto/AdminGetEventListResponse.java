@@ -9,7 +9,7 @@ import com.devjeans.hype.event.domain.EventVO;
 import lombok.Data;
 
 /**
- * 행사 요약정보 리스트 DTO
+ * 행사 요약정보 리스트 DTO (어드민)
  * @author 조영욱
  * @since 2024.06.17
  * @version 1.0
@@ -22,10 +22,10 @@ import lombok.Data;
  */
 
 @Data
-public class GetEventListResponse {
+public class AdminGetEventListResponse {
 	List<GetEventResponse> eventList = new ArrayList<>();
 
-	public GetEventListResponse(List<EventVO> eventVOList) {
+	public AdminGetEventListResponse(List<EventVO> eventVOList) {
 		eventVOList.stream().forEach((event) -> {
 			eventList.add(new GetEventResponse(event));
 		});
