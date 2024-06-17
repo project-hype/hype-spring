@@ -18,20 +18,36 @@
 	<!-- ********************************** -->
 	<!-- ******    Event CRUD 시작    ****** -->
 	<!-- ********************************** -->
-	<select id="selectEventById" resultType="EventVO">
+	<select id="selectEventById" resultMap="event">
 		SELECT 
-			event_id,
-			branch_id,
-			event_type_id,
-			category_id,
-			title,
-			content,
-			image_url,
-			start_date,
-			end_date,
-			view_count
-			detail_address 
-		FROM EVENT
+			E.event_id,
+			E.branch_id,
+				B.branch_id,
+				B.city_id,
+				B.branch_name,
+				B.address,
+					C.city_id,
+					C.city_name,
+			E.event_type_id,
+				ET.event_type_name,
+			E.category_id,
+				CA.category_name,
+			E.title,
+			E.content,
+			E.image_url,
+			E.start_date,
+			E.end_date,
+			E.view_count,
+			E.detail_address
+		FROM EVENT E
+		LEFT JOIN BRANCH B
+			ON E.branch_id = B.branch_id
+		LEFT JOIN CITY C
+			ON B.city_id = C.city_id
+		LEFT JOIN EVENT_TYPE ET
+			ON E.event_type_id = ET.event_type_id
+		LEFT JOIN CATEGORY CA
+			ON E.category_id = CA.category_id
 		WHERE event_id = #{eventId}
 	</select>
 	
