@@ -10,6 +10,7 @@ public class EventHashtagVO {
 	private Long eventId;
 	private Long hashtagId;
 	
-	private List<HashtagVO> hashtag;
+	private List<HashtagVO> hashtagList;
+	private List<EventVO> eventList;
 
 }

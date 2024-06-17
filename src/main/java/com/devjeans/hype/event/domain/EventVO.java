@@ -23,9 +23,9 @@ public class EventVO {
 	private String detailAddress;
 	
 	private CategoryVO category;
-	private List<EventHashtagVO> eventHashtag;
-	private List<StarScoreVO> starScore;
-	private List<FavoriteVO> favorite;
+	private List<EventHashtagVO> eventHashtagList;
+	private List<StarScoreVO> starScoreList;
+	private List<FavoriteVO> favoriteList;
 	private EventTypeVO eventType;
 	private BranchVO branch;
 }
