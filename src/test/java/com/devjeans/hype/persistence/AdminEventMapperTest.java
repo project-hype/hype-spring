@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -245,27 +246,46 @@ public class AdminEventMapperTest {
 	 *****************************/
 	
 	/**
-	 * EventHashtag Event ID로 조회
+	 * EventHashtag List Event ID로 조회
 	 */
 	@Test
-	public void testSelectEventHashtagByEventId() {
-		EventHashtagVO eventHashtag = mapper.selectEventHashtagByEventId(1L);
+	public void testSelectEventHashtagListByEventId() {
+		List<EventHashtagVO> eventHashtagList = mapper.selectEventHashtagListByEventId(1L);
+		
+		log.info(eventHashtagList);
+		
+		for (EventHashtagVO eventHashtag : eventHashtagList) {
+			assertEquals(1L, eventHashtag.getEventId().longValue());
+		}
+	
+	}
+	
+	/**
+	 * EventHashtag List Hashtag ID로 조회
+	 */
+	@Test
+	public void testSelectEventHashtagListByHashtagId() {
+		List<EventHashtagVO> eventHashtagList = mapper.selectEventHashtagListByHashtagId(1L);
+		
+		log.info(eventHashtagList);
+		
+		for (EventHashtagVO eventHashtag : eventHashtagList) {
+			assertEquals(1L, eventHashtag.getHashtagId().longValue());
+		}
+	}
+	
+	/**
+	 * EventHashtag Event ID와 Hashtag ID로 조회
+	 */
+	@Test
+	public void testSelectEventHashtagByEventIdAndHashtagId() {
+		EventHashtagVO eventHashtag = mapper.selectEventHashtagByEventIdAndHashtagId(1L, 1L);
 		
 		log.info(eventHashtag);
 		
 		assertEquals(1L, eventHashtag.getEventId().longValue());
-	}
-	
-	/**
-	 * EventHashtag Hashtag ID로 조회
-	 */
-	@Test
-	public void testSelectEventHashtagByHashtagId() {
-		EventHashtagVO eventHashtag = mapper.selectEventHashtagByHashtagId(1L);
-		
-		log.info(eventHashtag);
-		
 		assertEquals(1L, eventHashtag.getHashtagId().longValue());
+		
 	}
 	
 	/**
@@ -274,7 +294,7 @@ public class AdminEventMapperTest {
 	@Test
 	public void testInsertEventHashtag() {
 		EventHashtagVO eventHashtag = new EventHashtagVO();
-		eventHashtag.setEventId(1L);
+		eventHashtag.setEventId(2L);
 		eventHashtag.setHashtagId(1L);
 		
 		int result = mapper.insertEventHashtag(eventHashtag);
@@ -288,7 +308,7 @@ public class AdminEventMapperTest {
 	 */
 	@Test
 	public void testDeleteEventHashtag() {
-		int result = mapper.deleteEventHashtag(2L);
+		int result = mapper.deleteEventHashtag(2L, 1L);
 		
 		log.info(result);
 		

@@ -168,7 +168,7 @@
 	<!-- ****  EventHashtag CRUD 시작   **** -->
 	<!-- ********************************** -->
 	
-	<select id="selectEventHashtagByEventId" resultType="EventHashtagVO">
+	<select id="selectEventHashtagListByEventId" resultType="EventHashtagVO">
 		SELECT 
 			event_id,
 			hashtag_id
@@ -176,12 +176,21 @@
 		WHERE event_id = #{eventId}
 	</select>
 	
-	<select id="selectEventHashtagByHashtagId" resultType="EventHashtagVO">
+	<select id="selectEventHashtagListByHashtagId" resultType="EventHashtagVO">
 		SELECT 
 			event_id,
 			hashtag_id
 		FROM EVENT_HASHTAG
 		WHERE hashtag_id = #{hashtagId}
+	</select>
+	
+	<select id="selectEventHashtagByEventIdAndHashtagId" resultType="EventHashtagVO">
+		SELECT 
+			event_id,
+			hashtag_id
+		FROM EVENT_HASHTAG
+		WHERE event_id = #{eventId}
+			AND hashtag_id = #{hashtagId}
 	</select>
 	
 	<insert id="insertEventHashtag">
@@ -198,7 +207,7 @@
 	<delete id="deleteEventHashtag">
 		DELETE
 		FROM EVENT_HASHTAG
-		WHERE event_id = #{eventID}
+		WHERE event_id = #{eventId}
 			AND hashtag_id = #{hashtagId}
 	</delete>
 	

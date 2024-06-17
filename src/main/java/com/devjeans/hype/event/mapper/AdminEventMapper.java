@@ -1,5 +1,9 @@
 package com.devjeans.hype.event.mapper;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
@@ -33,10 +37,15 @@ public interface AdminEventMapper {
 	public int deleteHashtag(Long hashtagId);
 	
 	// EventHashTag CRUD
-	public EventHashtagVO selectEventHashtagByEventId(Long eventId);
-	public EventHashtagVO selectEventHashtagByHashtagId(Long hashtagId);
+	public List<EventHashtagVO> selectEventHashtagListByEventId(Long eventId);
+	public List<EventHashtagVO> selectEventHashtagListByHashtagId(Long hashtagId);
+	public EventHashtagVO selectEventHashtagByEventIdAndHashtagId(
+			@Param("eventId") Long eventId,
+			@Param("hashtagId") Long hashtagId);
 	public int insertEventHashtag(EventHashtagVO eventHashtag);
 //	public int updateEventHashtag(EventHashtagVO eventHashtag); 필요 없음
-	public int deleteEventHashtag(Long eventHashtagId);
+	public int deleteEventHashtag(
+			@Param("eventId") Long eventId,
+			@Param("hashtagId") Long hashtagId);
 	
 }
