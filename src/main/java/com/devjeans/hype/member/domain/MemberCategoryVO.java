@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class MemberCategoryVO {
-	private Long member_id;
-	private Long category_id;
+	private Long memberId;
+	private Long categoryid;
 }

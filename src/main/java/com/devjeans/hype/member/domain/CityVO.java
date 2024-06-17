@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CityVO {
-	private Long city_id;
-	private String city_name;
+	private Long cityId;
+	private String cityName;
 }

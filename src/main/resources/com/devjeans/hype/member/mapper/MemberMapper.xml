@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.devjeans.hype.member.mapper.MemberMapper">
+	<select id="getMemberList" resultType="MemberVO">
+		SELECT *
+		FROM MEMBER
+	</select>
+	
+	<select id="getMember" resultType="MemberVO">
+		SELECT *
+		FROM MEMBER
+		WHERE login_id = #{loginId}
+	</select>
+	
+	<insert id="insertMember" parameterType="MemberVO">
+		INSERT INTO MEMBER (member_id, login_id, name, password, gender, birthdate, city_id, prefer_branch_id)
+		VALUES (
+			seq_member.nextval,
+			#{loginId},
+			#{name},
+			#{password},
+			#{gender},
+			#{birthdate},
+			#{cityId},
+			#{preferBranchId}
+		)
+	</insert>
+
+	<delete id="deleteMember">
+		DELETE FROM MEMBER
+		WHERE member_id = #{memberId}
+	</delete>
+	
+	
+</mapper>

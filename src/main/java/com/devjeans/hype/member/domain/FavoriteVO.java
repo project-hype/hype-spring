@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class FavoriteVO {
-	private Long member_id;
-	private Long event_id;
-	private Date create_date;
+	private Long memberId;
+	private Long eventId;
+	private Date createDate;
 }
