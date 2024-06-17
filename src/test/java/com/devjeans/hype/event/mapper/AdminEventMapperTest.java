@@ -1,4 +1,4 @@
-package com.devjeans.hype.persistence;
+package com.devjeans.hype.event.mapper;
 
 import static org.junit.Assert.assertEquals;
 
@@ -18,7 +18,6 @@ import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.domain.HashtagVO;
-import com.devjeans.hype.event.mapper.AdminEventMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -294,8 +293,8 @@ public class AdminEventMapperTest {
 	@Test
 	public void testInsertEventHashtag() {
 		EventHashtagVO eventHashtag = new EventHashtagVO();
-		eventHashtag.setEventId(2L);
-		eventHashtag.setHashtagId(1L);
+		eventHashtag.setEventId(66L);
+		eventHashtag.setHashtagId(3L);
 		
 		int result = mapper.insertEventHashtag(eventHashtag);
 		
