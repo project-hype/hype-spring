@@ -15,6 +15,19 @@ import com.devjeans.hype.member.domain.MemberVO;
 
 import lombok.extern.log4j.Log4j;
 
+/**
+ * 회원 서비스 테스트
+ * @author 임원정
+ * @since 2024.06.17
+ * @version 1.0
+ *
+ * <pre>
+ * 수정일        	수정자        수정내용
+ * ----------  --------    ---------------------------
+ * 2024.06.17  	임원정        최초 생성
+ * </pre>
+ */
+
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "file:**/*-context.xml")
@@ -24,9 +37,9 @@ public class MemberServiceTests {
 	private MemberService service;
 	
 	@Test
-	public void testValidateId() {
+	public void testValidateId() throws Exception {
 		String id = "won4538";
-		boolean isValidateId = service.validateId(id);
+		boolean isValidateId = service.isValidateId(id);
 		log.info(isValidateId);
 	}
 	
