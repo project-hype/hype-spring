@@ -13,7 +13,7 @@ public class EventVO {
 	private Long categoryId;
 	private String title;
 	private String content;
-	private String mainImage;
+	private String imageUrl;
 	private Date startDate;
 	private Date endDate;
 	private int viewCount;

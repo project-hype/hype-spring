@@ -15,7 +15,7 @@ public class GetListTopViewEventDTO {
 	private Date startDate;
 	private Date endDate;
 	private String branchName;
-	private String eventTypeName;	
+	private String eventTypeName;
 	private int viewCount;
 
 }
