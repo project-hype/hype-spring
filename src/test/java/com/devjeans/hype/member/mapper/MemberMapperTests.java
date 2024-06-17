@@ -1,4 +1,4 @@
-package com.devjeans.hype.member;
+package com.devjeans.hype.member.mapper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.devjeans.hype.member.domain.MemberVO;
-import com.devjeans.hype.member.mapper.MemberMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -31,7 +30,7 @@ public class MemberMapperTests {
 	
 	@Test
 	public void testGetMember() {
-		MemberVO member = mapper.getMember("admin");
+		MemberVO member = mapper.getMemberByLoginId("wi");
 		log.info(member);
 	}
 	
@@ -65,4 +64,18 @@ public class MemberMapperTests {
 	public void testDeleteMember() {
 		log.info("DELETE COUNT: "+mapper.deleteMember(1002L));
 	}
+	
+	@Test
+	public void testUpdateMember() {
+		MemberVO member = new MemberVO();
+		
+		member.setPassword("1234");
+		member.setCityId(1L);
+		member.setPreferBranchId(1L);
+		
+		int num = mapper.insertMember(member);
+		log.info(member);
+		log.info(num);
+	}
+	
 }

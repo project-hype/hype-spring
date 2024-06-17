@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+<!-- 	<bean id="customAccessDenied" class="com.devjeans.hype.member.security.CustomAccessDeniedHandler" />-->
+	<bean id="customLoginSuccess" class="com.devjeans.hype.member.security.CustomLoginSuccessHandler" />
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	
+	<security:http auto-config="true" use-expressions="true">
+        
+        <!-- 회원 페이지는 ROLE_MEMBER 및 ROLE_ADMIN 권한이 있어야 접근 가능 -->
+        <security:intercept-url pattern="/member/mypage" access="hasAnyRole('ROLE_MEMBER', 'ROLE_ADMIN')"/>
+        <!-- 관리자 페이지는 ROLE_ADMIN 권한이 있어야 접근 가능 -->
+        <security:intercept-url pattern="/member/admin" access="hasRole('ROLE_ADMIN')"/>
+        
+        <security:form-login login-page="/login" authentication-success-handler-ref="customLoginSuccess"/>
+		<!-- <security:access-denied-handler ref="customAccessDenied" /> -->
+		<security:logout logout-url="/logout" invalidate-session="true"/>
+		<security:csrf disabled="true"/>
+    </security:http>
+
+    <security:authentication-manager>
+		<security:authentication-provider>
+            <security:jdbc-user-service  
+            	data-source-ref="dataSource"
+                users-by-username-query="
+                    SELECT login_id AS username, password, 1 AS enabled
+                    FROM MEMBER
+                    WHERE login_id = ?"
+                authorities-by-username-query="
+                    SELECT login_id AS username, 
+                    CASE 
+                        WHEN is_admin = 1 THEN 'ROLE_ADMIN' 
+                        ELSE 'ROLE_MEMBER' 
+                    END AS authority 
+                    FROM MEMBER 
+                    WHERE login_id = ?"/>
+            <security:password-encoder ref="bcryptPasswordEncoder" />
+        </security:authentication-provider>
+	</security:authentication-manager>
+</beans>
