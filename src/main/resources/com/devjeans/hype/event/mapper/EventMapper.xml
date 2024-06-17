@@ -3,12 +3,16 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.devjeans.hype.event.mapper.EventMapper">
+	
+<!-- 	<resultMap type="EventVO" id="eventVO">
+		<id column="eventId"
+	</resultMap> -->
 
 	<select id="getDual2" resultType="Object">
 		SELECT dummy FROM DUAL
 	</select>
 	
-	<select id="getTopViewEvents" resultType="com.devjeans.hype.event.dto.GetListTopViewEventDTO">
+	<select id="getTopViewEvents" resultType="EventVO">
 		SELECT T1.event_id, T1.branch_id, T1.event_type_id, T1.image_url, T1.title, T1.start_date, T1.end_date, T2.branch_name, T3.event_type_name, T1.view_count
 		FROM EVENT T1
 		INNER JOIN BRANCH T2
@@ -19,4 +23,15 @@
 		ORDER BY T1.view_count DESC
 		FETCH FIRST 10 ROWS ONLY
 	</select>
+	
+	<select id="getEventsByDate" resultType="EventVO" parameterType="java.util.Date">
+		SELECT T1.image_url, T1.title, T1.start_date, T1.end_date, T2.branch_name, T3.event_type_name
+		FROM EVENT T1
+		INNER JOIN BRANCH T2
+		ON T2.branch_id = T1.branch_id
+		INNER JOIN EVENT_TYPE T3
+		ON T3.EVENT_TYPE_ID = T1.EVENT_TYPE_ID
+		WHERE #{date} BETWEEN T1.start_date AND T1.end_date
+	</select>
+	
 </mapper>

@@ -7,5 +7,7 @@ public class BannerVO {
 	
 	private Long eventId;
 	private int orderPriority;
+	
+	private EventVO event;
 
 }

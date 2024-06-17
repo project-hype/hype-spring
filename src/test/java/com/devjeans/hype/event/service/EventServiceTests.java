@@ -1,5 +1,8 @@
 package com.devjeans.hype.event.service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,4 +25,17 @@ public class EventServiceTests {
 	public void testGetListTopView() {
 		service.getListTopView().forEach(event -> log.info(event));
 	}
+	
+	@Test
+	public void testGetListByDate() {
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd"); 
+		Date date = new Date();
+		
+		String now = sdf1.format(date);
+		
+		log.info(now);
+		service.getListByDate(date).forEach(event -> log.info(event));
+	}
+	
+	
 }

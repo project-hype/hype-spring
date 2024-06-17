@@ -1,6 +1,9 @@
 package com.devjeans.hype.event.domain;
 
 import java.util.Date;
+import java.util.List;
+
+import com.devjeans.hype.member.domain.FavoriteVO;
 
 import lombok.Data;
 
@@ -19,4 +22,10 @@ public class EventVO {
 	private int viewCount;
 	private String detailAddress;
 	
+	private CategoryVO category;
+	private List<EventHashtagVO> eventHashtagList;
+	private List<StarScoreVO> starScoreList;
+	private List<FavoriteVO> favoriteList;
+	private EventTypeVO eventType;
+	private BranchVO branch;
 }

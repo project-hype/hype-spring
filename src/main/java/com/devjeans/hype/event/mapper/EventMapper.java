@@ -1,11 +1,11 @@
 package com.devjeans.hype.event.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Select;
 
 import com.devjeans.hype.event.domain.EventVO;
-import com.devjeans.hype.event.dto.GetListTopViewEventDTO;
 
 public interface EventMapper {
 	
@@ -16,6 +16,8 @@ public interface EventMapper {
 	@Select("SELECT event_id FROM EVENT")
 	public List<EventVO> getList();
 	
-	public List<GetListTopViewEventDTO> getTopViewEvents();
+	public List<EventVO> getTopViewEvents();
+	
+	public List<EventVO> getEventsByDate(Date date);
 	
 }

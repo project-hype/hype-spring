@@ -6,6 +6,9 @@ import lombok.Data;
 public class EventHashtagVO {
 	
 	private Long eventId;
-	private Long hastagId;
+	private Long hashtagId;
+	
+	private HashtagVO hashtag;
+	private EventVO event;
 
 }
