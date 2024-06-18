@@ -1,11 +1,16 @@
 package com.devjeans.hype.member.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import lombok.extern.java.Log;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j;
 
 /**
  * 스프링 시큐리티 컨트롤러
@@ -20,8 +25,11 @@ import lombok.extern.java.Log;
  * </pre>
  */
 
-@Controller
-@Log
+@RestController
+@RequestMapping(value="/",
+		produces=MediaType.APPLICATION_JSON_VALUE)
+@Log4j
+@AllArgsConstructor
 public class SecurityController {
 	@GetMapping("/accessError")
 	public void accessDenied(Authentication auth, Model model) {
@@ -29,22 +37,32 @@ public class SecurityController {
 		model.addAttribute("msg", "Access Denied");
 	}
 	
+	@GetMapping("/loginSuccess")
+	public ResponseEntity<String> loginSuccess() {
+		return new ResponseEntity<String>("login success", HttpStatus.OK);
+	}
+	
 	@GetMapping("/login")
-	public void loginInput(String error, String logout, Model model) {
+	public ResponseEntity<String> loginPage(String error, String logout) {
+		ResponseEntity<String> result = null;
 		log.info("error: "+error);
 		log.info("logout: "+logout);
-		
 		if(error!=null) {
-			model.addAttribute("error", "Login Error Check Your Account");
+			result = new ResponseEntity<String>("login failed", HttpStatus.BAD_REQUEST);
+			return result;
 		}
 		
 		if(logout!=null) {
-			model.addAttribute("logout", "Logout!!");
+			result = new ResponseEntity<String>("logout success", HttpStatus.OK);
+			return result; 
 		}
+		
+		return result;
 	}
 	
 	@GetMapping("/logout")
-	public void logoutGET() {
+	public ResponseEntity<String> logoutGET() {
 		log.info("logout");
+		return new ResponseEntity<String>("logout success", HttpStatus.OK);
 	}
 }

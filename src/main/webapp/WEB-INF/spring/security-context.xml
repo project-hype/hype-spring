@@ -2,15 +2,37 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 	
 <!-- 	<bean id="customAccessDenied" class="com.devjeans.hype.member.security.CustomAccessDeniedHandler" />-->
 	<bean id="customLoginSuccess" class="com.devjeans.hype.member.security.CustomLoginSuccessHandler" />
 	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 	
+	<bean id="corsFilter" class="org.springframework.web.filter.CorsFilter">
+        <constructor-arg>
+            <bean class="org.springframework.web.cors.UrlBasedCorsConfigurationSource">
+                <property name="corsConfigurations">
+                    <map>
+                        <entry key="/**">
+                            <bean class="org.springframework.web.cors.CorsConfiguration">
+                                <property name="allowedOrigins" value="http://localhost:3000"/>
+                                <property name="allowedMethods" value="*"/>
+                                <property name="allowedHeaders" value="*"/>
+                                <property name="exposedHeaders" value="Access-Control-Allow-Origin,Access-Control-Allow-Credentials" />
+                                <property name="allowCredentials" value="true"/>
+                            </bean>
+                        </entry>
+                    </map>
+                </property>
+            </bean>
+        </constructor-arg>
+    </bean>
+	
 	<security:http auto-config="true" use-expressions="true">
-        
+       
         <!-- 회원 페이지는 ROLE_MEMBER 및 ROLE_ADMIN 권한이 있어야 접근 가능 -->
         <security:intercept-url pattern="/member/mypage" access="hasAnyRole('ROLE_MEMBER', 'ROLE_ADMIN')"/>
         <!-- 관리자 페이지는 ROLE_ADMIN 권한이 있어야 접근 가능 -->
@@ -20,8 +42,11 @@
 		<!-- <security:access-denied-handler ref="customAccessDenied" /> -->
 		<security:logout logout-url="/logout" invalidate-session="true"/>
 		<security:csrf disabled="true"/>
+		
+        <!-- CORS 설정 -->
+        <security:custom-filter ref="corsFilter" before="SECURITY_CONTEXT_FILTER"/>
     </security:http>
-
+	
     <security:authentication-manager>
 		<security:authentication-provider>
             <security:jdbc-user-service  

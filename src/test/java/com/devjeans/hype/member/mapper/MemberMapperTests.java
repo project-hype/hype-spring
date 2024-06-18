@@ -1,6 +1,7 @@
 package com.devjeans.hype.member.mapper;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,6 +11,7 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -40,6 +42,9 @@ public class MemberMapperTests {
 	@Autowired
 	private MemberMapper mapper;
 	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
+	
 	/*****************************
 	 ****** Member CRUD Test ******
 	 *****************************/
@@ -48,8 +53,8 @@ public class MemberMapperTests {
 	 * Login ID로 조회
 	 */
 	@Test
-	public void testSelectMemberByLoginId() {
-		MemberVO member = mapper.selectMemberByLoginId("wi");
+	public void testSelectLoginIdByLoginId() {
+		MemberVO member = mapper.selectLoginIdByLoginId("wi");
 		log.info(member);
 	}
 	
@@ -61,6 +66,35 @@ public class MemberMapperTests {
 		MemberVO member = mapper.selectMemberById(2L);
 		log.info(member);
 		assertEquals(2L, member.getMemberId().longValue());
+	}
+	
+	/**
+	 * 로그인 ID로 비밀번호 가져오기
+	 */
+	@Test
+	public void testSelectPasswordByLoginId() {
+		String loginId = "test123";
+		String enteredPassword = "1234";
+		// 암호화된 패스워드
+        String storedPasswordHash = mapper.selectPasswordByLoginId(loginId);
+        log.info(storedPasswordHash);
+        // 입력된 비밀번호, 암호화된 비밀번호 비교
+        boolean passwordMatches = encoder.matches(enteredPassword, storedPasswordHash);
+		assertEquals(true, passwordMatches);
+	}
+	
+	/**
+	 * 로그인 ID와 비밀번호에 해당하는 멤버 가져오기
+	 */
+	@Test
+	public void testSelectMemberByLoginIdAndPassword() {
+		MemberVO loginMember = new MemberVO();
+		loginMember.setLoginId("test123");
+		loginMember.setPassword("$2a$10$BWhMdKkeYblzH7Oo.F4eoOYVqobWBYBoAt0GTAKreRCqH1DSVmtzm");
+		log.info(loginMember);
+		
+		MemberVO member = mapper.selectMemberByLoginIdAndPassword(loginMember);
+		assertTrue(member!=null);
 	}
 	
 	/**

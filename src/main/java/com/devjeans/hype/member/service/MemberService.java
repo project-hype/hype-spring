@@ -18,5 +18,7 @@ public interface MemberService {
 	// 회원 CRUD
 	boolean isValidateLoginId(String loginId) throws Exception;	// ID 중복 확인
 	boolean join(MemberVO member);	// 회원가입
-	MemberVO getMemberById(String loginId);
+	String getUserPassword(String loginId);
+	MemberVO login(MemberVO member);
+	MemberVO getMemberInfo(Long memberId);
 }

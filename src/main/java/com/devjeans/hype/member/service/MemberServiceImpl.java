@@ -40,7 +40,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean isValidateLoginId(String loginId) {
 		// member가 존재하지 않으면 true, 존재하면 false
-		return mapper.selectMemberByLoginId(loginId) == null;
+		return mapper.selectLoginIdByLoginId(loginId) == null;
 	}
 
 	/**
@@ -68,9 +68,22 @@ public class MemberServiceImpl implements MemberService {
 		return result == 1;
 	}
 	
+
 	@Override
-	public MemberVO getMemberById(String loginId) {
-		return mapper.selectMemberByLoginId(loginId);
+	public String getUserPassword(String loginId) {
+		return mapper.selectPasswordByLoginId(loginId);
 	}
+
+	@Override
+	public MemberVO login(MemberVO member) {
+		return mapper.selectMemberByLoginIdAndPassword(member);
+	}
+
+	@Override
+	public MemberVO getMemberInfo(Long memberId) {
+		return mapper.selectMemberById(memberId);
+	}
+	
+	
 	
 }

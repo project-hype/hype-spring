@@ -20,8 +20,10 @@ import com.devjeans.hype.member.domain.MemberVO;
 public interface MemberMapper {
 	
 	// Member CRUD
-	public MemberVO selectMemberByLoginId(String loginId);	// 회원가입할 때 id 중복 검사
+	public MemberVO selectLoginIdByLoginId(String loginId);	// 회원가입할 때 id 중복 검사
 	public MemberVO selectMemberById(Long memberId);	// 마이페이지 정보 조회
+	public String selectPasswordByLoginId(String loginId);	// 비밀번호 일치하는지 확인
+	public MemberVO selectMemberByLoginIdAndPassword(MemberVO member);	// 로그인
 	public int insertMember(MemberVO member);	// 회원가입
 	public int deleteMember(Long memberId);		// 회원탈퇴
 	public int updateMember(MemberVO member); 	// 회원정보 수정

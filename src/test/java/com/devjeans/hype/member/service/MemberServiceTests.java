@@ -69,4 +69,9 @@ public class MemberServiceTests {
 		log.info(member);
 		log.info(isJoined);
 	}
+	
+	@Test
+	public void testLogin() {
+		
+	}
 }
