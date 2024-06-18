@@ -15,7 +15,7 @@ import lombok.extern.log4j.Log4j;
 
 /**
  * 메인페이지 행사 서비스 테스트
- * @author 정은
+ * @author 정은지
  * @since 2024.06.17
  * @version 1.0
  *
@@ -38,7 +38,7 @@ public class EventServiceTests {
 	@Test
 	public void testGetListTopView() {
 		try {
-			service.getListTopView().forEach(event->log.info(event));
+			service.getListTopView(1L).forEach(event->log.info(event));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -49,7 +49,7 @@ public class EventServiceTests {
 		Date date = new Date();
 				
 		try {
-			service.getListByDate(date).forEach(event->log.info(event));
+			service.getListByDate(date, 1L).forEach(event->log.info(event));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -89,16 +89,15 @@ public class EventServiceTests {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
 	
 	@Test
 	public void testCheckFavoriteEvent() {
 		
 		try {
-			boolean result = service.checkFavoriteEvent(3L, 1L);
-			assertTrue(result);
+			service.getMyFavoriteEvent(3L).forEach(event->log.info(event));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

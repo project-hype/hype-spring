@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventVO;
+import com.devjeans.hype.member.domain.FavoriteVO;
 
 /**
  * 메인페이지 행사 매퍼 인터페이스
@@ -45,6 +46,6 @@ public interface EventMapper {
 	// 즐겨찾기 제거
 	public int deleteFavorite(@Param("memberId") Long memberId, @Param("eventId") Long eventId);
 
-	// 즐겨찾기 여부 확인
-	public int getCheckFavorite(@Param("memberId") Long memberId, @Param("eventId") Long eventId);
+	// 즐겨찾기 행사 ID 조회
+	public List<Long> getMyFavoriteEvent (@Param("memberId") Long memberId);
 }

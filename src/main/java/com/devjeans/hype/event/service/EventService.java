@@ -18,6 +18,7 @@ import java.util.List;
 
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventVO;
+import com.devjeans.hype.member.domain.FavoriteVO;
 
 /**
  * 메인페이지 행사조회 서비스 인터페이스
@@ -34,9 +35,9 @@ import com.devjeans.hype.event.domain.EventVO;
 
 public interface EventService {
 	
-	List<EventVO> getListTopView() throws Exception;
+	List<EventVO> getListTopView(Long memberId) throws Exception;
 	
-	List<EventVO> getListByDate(Date date)throws Exception;
+	List<EventVO> getListByDate(Date date, Long memberId) throws Exception;
 	
 	List<BannerVO> getListBanner() throws Exception;
 	
@@ -44,6 +45,6 @@ public interface EventService {
 	
 	boolean deleteFavoriteEvent(Long memberId, Long eventId) throws Exception;
 	
-	boolean checkFavoriteEvent(Long memberId, Long eventId) throws Exception;
+	List<Long> getMyFavoriteEvent(Long memberId) throws Exception;
 	
 }

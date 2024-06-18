@@ -7,11 +7,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devjeans.hype.event.domain.BannerVO;
@@ -46,10 +48,10 @@ public class EventController {
 	private EventService service;
 	
 	@GetMapping("/list/top")
-	public GetEventListResponse getListTopView() throws Exception {
-		List<EventVO> list = service.getListTopView();
-
-		return new GetEventListResponse(list);
+	public GetEventListResponse getListTopViewWithFavorite(@RequestParam Long memberId) throws Exception {
+		List<EventVO> list = service.getListTopView(memberId);
+		List<Long> favoriteEventIds = service.getMyFavoriteEvent(memberId);
+		return new GetEventListResponse(list, favoriteEventIds);
 	}
 	
 	@GetMapping("/list/banner")
@@ -60,40 +62,29 @@ public class EventController {
 	}
 	
 	@GetMapping("/list/{date}")
-	public GetEventListResponse getEventListResponse(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) throws Exception {
-		List<EventVO> list = service.getListByDate(date);
-		return new GetEventListResponse(list);
+	public GetEventListResponse getEventListResponse(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date, @RequestParam Long memberId) throws Exception {
+		List<EventVO> list = service.getListByDate(date, memberId);
+		List<Long> favoriteEventIds = service.getMyFavoriteEvent(memberId);
+		return new GetEventListResponse(list, favoriteEventIds);
 	}
 	
 	@PostMapping("/addFav")
 	public ResponseEntity<String> addFavoriteEvent(@RequestBody CreateFavoriteEventRequest request) {
 		try {
 			service.addFavoriteEvent(request.getMemberId(), request.getEventId());
-			return ResponseEntity.ok("Favorite event added successfully");
+			return ResponseEntity.ok("success");
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to add favorite event");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
 		}
 	}
 	
-	@PostMapping("/deleteFav")
+	@DeleteMapping("/deleteFav")
 	public ResponseEntity<String> deleteFavoriteEvent(@RequestBody CreateFavoriteEventRequest request) {
 		try {
 			service.deleteFavoriteEvent(request.getMemberId(), request.getEventId());
-			return ResponseEntity.ok("Favorite event deleted successfully");
+			return ResponseEntity.ok("success");
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to delete favorite event");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
 		}
 	}
-	
-	@PostMapping("/checkFav")
-	public ResponseEntity<String> checkFavoriteEvent(@RequestBody CreateFavoriteEventRequest request) {
-		try {
-			service.checkFavoriteEvent(request.getMemberId(), request.getEventId());
-			return ResponseEntity.ok("check");
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed");
-		}
-		
-	}
-	
 }

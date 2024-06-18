@@ -143,10 +143,10 @@
 		       AND event_id = #{eventId} 
 	</delete>
 	
-	<select id="getCheckFavorite">
-		SELECT count(*)
+	<select id="getMyFavoriteEvent">
+		SELECT event_id
 		FROM FAVORITE
-		WHERE member_id = #{memberId} AND event_id = #{eventId}
+		WHERE member_id = #{memberId}
 	</select>
 	
 </mapper>

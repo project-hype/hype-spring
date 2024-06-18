@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.mapper.EventMapper;
+import com.devjeans.hype.member.domain.FavoriteVO;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -35,8 +36,8 @@ public class EventServiceImpl implements EventService {
 	 * 조회수 높은 순 행사 리스트 조회 
 	 */
 	@Override
-	public List<EventVO> getListTopView() throws Exception {
-		
+	public List<EventVO> getListTopView(Long memberId) throws Exception {
+	
 		return mapper.getTopViewEvents();
 	}
 
@@ -44,11 +45,11 @@ public class EventServiceImpl implements EventService {
 	 * 날짜별 행사 조회  
 	 */
 	@Override
-	public List<EventVO> getListByDate(Date date) throws Exception {
+	public List<EventVO> getListByDate(Date date, Long memberId) throws Exception {
 		
 		return mapper.getEventsByDate(date);
 	}
-
+ 
 	/**
 	 * 배너 행사 조회
 	 */
@@ -68,7 +69,7 @@ public class EventServiceImpl implements EventService {
 	}
 
 	/**
-	 * 행사 즐겨찾기 제외
+	 * 행사 즐겨찾기 삭제
 	 */
 	@Override
 	public boolean deleteFavoriteEvent(Long memberId, Long eventId) throws Exception {
@@ -77,12 +78,13 @@ public class EventServiceImpl implements EventService {
 	}
 
 	/**
-	 * 행사 즐겨찾기 여부 확인
+	 * 내가 즐겨찾기한 행사
 	 */
 	@Override
-	public boolean checkFavoriteEvent(Long memberId, Long eventId) throws Exception {
-
-		return mapper.getCheckFavorite(memberId, eventId) == 1;
+	public List<Long> getMyFavoriteEvent(Long memberId) throws Exception {
+		
+		return mapper.getMyFavoriteEvent(memberId);
 	}
+
 
 }

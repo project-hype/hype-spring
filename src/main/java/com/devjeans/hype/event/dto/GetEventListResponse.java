@@ -25,9 +25,11 @@ import lombok.Data;
 public class GetEventListResponse {
 	List<GetEventResponse> eventList = new ArrayList<>();
 
-	public GetEventListResponse(List<EventVO> eventVO) {
+	public GetEventListResponse(List<EventVO> eventVO, List<Long> favoriteEventIds) {
+		
 		eventVO.stream().forEach((event) -> {
-			eventList.add(new GetEventResponse(event));
+			boolean isFavorite = favoriteEventIds.contains(event.getEventId());
+			eventList.add(new GetEventResponse(event, isFavorite));
 		});
 	}
 
@@ -43,8 +45,9 @@ public class GetEventListResponse {
 		String branchName;
 		String eventTypeName;
 		int viewCount;
+		boolean isFavorite;
 		
-		public GetEventResponse(EventVO event) {
+		public GetEventResponse(EventVO event, boolean isFavorite) {
 			this.eventId = event.getEventId();
 			this.branchId = event.getBranchId();
 			this.eventTypeId = event.getEventTypeId();
@@ -58,6 +61,7 @@ public class GetEventListResponse {
 			this.branchName = event.getBranch().getBranchName();
 			this.eventTypeName = event.getEventType().getEventTypeName();
 			this.viewCount = event.getViewCount();
+			this.isFavorite = isFavorite;
 		}
 	
 	}
