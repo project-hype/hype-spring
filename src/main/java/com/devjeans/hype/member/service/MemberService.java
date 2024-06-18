@@ -16,7 +16,7 @@ import com.devjeans.hype.member.domain.MemberVO;
  */
 public interface MemberService {
 	// 회원 CRUD
-	boolean isValidateId(String loginId) throws Exception;	// ID 중복 확인
+	boolean isValidateLoginId(String loginId) throws Exception;	// ID 중복 확인
 	boolean join(MemberVO member);	// 회원가입
-	MemberVO getMemberByLoginId(String loginId);
+	MemberVO getMemberById(String loginId);
 }
