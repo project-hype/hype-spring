@@ -2,6 +2,7 @@ package com.devjeans.hype.event.dto;
 
 import java.util.Date;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.modelmapper.ModelMapper;
@@ -14,12 +15,16 @@ import lombok.Data;
 public class AdminModifyEventRequest {
 	
 	@NotNull
+	@Min(1)
 	private Long eventId;
 	@NotNull
+	@Min(1)
 	private Long branchId;
 	@NotNull
+	@Min(1)
 	private Long eventTypeId;
 	@NotNull
+	@Min(1)
 	private Long categoryId;
 	@NotNull
 	private String title;

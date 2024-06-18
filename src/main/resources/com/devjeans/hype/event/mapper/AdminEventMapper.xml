@@ -185,7 +185,7 @@
 	<!-- ********************************** -->
 	
 	<select id="selectCategoryById" resultType="CategoryVO">
-		SELECT 
+		SELECT
 			category_id,
 			category_name
 		FROM CATEGORY
@@ -193,10 +193,12 @@
 	</select>
 	
 	<select id="selectAllCategory">
-		SELECT 
+		SELECT
+			/*+ INDEX_DESC(CATEGORY PK_CATEGORY) */
 			category_id,
 			category_name
 		FROM CATEGORY
+		WHERE category_id > 0
 	</select>
 	
 	<insert id="insertCategory">
@@ -231,7 +233,7 @@
 	<!-- ********************************** -->
 	
 	<select id="selectHashtagById" resultType="HashtagVO">
-		SELECT 
+		SELECT
 			hashtag_id,
 			hashtag_name
 		FROM HASHTAG
@@ -239,7 +241,8 @@
 	</select>
 	
 	<select id="selectAllHashtag">
-		SELECT 
+		SELECT
+			/*+ INDEX_DESC(HASHTAG PK_HASHTAG) */
 			hashtag_id,
 			hashtag_name
 		FROM HASHTAG
