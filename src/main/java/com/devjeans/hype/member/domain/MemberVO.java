@@ -21,8 +21,9 @@ public class MemberVO {
 	private Long cityId;
 	private Long preferBranchId;
 	
-	private CategoryVO category;
 	private CityVO city;
 	private BranchVO branch;
-	private List<FavoriteVO> favoriteList;
+	private List<CategoryVO> category;
+	private List<MemberCategoryVO> memberCategory;
+	//private List<FavoriteVO> favoriteList;
 }

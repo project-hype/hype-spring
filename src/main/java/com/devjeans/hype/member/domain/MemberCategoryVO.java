@@ -1,5 +1,7 @@
 package com.devjeans.hype.member.domain;
 
+import java.util.List;
+
 import com.devjeans.hype.event.domain.CategoryVO;
 
 import lombok.Data;
@@ -9,6 +11,5 @@ public class MemberCategoryVO {
 	private Long memberId;
 	private Long categoryId;
 	
-	private MemberVO member;
-	private CategoryVO category;
+	private List<CategoryVO> category;
 }

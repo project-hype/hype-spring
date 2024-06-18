@@ -79,7 +79,7 @@ public class MemberMapperTests {
 			e.printStackTrace();
 		}
 
-		member.setLoginId("test1");
+		member.setLoginId("test5");
 		member.setName("테스트");
 		member.setPassword("test1234");
 		member.setGender("M");

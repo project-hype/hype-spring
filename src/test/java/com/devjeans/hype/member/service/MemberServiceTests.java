@@ -39,7 +39,7 @@ public class MemberServiceTests {
 	@Test
 	public void testValidateId() throws Exception {
 		String id = "won4538";
-		boolean isValidateId = service.isValidateId(id);
+		boolean isValidateId = service.isValidateLoginId(id);
 		log.info(isValidateId);
 	}
 	
