@@ -29,6 +29,7 @@
 		<result column="prefer_branch_id" property="preferBranchId" />
 		<collection property="city" resultMap="city"/>
 		<collection property="branch" resultMap="branch"/>
+		<collection property="memberCategory" resultMap="memberCategory" />
 	</resultMap>
 	
 	<resultMap type="CityVO" id="city">
@@ -79,19 +80,29 @@
 			M.city_id,
 				C.city_name,
 			M.prefer_branch_id,
-				B.branch_name
+				B.branch_name,
+			MC.category_id,
+			CA.category_name
 		FROM MEMBER M
 		LEFT JOIN CITY C
 			ON M.city_id = C.city_id
 		LEFT JOIN BRANCH B
 			ON M.prefer_branch_id = B.branch_id
-		WHERE member_id = #{memberId}
+		LEFT JOIN MEMBER_CATEGORY MC
+			ON M.member_id = MC.member_id
+		LEFT JOIN CATEGORY CA
+			ON MC.category_id = CA.category_id
+		WHERE M.member_id = #{memberId}
 	</select>
 	
-	<insert id="insertMember">
+	<insert id="insertMember" parameterType="MemberVO" useGeneratedKeys="true" keyProperty="memberId">
+		<selectKey keyProperty="memberId" order="BEFORE" resultType="long">
+			SELECT seq_member.nextval
+			FROM DUAL
+		</selectKey>
 		INSERT INTO MEMBER (member_id, login_id, name, password, gender, birthdate, city_id, prefer_branch_id)
 		VALUES (
-			seq_member.nextval,
+			#{memberId},
 			#{loginId},
 			#{name},
 			#{password},

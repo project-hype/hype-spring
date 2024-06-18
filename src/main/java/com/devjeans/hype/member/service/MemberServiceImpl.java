@@ -1,8 +1,13 @@
 package com.devjeans.hype.member.service;
 
+import java.util.List;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.devjeans.hype.event.domain.CategoryVO;
+import com.devjeans.hype.member.domain.MemberCategoryVO;
 import com.devjeans.hype.member.domain.MemberVO;
 import com.devjeans.hype.member.mapper.MemberMapper;
 
@@ -33,30 +38,38 @@ public class MemberServiceImpl implements MemberService {
 	 * ID 중복확인
 	 */
 	@Override
-	public boolean isValidateId(String loginId) {
-		MemberVO member = new MemberVO();
-		member = mapper.selectMemberByLoginId(loginId);	// 입력된 id와 중복된 id의 멤버가 있는지 조회 
-		if(member!=null) {	// member가 존재한다면 false return
-			return false;
-		}
-		return true;
+	public boolean isValidateLoginId(String loginId) {
+		// member가 존재하지 않으면 true, 존재하면 false
+		return mapper.selectMemberByLoginId(loginId) == null;
 	}
 
 	/**
 	 * 회원 가입
 	 */
 	@Override
+	@Transactional
 	public boolean join(MemberVO member) {
-		member.setPassword(passwordEncoder.encode(member.getPassword()));	// bcrypt encoding
-		int num = mapper.insertMember(member);
-		if(num==1) {
-			return true;
+		// password bcrypt encoding
+		member.setPassword(passwordEncoder.encode(member.getPassword()));
+		
+		// 회원 정보 insert
+		int result = mapper.insertMember(member);
+		List<CategoryVO> categoryList = member.getCategory();
+		
+		// 회원 카테고리 insert
+		if(categoryList.size()>0) {
+			for(CategoryVO category : categoryList) {
+				MemberCategoryVO mc = new MemberCategoryVO();
+				mc.setMemberId(member.getMemberId());
+				mc.setCategoryId(category.getCategoryId());
+				mapper.insertMemberCategory(mc);
+			}
 		}
-		return false;
+		return result == 1;
 	}
 	
 	@Override
-	public MemberVO getMemberByLoginId(String loginId) {
+	public MemberVO getMemberById(String loginId) {
 		return mapper.selectMemberByLoginId(loginId);
 	}
 	
