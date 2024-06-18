@@ -22,17 +22,17 @@ import lombok.Data;
  */
 
 @Data
-public class GetMainEventListResponse {
-	List<GetMainEventResponse> eventList = new ArrayList<>();
+public class GetEventListResponse {
+	List<GetEventResponse> eventList = new ArrayList<>();
 
-	public GetMainEventListResponse(List<EventVO> eventVO) {
+	public GetEventListResponse(List<EventVO> eventVO) {
 		eventVO.stream().forEach((event) -> {
-			eventList.add(new GetMainEventResponse(event));
+			eventList.add(new GetEventResponse(event));
 		});
 	}
 
 	@Data
-	public static class GetMainEventResponse {
+	public static class GetEventResponse {
 		Long eventId;
 		Long branchId;
 		Long eventTypeId;
@@ -44,7 +44,7 @@ public class GetMainEventListResponse {
 		String eventTypeName;
 		int viewCount;
 		
-		public GetMainEventResponse(EventVO event) {
+		public GetEventResponse(EventVO event) {
 			this.eventId = event.getEventId();
 			this.branchId = event.getBranchId();
 			this.eventTypeId = event.getEventTypeId();

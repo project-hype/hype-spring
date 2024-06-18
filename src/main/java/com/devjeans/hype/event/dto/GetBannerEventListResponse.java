@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventVO;
-import com.devjeans.hype.event.dto.GetMainEventListResponse.GetMainEventResponse;
 
 import lombok.Data;
 
@@ -24,17 +23,17 @@ import lombok.Data;
  */
 
 @Data
-public class GetBannerMainEventListResponse {
-	List<GetBannerMainEventResponse> eventList = new ArrayList<>();
+public class GetBannerEventListResponse {
+	List<GetBannerEventResponse> eventList = new ArrayList<>();
 
-	public GetBannerMainEventListResponse(List<BannerVO> bannerVO) {
+	public GetBannerEventListResponse(List<BannerVO> bannerVO) {
 		bannerVO.stream().forEach((event) -> {
-			eventList.add(new GetBannerMainEventResponse(event));
+			eventList.add(new GetBannerEventResponse(event));
 		});
 	}
 
 	@Data
-	public static class GetBannerMainEventResponse {
+	public static class GetBannerEventResponse {
 		Long eventId;
 		Long branchId;
 		Long eventTypeId;
@@ -46,7 +45,7 @@ public class GetBannerMainEventListResponse {
 		String eventTypeName;
 		int orderPriority;
 		
-		public GetBannerMainEventResponse(BannerVO banner) {
+		public GetBannerEventResponse(BannerVO banner) {
 			this.eventId = banner.getEvent().getEventId();
 			this.branchId = banner.getEvent().getBranchId();
 			this.eventTypeId = banner.getEvent().getEventTypeId();

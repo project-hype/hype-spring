@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.dto.CreateFavoriteEventRequest;
-import com.devjeans.hype.event.dto.GetBannerMainEventListResponse;
-import com.devjeans.hype.event.dto.GetMainEventListResponse;
+import com.devjeans.hype.event.dto.GetBannerEventListResponse;
+import com.devjeans.hype.event.dto.GetEventListResponse;
 import com.devjeans.hype.event.service.EventService;
 
 import lombok.AllArgsConstructor;
@@ -46,24 +46,23 @@ public class EventController {
 	private EventService service;
 	
 	@GetMapping("/list/top")
-	public GetMainEventListResponse getListTopView() throws Exception {
+	public GetEventListResponse getListTopView() throws Exception {
 		List<EventVO> list = service.getListTopView();
-		log.info(list);
 
-		return new GetMainEventListResponse(list);
+		return new GetEventListResponse(list);
 	}
 	
 	@GetMapping("/list/banner")
-	public GetBannerMainEventListResponse getListBanner() throws Exception {
+	public GetBannerEventListResponse getListBanner() throws Exception {
 		List<BannerVO> list = service.getListBanner();
 		
-		return new GetBannerMainEventListResponse(list);
+		return new GetBannerEventListResponse(list);
 	}
 	
 	@GetMapping("/list/{date}")
-	public GetMainEventListResponse getEventListResponse(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) throws Exception {
+	public GetEventListResponse getEventListResponse(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) throws Exception {
 		List<EventVO> list = service.getListByDate(date);
-		return new GetMainEventListResponse(list);
+		return new GetEventListResponse(list);
 	}
 	
 	@PostMapping("/addFav")
