@@ -15,26 +15,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
+import com.devjeans.hype.event.domain.EventTypeVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.domain.HashtagVO;
 import com.devjeans.hype.event.dto.AdminCreateCategoryRequest;
 import com.devjeans.hype.event.dto.AdminCreateEventHashtagRequest;
 import com.devjeans.hype.event.dto.AdminCreateEventRequest;
 import com.devjeans.hype.event.dto.AdminCreateHashtagRequest;
+import com.devjeans.hype.event.dto.AdminGetBranchListResponse;
 import com.devjeans.hype.event.dto.AdminGetCategoryListResponse;
 import com.devjeans.hype.event.dto.AdminGetEventDetailResponse;
 import com.devjeans.hype.event.dto.AdminGetEventListResponse;
+import com.devjeans.hype.event.dto.AdminGetEventTypeListResponse;
 import com.devjeans.hype.event.dto.AdminGetHashtagListResponse;
 import com.devjeans.hype.event.dto.AdminModifyCategoryRequest;
 import com.devjeans.hype.event.dto.AdminModifyEventRequest;
 import com.devjeans.hype.event.dto.AdminModifyHashtagRequest;
 import com.devjeans.hype.event.service.AdminEventService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 /**
@@ -56,10 +62,10 @@ import lombok.extern.log4j.Log4j;
 		value="/admin/event",
 		produces=MediaType.APPLICATION_JSON_VALUE)
 @Log4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdminEventController {
 
-	private AdminEventService service;
+	private final AdminEventService service;
 	
 	// Event 시작
 	/**
@@ -71,7 +77,6 @@ public class AdminEventController {
 	@GetMapping("/list")
 	public AdminGetEventListResponse getEventList(Criteria cri) throws Exception {
 		List<EventVO> eventList = service.getEventListWithPaging(cri);
-		
 		return new AdminGetEventListResponse(eventList);
 	}
 	
@@ -96,16 +101,19 @@ public class AdminEventController {
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping("")
+	@PostMapping(value = "",consumes = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<String> createEvent(
-			@RequestBody @Valid AdminCreateEventRequest request,
-			BindingResult bs) throws Exception {
+			@RequestPart("request") @Valid AdminCreateEventRequest request,
+			BindingResult bs,
+			@RequestPart("file") MultipartFile file
+			) throws Exception {
 		if (bs.hasErrors()) {
 			log.info(bs);
 			return new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 		}
 		
-		return service.createEvent(request.toEventVO())
+		return service.createEvent(request.toEventVO(), file)
 				? new ResponseEntity<String>("success", HttpStatus.OK)
 				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 	}
@@ -117,16 +125,18 @@ public class AdminEventController {
 	 * @return
 	 * @throws Exception
 	 */
-	@PutMapping("")
+	@PutMapping(value = "",consumes = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<String> modifyEvent(
-			@RequestBody @Valid AdminModifyEventRequest request,
-			BindingResult bs) throws Exception {
+			@RequestPart("request") @Valid AdminModifyEventRequest request,
+			BindingResult bs,
+			@RequestPart(value="file", required=false) MultipartFile file) throws Exception {
 		if (bs.hasErrors()) {
 			log.info(bs);
 			return new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 		}
 
-		return service.modifyEvent(request.toEventVO())
+		return service.modifyEvent(request.toEventVO(), file)
 				? new ResponseEntity<String>("success", HttpStatus.OK)
 				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 	}
@@ -344,4 +354,23 @@ public class AdminEventController {
 				? new ResponseEntity<String>("success", HttpStatus.OK)
 				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 	}
+	
+	@GetMapping("/type/list")
+	public AdminGetEventTypeListResponse getEventTypeList() throws Exception {
+		List<EventTypeVO> eventTypeList = service.getEventTypeList();
+		
+		log.info(eventTypeList);
+		
+		return new AdminGetEventTypeListResponse(eventTypeList);
+	}
+	
+	@GetMapping("/branch/list")
+	public AdminGetBranchListResponse getBranchList() throws Exception {
+		List<BranchVO> branchList = service.getBranchList();
+		
+		log.info(branchList);
+		
+		return new AdminGetBranchListResponse(branchList);
+	}
+	
 }

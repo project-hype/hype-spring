@@ -3,13 +3,19 @@ package com.devjeans.hype.event.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
 import com.devjeans.hype.event.domain.EventHashtagVO;
+import com.devjeans.hype.event.domain.EventTypeVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.domain.HashtagVO;
 import com.devjeans.hype.event.mapper.AdminEventMapper;
+import com.devjeans.hype.util.FileStore;
+import com.devjeans.hype.util.UploadFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -24,6 +30,7 @@ import lombok.extern.log4j.Log4j;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	조영욱        최초 생성
+ * 2024.06.19  	조영욱        이벤트 타입 리스트 조회 추가
  * </pre>
  */
 
@@ -33,6 +40,7 @@ import lombok.extern.log4j.Log4j;
 public class AdminEventServiceImpl implements AdminEventService {
 
 	private final AdminEventMapper mapper;
+	private final FileStore fileStore;
 	
 	/**
 	 * 행사 최근 순 리스트로 조회
@@ -58,14 +66,27 @@ public class AdminEventServiceImpl implements AdminEventService {
 	 * 행사 추가
 	 */
 	@Override
-	public boolean createEvent(EventVO event) throws Exception {
+	@Transactional
+	public boolean createEvent(EventVO event, MultipartFile file) throws Exception {
+		
+		UploadFile uploadFile = fileStore.storeFile(file);
+		event.setImageUrl(uploadFile.getStoredFilePath());
+		
 		return mapper.insertEvent(event) == 1;
 	}
 	
 	/**
 	 * 행사 수정
 	 */
-	public boolean modifyEvent(EventVO event) throws Exception {
+	public boolean modifyEvent(EventVO event, MultipartFile file) throws Exception {
+		
+		log.info(file);
+		
+		if (file != null) {
+			UploadFile uploadFile = fileStore.storeFile(file);
+			event.setImageUrl(uploadFile.getStoredFilePath());
+		}
+		
 		return mapper.updateEvent(event) == 1;
 	}
 	
@@ -188,6 +209,20 @@ public class AdminEventServiceImpl implements AdminEventService {
 		return mapper.deleteEventHashtag(eventId, hashtagId) == 1;
 	}
 	
+	/**
+	 * 행사 타입 리스트 조회
+	 */
+	@Override
+	public List<EventTypeVO> getEventTypeList() throws Exception {
+		return mapper.selectAllEventType();
+	}
 	
+	/**
+	 * 브랜치 리스트 조회
+	 */
+	@Override
+	public List<BranchVO> getBranchList() throws Exception {
+		return mapper.selectAllBranch();
+	}
 	
 }

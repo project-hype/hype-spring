@@ -2,9 +2,13 @@ package com.devjeans.hype.event.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
 import com.devjeans.hype.event.domain.EventHashtagVO;
+import com.devjeans.hype.event.domain.EventTypeVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.domain.HashtagVO;
 
@@ -18,6 +22,7 @@ import com.devjeans.hype.event.domain.HashtagVO;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	조영욱        최초 생성
+ * 2024.06.19  	조영욱        이벤트 타입 리스트 조회 추가
  * </pre>
  */
 
@@ -26,8 +31,8 @@ public interface AdminEventService {
 	// 행사 CRUD
 	List<EventVO> getEventListWithPaging(Criteria cri) throws Exception;
 	EventVO getEventById(Long eventId) throws Exception;
-	boolean createEvent(EventVO event) throws Exception;
-	boolean modifyEvent(EventVO event) throws Exception;
+	boolean createEvent(EventVO event, MultipartFile file) throws Exception;
+	boolean modifyEvent(EventVO event, MultipartFile file) throws Exception;
 	boolean removeEvent(Long eventId) throws Exception;
 	
 	// 카테고리 CRUD
@@ -49,5 +54,11 @@ public interface AdminEventService {
 	List<EventHashtagVO> getEventHashtagListByHashtagId(Long hashtagId) throws Exception;
 	boolean createEventHashtag(EventHashtagVO eventHashtag) throws Exception;
 	boolean removeEventHashtag(Long eventId, Long hashtagId) throws Exception;
+	
+	// 이벤트 타입 조회
+	List<EventTypeVO> getEventTypeList() throws Exception;
+	
+	// 브랜치 조회
+	List<BranchVO> getBranchList() throws Exception;
 
 }

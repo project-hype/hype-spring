@@ -4,9 +4,11 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
 import com.devjeans.hype.event.domain.EventHashtagVO;
+import com.devjeans.hype.event.domain.EventTypeVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.domain.HashtagVO;
 
@@ -20,6 +22,7 @@ import com.devjeans.hype.event.domain.HashtagVO;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	조영욱        최초 생성
+ * 2024.06.19  	조영욱        이벤트 타입 리스트 조회 추가
  * </pre>
  */
 public interface AdminEventMapper {
@@ -38,12 +41,6 @@ public interface AdminEventMapper {
 	public int insertCategory(CategoryVO category);
 	public int updateCategory(CategoryVO category);
 	public int deleteCategory(Long categoryId);
-	
-	// EventType CRUD : 보류
-//	public EventTypeVO selectEventTypeById(Long eventTypeId);
-//	public int insertEventType(EventTypeVO eventType);
-//	public int updateEventType(EventTypeVO eventType);
-//	public int deleteEventType(Long eventTypeId);
 	
 	// Hashtag CRUD
 	public HashtagVO selectHashtagById(Long hashtagId);
@@ -64,4 +61,9 @@ public interface AdminEventMapper {
 			@Param("eventId") Long eventId,
 			@Param("hashtagId") Long hashtagId);
 	
+	// EventType
+	public List<EventTypeVO> selectAllEventType();
+	
+	// Branch
+	public List<BranchVO> selectAllBranch();
 }

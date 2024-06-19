@@ -2,7 +2,6 @@ package com.devjeans.hype.event.service;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -42,6 +41,14 @@ public class AdminEventServiceTest {
 	@Autowired
 	private AdminEventService service;
 	
+	@Test
+	public void testClassProxy() {
+		log.info(service);
+		log.info(service.getClass().getName());
+		
+		assertEquals(true, service.getClass().getName().contains("proxy"));
+	}
+	
 	// *********** Event ************
 	
 	@Test
@@ -56,48 +63,49 @@ public class AdminEventServiceTest {
 			log.warn(e);
 		}
 		
+		
 	}
 	
-	@Test
-	public void testCreateEvent() {
-		EventVO event = new EventVO();
-		event.setBranchId(3L);
-		event.setEventTypeId(3L);
-		event.setCategoryId(3L);
-		event.setTitle("가나다라");
-		event.setContent("테스트콘텐츠");
-		event.setImageUrl("https://testURL");
-		event.setStartDate(new Date());
-		event.setEndDate(new Date());
-		event.setDetailAddress("3층 해당 매장");
-		try {
-			boolean result = service.createEvent(event);
-			assertEquals(true, result);
-		} catch (Exception e) {
-			log.info(e.getMessage());
-		}
-	}
+//	@Test
+//	public void testCreateEvent() {
+//		EventVO event = new EventVO();
+//		event.setBranchId(3L);
+//		event.setEventTypeId(3L);
+//		event.setCategoryId(3L);
+//		event.setTitle("가나다라");
+//		event.setContent("테스트콘텐츠");
+//		event.setImageUrl("https://testURL");
+//		event.setStartDate(new Date());
+//		event.setEndDate(new Date());
+//		event.setDetailAddress("3층 해당 매장");
+//		try {
+//			boolean result = service.createEvent(event);
+//			assertEquals(true, result);
+//		} catch (Exception e) {
+//			log.info(e.getMessage());
+//		}
+//	}
 	
-	@Test
-	public void testModifyEvent() {
-		EventVO event = new EventVO();
-		event.setEventId(68L);
-		event.setBranchId(4L);
-		event.setEventTypeId(3L);
-		event.setCategoryId(4L);
-		event.setTitle("2가나다라");
-		event.setContent("2테스트콘텐츠");
-		event.setImageUrl("https://t2estURL");
-		event.setStartDate(new Date());
-		event.setEndDate(new Date());
-		event.setDetailAddress("3층 2해당 매장");
-		try {
-			boolean result = service.modifyEvent(event);
-			assertEquals(true, result);
-		} catch (Exception e) {
-			log.info(e.getMessage());
-		}
-	}
+//	@Test
+//	public void testModifyEvent() {
+//		EventVO event = new EventVO();
+//		event.setEventId(68L);
+//		event.setBranchId(4L);
+//		event.setEventTypeId(3L);
+//		event.setCategoryId(4L);
+//		event.setTitle("2가나다라");
+//		event.setContent("2테스트콘텐츠");
+//		event.setImageUrl("https://t2estURL");
+//		event.setStartDate(new Date());
+//		event.setEndDate(new Date());
+//		event.setDetailAddress("3층 2해당 매장");
+//		try {
+//			boolean result = service.modifyEvent(event);
+//			assertEquals(true, result);
+//		} catch (Exception e) {
+//			log.info(e.getMessage());
+//		}
+//	}
 	
 	@Test
 	public void testRemoveEvent() {

@@ -16,6 +16,7 @@ import lombok.Data;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	조영욱        최초 생성
+ * 2024.06.19  	조영욱        detailAdress 필드 수정
  * </pre>
  */
 
@@ -35,7 +36,7 @@ public class AdminGetEventDetailResponse {
 	String startDate;
 	String endDate;
 	int viewCount;
-	String Address;
+	String detailAddress;
 	
 	public AdminGetEventDetailResponse(EventVO event) {
 		this.eventId = event.getEventId();
@@ -53,7 +54,6 @@ public class AdminGetEventDetailResponse {
 		this.startDate = format.format(event.getStartDate());
 		this.endDate = format.format(event.getEndDate());
 		this.viewCount = event.getViewCount();
-		this.Address = "" + event.getBranch().getBranchName()
-				+ " " + event.getDetailAddress();
+		this.detailAddress = event.getDetailAddress();
 	}
 }
