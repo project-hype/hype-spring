@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
 import com.devjeans.hype.event.domain.EventHashtagVO;
@@ -41,12 +42,6 @@ public interface AdminEventMapper {
 	public int updateCategory(CategoryVO category);
 	public int deleteCategory(Long categoryId);
 	
-	// EventType CRUD : 보류
-//	public EventTypeVO selectEventTypeById(Long eventTypeId);
-//	public int insertEventType(EventTypeVO eventType);
-//	public int updateEventType(EventTypeVO eventType);
-//	public int deleteEventType(Long eventTypeId);
-	
 	// Hashtag CRUD
 	public HashtagVO selectHashtagById(Long hashtagId);
 	public List<HashtagVO> selectAllHashtag();
@@ -68,4 +63,7 @@ public interface AdminEventMapper {
 	
 	// EventType
 	public List<EventTypeVO> selectAllEventType();
+	
+	// Branch
+	public List<BranchVO> selectAllBranch();
 }

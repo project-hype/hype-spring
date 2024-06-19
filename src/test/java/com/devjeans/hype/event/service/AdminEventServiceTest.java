@@ -42,6 +42,14 @@ public class AdminEventServiceTest {
 	@Autowired
 	private AdminEventService service;
 	
+	@Test
+	public void testClassProxy() {
+		log.info(service);
+		log.info(service.getClass().getName());
+		
+		assertEquals(true, service.getClass().getName().contains("proxy"));
+	}
+	
 	// *********** Event ************
 	
 	@Test
@@ -55,6 +63,7 @@ public class AdminEventServiceTest {
 		} catch (Exception e) {
 			log.warn(e);
 		}
+		
 		
 	}
 	

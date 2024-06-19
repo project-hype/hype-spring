@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
 import com.devjeans.hype.event.domain.EventHashtagVO;
@@ -198,6 +199,12 @@ public class AdminEventServiceImpl implements AdminEventService {
 		return mapper.selectAllEventType();
 	}
 	
-	
+	/**
+	 * 브랜치 리스트 조회
+	 */
+	@Override
+	public List<BranchVO> getBranchList() throws Exception {
+		return mapper.selectAllBranch();
+	}
 	
 }

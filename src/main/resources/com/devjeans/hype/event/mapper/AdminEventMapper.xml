@@ -328,16 +328,25 @@
 	<!-- ********************************** -->
 	
 	<!-- ********************************** -->
-	<!-- *********  EventType 시작 ********* -->
+	<!-- *****  SelectAll Tables 시작 ****** -->
 	<!-- ********************************** -->
 	<select id="selectAllEventType">
 		SELECT
-			/*+ INDEX_DESC(EVENT_TYPE PK_EVENT_TYPE) */
+			/*+ INDEX_ASC(EVENT_TYPE PK_EVENT_TYPE) */
 			event_type_id,
 			event_type_name
 		FROM EVENT_TYPE
 	</select>
+	
+	<select id="selectAllBranch">
+		SELECT
+			/*+ INDEX_ASC(BRANCH PK_BRANCH) */
+			branch_id,
+			branch_name
+		FROM BRANCH
+	</select>
+
 	<!-- ********************************** -->
-	<!-- *********  EventType 끝 ********* -->
+	<!-- ******  SelectAll Tables 끝 ****** -->
 	<!-- ********************************** -->
 </mapper>

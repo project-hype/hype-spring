@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
 import com.devjeans.hype.event.domain.EventTypeVO;
@@ -26,6 +27,7 @@ import com.devjeans.hype.event.dto.AdminCreateCategoryRequest;
 import com.devjeans.hype.event.dto.AdminCreateEventHashtagRequest;
 import com.devjeans.hype.event.dto.AdminCreateEventRequest;
 import com.devjeans.hype.event.dto.AdminCreateHashtagRequest;
+import com.devjeans.hype.event.dto.AdminGetBranchListResponse;
 import com.devjeans.hype.event.dto.AdminGetCategoryListResponse;
 import com.devjeans.hype.event.dto.AdminGetEventDetailResponse;
 import com.devjeans.hype.event.dto.AdminGetEventListResponse;
@@ -36,7 +38,7 @@ import com.devjeans.hype.event.dto.AdminModifyEventRequest;
 import com.devjeans.hype.event.dto.AdminModifyHashtagRequest;
 import com.devjeans.hype.event.service.AdminEventService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 /**
@@ -58,10 +60,10 @@ import lombok.extern.log4j.Log4j;
 		value="/admin/event",
 		produces=MediaType.APPLICATION_JSON_VALUE)
 @Log4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AdminEventController {
 
-	private AdminEventService service;
+	private final AdminEventService service;
 	
 	// Event 시작
 	/**
@@ -73,7 +75,6 @@ public class AdminEventController {
 	@GetMapping("/list")
 	public AdminGetEventListResponse getEventList(Criteria cri) throws Exception {
 		List<EventVO> eventList = service.getEventListWithPaging(cri);
-		
 		return new AdminGetEventListResponse(eventList);
 	}
 	
@@ -123,6 +124,9 @@ public class AdminEventController {
 	public ResponseEntity<String> modifyEvent(
 			@RequestBody @Valid AdminModifyEventRequest request,
 			BindingResult bs) throws Exception {
+		log.info("************************");
+		log.info("************************");
+
 		if (bs.hasErrors()) {
 			log.info(bs);
 			return new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
@@ -355,4 +359,14 @@ public class AdminEventController {
 		
 		return new AdminGetEventTypeListResponse(eventTypeList);
 	}
+	
+	@GetMapping("/branch/list")
+	public AdminGetBranchListResponse getBranchList() throws Exception {
+		List<BranchVO> branchList = service.getBranchList();
+		
+		log.info(branchList);
+		
+		return new AdminGetBranchListResponse(branchList);
+	}
+	
 }

@@ -2,6 +2,7 @@ package com.devjeans.hype.event.service;
 
 import java.util.List;
 
+import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
 import com.devjeans.hype.event.domain.EventHashtagVO;
@@ -54,5 +55,8 @@ public interface AdminEventService {
 	
 	// 이벤트 타입 조회
 	List<EventTypeVO> getEventTypeList() throws Exception;
+	
+	// 브랜치 조회
+	List<BranchVO> getBranchList() throws Exception;
 
 }
