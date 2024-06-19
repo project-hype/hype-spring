@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
 import com.devjeans.hype.event.domain.EventHashtagVO;
+import com.devjeans.hype.event.domain.EventTypeVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.domain.HashtagVO;
 import com.devjeans.hype.event.mapper.AdminEventMapper;
@@ -24,6 +25,7 @@ import lombok.extern.log4j.Log4j;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	조영욱        최초 생성
+ * 2024.06.19  	조영욱        이벤트 타입 리스트 조회 추가
  * </pre>
  */
 
@@ -186,6 +188,14 @@ public class AdminEventServiceImpl implements AdminEventService {
 	@Override
 	public boolean removeEventHashtag(Long eventId, Long hashtagId) throws Exception {
 		return mapper.deleteEventHashtag(eventId, hashtagId) == 1;
+	}
+	
+	/**
+	 * 행사 타입 리스트 조회
+	 */
+	@Override
+	public List<EventTypeVO> getEventTypeList() throws Exception {
+		return mapper.selectAllEventType();
 	}
 	
 	

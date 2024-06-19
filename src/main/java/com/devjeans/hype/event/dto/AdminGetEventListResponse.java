@@ -38,6 +38,7 @@ public class AdminGetEventListResponse {
 		Long branchId;
 		Long eventTypeId;
 		Long categoryId;
+		String eventTypeName;
 		String title;
 		String imageUrl;
 		String startDate;
@@ -48,6 +49,7 @@ public class AdminGetEventListResponse {
 			this.branchId = event.getBranchId();
 			this.eventTypeId = event.getEventTypeId();
 			this.categoryId = event.getCategoryId();
+			this.eventTypeName = event.getEventType().getEventTypeName();
 			this.title = event.getTitle();
 			this.imageUrl = event.getImageUrl();
 			

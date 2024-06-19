@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
+import com.devjeans.hype.event.domain.EventTypeVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.domain.HashtagVO;
 import com.devjeans.hype.event.dto.AdminCreateCategoryRequest;
@@ -28,6 +29,7 @@ import com.devjeans.hype.event.dto.AdminCreateHashtagRequest;
 import com.devjeans.hype.event.dto.AdminGetCategoryListResponse;
 import com.devjeans.hype.event.dto.AdminGetEventDetailResponse;
 import com.devjeans.hype.event.dto.AdminGetEventListResponse;
+import com.devjeans.hype.event.dto.AdminGetEventTypeListResponse;
 import com.devjeans.hype.event.dto.AdminGetHashtagListResponse;
 import com.devjeans.hype.event.dto.AdminModifyCategoryRequest;
 import com.devjeans.hype.event.dto.AdminModifyEventRequest;
@@ -343,5 +345,14 @@ public class AdminEventController {
 		return service.removeEventHashtag(eventId, hashtagId)
 				? new ResponseEntity<String>("success", HttpStatus.OK)
 				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
+	}
+	
+	@GetMapping("/type/list")
+	public AdminGetEventTypeListResponse getEventTypeList() throws Exception {
+		List<EventTypeVO> eventTypeList = service.getEventTypeList();
+		
+		log.info(eventTypeList);
+		
+		return new AdminGetEventTypeListResponse(eventTypeList);
 	}
 }
