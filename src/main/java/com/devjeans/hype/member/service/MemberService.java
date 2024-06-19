@@ -12,6 +12,7 @@ import com.devjeans.hype.member.domain.MemberVO;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	임원정        최초 생성
+ * 2024.06.18  	임원정        로그인 기능 추가
  * </pre>
  */
 public interface MemberService {

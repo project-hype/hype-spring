@@ -50,7 +50,9 @@ public class MemberServiceImpl implements MemberService {
 	@Transactional
 	public boolean join(MemberVO member) {
 		// password bcrypt encoding
-		member.setPassword(passwordEncoder.encode(member.getPassword()));
+		if(member!=null) {
+			member.setPassword(passwordEncoder.encode(member.getPassword()));
+		}
 		
 		// 회원 정보 insert
 		int result = mapper.insertMember(member);
@@ -83,7 +85,6 @@ public class MemberServiceImpl implements MemberService {
 	public MemberVO getMemberInfo(Long memberId) {
 		return mapper.selectMemberById(memberId);
 	}
-	
 	
 	
 }

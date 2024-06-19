@@ -32,6 +32,8 @@ import lombok.extern.log4j.Log4j;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	임원정        최초 생성
+ * 2024.06.18  	임원정        로그인 기능 추가
+ * 2024.06.19	임원정		회원가입 관련 기능 수정
  * </pre>
  */
 
@@ -56,16 +58,12 @@ public class MemberController {
 		return "member/admin";
 	}
 	
-	@GetMapping("/checkLoginId")
+	@PostMapping("/checkLoginId")
 	public ResponseEntity<String> checkLoginId(@RequestBody MemberVO member) throws Exception {
 		log.info("loginId: "+member.getLoginId());
 		return service.isValidateLoginId(member.getLoginId())
 				? new ResponseEntity<String>("success", HttpStatus.OK)
 				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
-	}
-	
-	@GetMapping("/join")
-	public void register() {
 	}
 	
     @PostMapping("/join")
@@ -98,12 +96,12 @@ public class MemberController {
             loginMember = service.login(member);
  
             HttpSession session = httpRequest.getSession();
-            session.setAttribute("username", loginId);
+            session.setAttribute("memberId", loginMember.getMemberId());
  
             return ResponseEntity.ok(loginMember);
         } else {
             return ResponseEntity.status(
-                       HttpStatus.BAD_REQUEST).body(loginMember);
+                       HttpStatus.UNAUTHORIZED).body(loginMember);
         }
     }
     
@@ -113,5 +111,26 @@ public class MemberController {
     	log.info(member);
     	return member;
     }
-
+    
+    @GetMapping("/session")
+    public ResponseEntity<MemberVO> getSessionInfo(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Long memberId =  (Long) session.getAttribute("memberId");
+            if (memberId != null) {
+                MemberVO member = service.getMemberInfo(memberId);
+                return ResponseEntity.ok(member);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // 세션 무효화
+        }
+        return ResponseEntity.ok().build();
+    }
 }
