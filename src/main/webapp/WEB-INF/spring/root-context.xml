@@ -51,8 +51,8 @@
 	<mybatis-spring:scan base-package="com.devjeans.hype.**.mapper"/>
 	
 	<context:component-scan base-package="com.devjeans.hype.**.service"/>
-	
 	<context:component-scan base-package="com.devjeans.hype.aop"/>
+	<context:component-scan base-package="com.devjeans.hype.util"/>
 	
 	<!-- Enable AspectJ Auto Proxy -->
 	<aop:aspectj-autoproxy />

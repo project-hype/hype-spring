@@ -2,6 +2,8 @@ package com.devjeans.hype.event.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
@@ -29,8 +31,8 @@ public interface AdminEventService {
 	// 행사 CRUD
 	List<EventVO> getEventListWithPaging(Criteria cri) throws Exception;
 	EventVO getEventById(Long eventId) throws Exception;
-	boolean createEvent(EventVO event) throws Exception;
-	boolean modifyEvent(EventVO event) throws Exception;
+	boolean createEvent(EventVO event, MultipartFile file) throws Exception;
+	boolean modifyEvent(EventVO event, MultipartFile file) throws Exception;
 	boolean removeEvent(Long eventId) throws Exception;
 	
 	// 카테고리 CRUD

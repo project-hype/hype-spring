@@ -41,8 +41,6 @@ public class AdminCreateEventRequest {
 	@NotNull
 	private String content;
 	@NotNull
-	private String imageUrl;
-	@NotNull
 	private Date startDate;
 	@NotNull
 	private Date endDate;

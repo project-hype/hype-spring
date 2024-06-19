@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
@@ -99,16 +101,19 @@ public class AdminEventController {
 	 * @return
 	 * @throws Exception
 	 */
-	@PostMapping("")
+	@PostMapping(value = "",consumes = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<String> createEvent(
-			@RequestBody @Valid AdminCreateEventRequest request,
-			BindingResult bs) throws Exception {
+			@RequestPart("request") @Valid AdminCreateEventRequest request,
+			BindingResult bs,
+			@RequestPart("file") MultipartFile file
+			) throws Exception {
 		if (bs.hasErrors()) {
 			log.info(bs);
 			return new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 		}
 		
-		return service.createEvent(request.toEventVO())
+		return service.createEvent(request.toEventVO(), file)
 				? new ResponseEntity<String>("success", HttpStatus.OK)
 				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 	}
@@ -120,19 +125,18 @@ public class AdminEventController {
 	 * @return
 	 * @throws Exception
 	 */
-	@PutMapping("")
+	@PutMapping(value = "",consumes = {
+			MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
 	public ResponseEntity<String> modifyEvent(
-			@RequestBody @Valid AdminModifyEventRequest request,
-			BindingResult bs) throws Exception {
-		log.info("************************");
-		log.info("************************");
-
+			@RequestPart("request") @Valid AdminModifyEventRequest request,
+			BindingResult bs,
+			@RequestPart(value="file", required=false) MultipartFile file) throws Exception {
 		if (bs.hasErrors()) {
 			log.info(bs);
 			return new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 		}
 
-		return service.modifyEvent(request.toEventVO())
+		return service.modifyEvent(request.toEventVO(), file)
 				? new ResponseEntity<String>("success", HttpStatus.OK)
 				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 	}

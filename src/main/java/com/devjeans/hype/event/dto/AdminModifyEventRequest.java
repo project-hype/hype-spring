@@ -31,13 +31,13 @@ public class AdminModifyEventRequest {
 	@NotNull
 	private String content;
 	@NotNull
-	private String imageUrl;
-	@NotNull
 	private Date startDate;
 	@NotNull
 	private Date endDate;
 	@NotNull
 	private String detailAddress;
+	
+	private String imageUrl;
 	
 	public EventVO toEventVO() {
 		ModelMapper modelMapper = new ModelMapper();
