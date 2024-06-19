@@ -3,6 +3,7 @@ package com.devjeans.hype.event.controller;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,10 +46,11 @@ import lombok.extern.log4j.Log4j;
 @AllArgsConstructor
 public class EventController {
 	
+	@Autowired
 	private EventService service;
 	
 	@GetMapping("/list/top")
-	public GetEventListResponse getListTopViewWithFavorite(@RequestParam Long memberId) throws Exception {
+	public GetEventListResponse getListTopViewWithFavorite(@RequestParam(required = false) Long memberId) throws Exception {
 		List<EventVO> list = service.getListTopView(memberId);
 		List<Long> favoriteEventIds = service.getMyFavoriteEvent(memberId);
 		return new GetEventListResponse(list, favoriteEventIds);
@@ -62,7 +64,7 @@ public class EventController {
 	}
 	
 	@GetMapping("/list/{date}")
-	public GetEventListResponse getEventListResponse(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date, @RequestParam Long memberId) throws Exception {
+	public GetEventListResponse getEventListResponse(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date, @RequestParam(required = false) Long memberId) throws Exception {
 		List<EventVO> list = service.getListByDate(date, memberId);
 		List<Long> favoriteEventIds = service.getMyFavoriteEvent(memberId);
 		return new GetEventListResponse(list, favoriteEventIds);
