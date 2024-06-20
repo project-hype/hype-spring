@@ -15,6 +15,7 @@ import com.devjeans.hype.member.domain.MemberVO;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	임원정        최초 생성
+ * 2024.06.18  	임원정        로그인 기능 추가
  * </pre>
  */
 public interface MemberMapper {
@@ -29,7 +30,7 @@ public interface MemberMapper {
 	public int updateMember(MemberVO member); 	// 회원정보 수정
 	
 	// MemberCategory CRUD
-	public List<MemberCategoryVO> selectMemberCategoryListByMemberId(Long memberId);
+	public List<MemberCategoryVO> selectMemberCategoryListByMemberId(Long memberId); //
 	public int insertMemberCategory(MemberCategoryVO memberCategory);
 	public int deleteMemberCategory(MemberCategoryVO memberCategory);
 }
