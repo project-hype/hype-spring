@@ -190,11 +190,10 @@
 		)
 	</insert>
 	
-	<delete id="deleteMemberCategory">
+	<delete id="deleteMemberCategories">
 		DELETE
 		FROM MEMBER_CATEGORY
 		WHERE member_id = #{memberId}
-			AND category_id = #{categoryId}
 	</delete>
 	<!-- ********************************** -->
 	<!-- ****  MemberCategory CRUD 끝   *** -->

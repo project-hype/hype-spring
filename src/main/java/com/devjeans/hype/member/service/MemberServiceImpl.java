@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.member.domain.MemberCategoryVO;
 import com.devjeans.hype.member.domain.MemberVO;
+import com.devjeans.hype.member.dto.MemberUpdateRequest;
 import com.devjeans.hype.member.mapper.MemberMapper;
 
 import lombok.AllArgsConstructor;
@@ -85,6 +86,26 @@ public class MemberServiceImpl implements MemberService {
 	public MemberVO getMemberInfo(Long memberId) {
 		return mapper.selectMemberById(memberId);
 	}
+
+	@Transactional
+    public boolean updateMemberInfo(MemberUpdateRequest request) {
+        // 회원 정보 업데이트 처리
+		request.setPassword(passwordEncoder.encode(request.getPassword()));
+        int updateResult = mapper.updateMember(request);
+        
+        // 기존 관심 카테고리 삭제
+        int deleteResult = mapper.deleteMemberCategories(request.getMemberId());
+        
+        // 새로운 관심 카테고리 추가
+        for (Long categoryId : request.getCategory()) {
+        	MemberCategoryVO mc = new MemberCategoryVO();
+        	mc.setMemberId(request.getMemberId());
+        	mc.setCategoryId(categoryId);
+            int insertResult = mapper.insertMemberCategory(mc);
+        }
+        
+        return updateResult==1;
+    }
 	
 	
 }
