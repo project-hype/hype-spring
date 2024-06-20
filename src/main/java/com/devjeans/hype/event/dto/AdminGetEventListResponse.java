@@ -9,7 +9,7 @@ import com.devjeans.hype.event.domain.EventVO;
 import lombok.Data;
 
 /**
- * 행사 요약정보 리스트 DTO (어드민)
+ * 행사 정보 리스트 조회 Response DTO (어드민)
  * @author 조영욱
  * @since 2024.06.17
  * @version 1.0

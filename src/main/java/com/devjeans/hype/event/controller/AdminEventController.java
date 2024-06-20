@@ -22,9 +22,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
+import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventTypeVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.domain.HashtagVO;
+import com.devjeans.hype.event.dto.AdminCreateBannerRequest;
 import com.devjeans.hype.event.dto.AdminCreateCategoryRequest;
 import com.devjeans.hype.event.dto.AdminCreateEventHashtagRequest;
 import com.devjeans.hype.event.dto.AdminCreateEventRequest;
@@ -32,9 +34,12 @@ import com.devjeans.hype.event.dto.AdminCreateHashtagRequest;
 import com.devjeans.hype.event.dto.AdminGetBranchListResponse;
 import com.devjeans.hype.event.dto.AdminGetCategoryListResponse;
 import com.devjeans.hype.event.dto.AdminGetEventDetailResponse;
+import com.devjeans.hype.event.dto.AdminGetEventHashtagListResponse;
 import com.devjeans.hype.event.dto.AdminGetEventListResponse;
+import com.devjeans.hype.event.dto.AdminGetEventListSummaryResponse;
 import com.devjeans.hype.event.dto.AdminGetEventTypeListResponse;
 import com.devjeans.hype.event.dto.AdminGetHashtagListResponse;
+import com.devjeans.hype.event.dto.AdminModifyBannerOrderRequest;
 import com.devjeans.hype.event.dto.AdminModifyCategoryRequest;
 import com.devjeans.hype.event.dto.AdminModifyEventRequest;
 import com.devjeans.hype.event.dto.AdminModifyHashtagRequest;
@@ -54,6 +59,9 @@ import lombok.extern.log4j.Log4j;
  * ----------  --------    ---------------------------
  * 2024.06.17  	조영욱        최초 생성
  * 2024.06.18  	조영욱        카테고리, 해시태그, 이벤트-해시태그 추가
+ * 2024.06.19  	조영욱        이벤트 타입, 카테고리, 해시태그 리스트 조회 추가
+ * 2024.06.19  	조영욱        이미지 업로드 추가
+ * 2024.06.20  	조영욱        배너 CRUD 추가
  * </pre>
  */
 
@@ -69,7 +77,7 @@ public class AdminEventController {
 	
 	// Event 시작
 	/**
-	 * 행사 리스트 요약 조회
+	 * 행사 리스트 페이지네이션 조회
 	 * @param cri
 	 * @return
 	 * @throws Exception
@@ -78,6 +86,17 @@ public class AdminEventController {
 	public AdminGetEventListResponse getEventList(Criteria cri) throws Exception {
 		List<EventVO> eventList = service.getEventListWithPaging(cri);
 		return new AdminGetEventListResponse(eventList);
+	}
+	
+	/**
+	 * 행사 리스트 요약 조회
+	 * @return
+	 * @throws Exception
+	 */
+	@GetMapping("/list/summary")
+	public AdminGetEventListSummaryResponse getEventSummaryList() throws Exception {
+		List<EventVO> eventList = service.getEventListSummary();
+		return new AdminGetEventListSummaryResponse(eventList);
 	}
 	
 	/**
@@ -304,7 +323,7 @@ public class AdminEventController {
 	 * @throws Exception
 	 */
 	@DeleteMapping("/hashtag/{hashtagId}")
-	public ResponseEntity<String> deleteHashtag(
+	public ResponseEntity<String> removeHashtag(
 			@PathVariable("hashtagId") Long hashtagId) throws Exception {
 		
 		return service.removeHashtag(hashtagId)
@@ -315,6 +334,21 @@ public class AdminEventController {
 	// Hashtag 끝
 	// **********************************************
 	// EventHashtag 시작
+	
+	/**
+	 * 이벤트에 달린 해시태그 리스트 조회
+	 * @return
+	 * @throws Exception
+	 */
+	@GetMapping("/event-hashtag/list/{eventId}")
+	public AdminGetEventHashtagListResponse getHashtagListByEventId(
+			@PathVariable("eventId") Long eventId) throws Exception {
+		List<EventHashtagVO> eventHashtagList = service.getEventHashtagListByEventId(eventId);
+		
+		log.info(eventHashtagList);
+		
+		return new AdminGetEventHashtagListResponse(eventHashtagList);
+	}
 	
 	/**
 	 * 이벤트에 해시태그 연결 추가
@@ -346,7 +380,7 @@ public class AdminEventController {
 	 * @throws Exception
 	 */
 	@DeleteMapping("/event-hashtag/{eventId}/{hashtagId}")
-	public ResponseEntity<String> deleteEventHashtag(
+	public ResponseEntity<String> removeEventHashtag(
 			@PathVariable("eventId") Long eventId,
 			@PathVariable("hashtagId") Long hashtagId) throws Exception {
 		
@@ -355,6 +389,15 @@ public class AdminEventController {
 				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 	}
 	
+	// EventHashtag 끝
+	// **********************************************
+	// 리스트 조회 시작
+	
+	/**
+	 * 행사 타입 리스트 전체 조회
+	 * @return
+	 * @throws Exception
+	 */
 	@GetMapping("/type/list")
 	public AdminGetEventTypeListResponse getEventTypeList() throws Exception {
 		List<EventTypeVO> eventTypeList = service.getEventTypeList();
@@ -364,6 +407,11 @@ public class AdminEventController {
 		return new AdminGetEventTypeListResponse(eventTypeList);
 	}
 	
+	/**
+	 * 지점 리스트 전체 조회
+	 * @return
+	 * @throws Exception
+	 */
 	@GetMapping("/branch/list")
 	public AdminGetBranchListResponse getBranchList() throws Exception {
 		List<BranchVO> branchList = service.getBranchList();
@@ -373,4 +421,57 @@ public class AdminEventController {
 		return new AdminGetBranchListResponse(branchList);
 	}
 	
+	// 리스트 조회 끝
+	// **********************************************
+	// Banner 시작
+	
+	/**
+	 * 배너에 출력할 이벤트 설정
+	 * @param request
+	 * @param bs
+	 * @return
+	 * @throws Exception
+	 */
+	@PostMapping("/banner")
+	public ResponseEntity<String> createBanner(
+			@RequestBody @Valid AdminCreateBannerRequest request,
+			BindingResult bs) throws Exception {
+		if (bs.hasErrors()) {
+			log.info(bs);
+			return new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
+		}
+
+		return service.createBanner(request.toBannerVO())
+				? new ResponseEntity<String>("success", HttpStatus.OK)
+				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);		
+	}
+	
+	/**
+	 * 배너에 출력할 이벤트 해제
+	 * @param eventId
+	 * @return
+	 * @throws Exception
+	 */
+	@DeleteMapping("/banner/{eventId}")
+	public ResponseEntity<String> removeBanner(
+			@PathVariable("eventId") Long eventId) throws Exception {
+		
+		return service.removeBanner(eventId)
+				? new ResponseEntity<String>("success", HttpStatus.OK)
+				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
+	}
+	
+	@PutMapping("/banner/order")
+	public ResponseEntity<String> modifyBannerOrder(
+			@RequestBody @Valid AdminModifyBannerOrderRequest request,
+			BindingResult bs) throws Exception {
+		if (bs.hasErrors()) {
+			log.info(bs);
+			return new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
+		}
+		
+		return service.modifyBannerOrder(request.getBannerList())
+				? new ResponseEntity<String>("success", HttpStatus.OK)
+				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
+	}
 }

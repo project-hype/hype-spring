@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
@@ -30,7 +31,9 @@ import lombok.extern.log4j.Log4j;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	조영욱        최초 생성
- * 2024.06.19  	조영욱        이벤트 타입 리스트 조회 추가
+ * 2024.06.19  	조영욱        이벤트 타입, 카테고리, 해시태그 리스트 조회 추가
+ * 2024.06.19  	조영욱        이미지 업로드 추가
+ * 2024.06.20  	조영욱        배너 CRUD 추가
  * </pre>
  */
 
@@ -52,6 +55,15 @@ public class AdminEventServiceImpl implements AdminEventService {
 			cri = new Criteria();
 		}
 		return mapper.selectEventListWithPaging(cri);
+	}
+	
+	/**
+	 * 이벤트 요약 정보 조회
+	 * eventId와 title만 조회
+	 */
+	@Override
+	public List<EventVO> getEventListSummary() throws Exception {
+		return mapper.selectEventListEventIdAndTitle();
 	}
 	
 	/**
@@ -223,6 +235,35 @@ public class AdminEventServiceImpl implements AdminEventService {
 	@Override
 	public List<BranchVO> getBranchList() throws Exception {
 		return mapper.selectAllBranch();
+	}
+	
+	/**
+	 * 배너에 노출할 행사 추가
+	 */
+	@Override
+	public boolean createBanner(BannerVO banner) throws Exception {
+		return mapper.insertBanner(banner) == 1;
+	}
+	
+	/**
+	 * 배너에 노출되고 있는 행사 배너에서 제외
+	 */
+	@Override
+	public boolean removeBanner(Long eventId) throws Exception {
+		return mapper.deleteBanner(eventId) == 1;
+	}
+	
+	/**
+	 * 배너 리스트로 받아 정렬 우선순위 변경
+	 */
+	@Override
+	public boolean modifyBannerOrder(List<BannerVO> bannerList) throws Exception {
+		int result = 0;
+		for (BannerVO banner : bannerList) {
+			result += mapper.updateBannerOrderPriority(banner);
+		}
+		
+		return result > 0;
 	}
 	
 }

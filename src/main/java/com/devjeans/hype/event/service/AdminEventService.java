@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
@@ -22,7 +23,9 @@ import com.devjeans.hype.event.domain.HashtagVO;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	조영욱        최초 생성
- * 2024.06.19  	조영욱        이벤트 타입 리스트 조회 추가
+ * 2024.06.19  	조영욱        이벤트 타입, 카테고리, 해시태그 리스트 조회 추가
+ * 2024.06.19  	조영욱        이미지 업로드 추가
+ * 2024.06.20  	조영욱        배너 CRUD 추가
  * </pre>
  */
 
@@ -33,7 +36,8 @@ public interface AdminEventService {
 	EventVO getEventById(Long eventId) throws Exception;
 	boolean createEvent(EventVO event, MultipartFile file) throws Exception;
 	boolean modifyEvent(EventVO event, MultipartFile file) throws Exception;
-	boolean removeEvent(Long eventId) throws Exception;
+	boolean removeEvent(Long eventId) throws Exception; 
+	List<EventVO> getEventListSummary() throws Exception;
 	
 	// 카테고리 CRUD
 	List<CategoryVO> getCategoryList() throws Exception;
@@ -60,5 +64,9 @@ public interface AdminEventService {
 	
 	// 브랜치 조회
 	List<BranchVO> getBranchList() throws Exception;
-
+	
+	// 배너 추가 삭제
+	boolean createBanner(BannerVO banner) throws Exception;
+	boolean removeBanner(Long eventId) throws Exception;
+	boolean modifyBannerOrder(List<BannerVO> bannerList) throws Exception;
 }

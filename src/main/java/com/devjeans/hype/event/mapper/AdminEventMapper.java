@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
@@ -22,7 +23,9 @@ import com.devjeans.hype.event.domain.HashtagVO;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	조영욱        최초 생성
- * 2024.06.19  	조영욱        이벤트 타입 리스트 조회 추가
+ * 2024.06.19  	조영욱        이벤트 타입, 카테고리, 해시태그 리스트 조회 추가
+ * 2024.06.19  	조영욱        이미지 업로드 추가
+ * 2024.06.20  	조영욱        배너 CRUD 추가
  * </pre>
  */
 public interface AdminEventMapper {
@@ -34,6 +37,7 @@ public interface AdminEventMapper {
 	public int insertEvent(EventVO event);
 	public int updateEvent(EventVO event);
 	public int deleteEvent (Long eventId);
+	public List<EventVO> selectEventListEventIdAndTitle();
 	
 	// Category CRUD
 	public CategoryVO selectCategoryById(Long categoryId);
@@ -66,4 +70,9 @@ public interface AdminEventMapper {
 	
 	// Branch
 	public List<BranchVO> selectAllBranch();
+	
+	// Banner
+	public int insertBanner(BannerVO banner);
+	public int deleteBanner(Long eventId);
+	public int updateBannerOrderPriority(BannerVO banner);
 }

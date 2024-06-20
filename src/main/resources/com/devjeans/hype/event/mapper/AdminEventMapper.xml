@@ -12,7 +12,9 @@
  * 수정일        	수정자        수정내용
  * ==========  =========    =========
  * 2024.06.17  	조영욱        최초 생성
- * 2024.06.19  	조영욱        이벤트 타입 리스트 조회 추가
+ * 2024.06.19  	조영욱        이벤트 타입, 카테고리, 해시태그 리스트 조회 추가
+ * 2024.06.19  	조영욱        이미지 업로드 추가
+ * 2024.06.20  	조영욱        배너 CRUD 추가
  * </pre>
  -->
 <mapper namespace="com.devjeans.hype.event.mapper.AdminEventMapper">
@@ -177,6 +179,15 @@
 		WHERE event_id = #{eventId}
 	</delete>
 	
+	<select id="selectEventListEventIdAndTitle">
+		SELECT
+			/*+ INDEX_DESC(EVENT PK_EVENT) */
+			event_id,
+			title
+		FROM EVENT
+		WHERE event_id > 0
+	</select>
+	
 	<!-- ********************************** -->
 	<!-- ******     Event CRUD 끝    ****** -->
 	<!-- ********************************** -->
@@ -280,11 +291,25 @@
 	<!-- ****  EventHashtag CRUD 시작   **** -->
 	<!-- ********************************** -->
 	
-	<select id="selectEventHashtagListByEventId" resultType="EventHashtagVO">
+	<resultMap type="HashtagVO" id="hashtag">
+		<result column="hashtag_id" property="hashtagId" />
+		<result column="hashtag_name" property="hashtagName" />
+	</resultMap>
+	
+	<resultMap type="EventHashtagVO" id="eventHashtag">
+		<result column="event_id" property="eventId" />
+		<result column="hashtag_id" property="hashtagId" />
+		<collection property="hashtag" resultMap="hashtag"/>
+	</resultMap>
+	
+	<select id="selectEventHashtagListByEventId" resultMap="eventHashtag">
 		SELECT 
-			event_id,
-			hashtag_id
-		FROM EVENT_HASHTAG
+			EH.event_id,
+			EH.hashtag_id,
+				H.hashtag_name
+		FROM EVENT_HASHTAG EH
+		LEFT JOIN HASHTAG H
+			ON EH.hashtag_id = H.hashtag_id
 		WHERE event_id = #{eventId}
 	</select>
 	
@@ -348,5 +373,36 @@
 
 	<!-- ********************************** -->
 	<!-- ******  SelectAll Tables 끝 ****** -->
+	<!-- ********************************** -->
+	
+	<!-- ********************************** -->
+	<!-- *******  Banner CRUD 시작   ******* -->
+	<!-- ********************************** -->
+	
+	<insert id="insertBanner">
+		INSERT INTO BANNER (
+			event_id,
+			order_priority
+		)
+		VALUES (
+			#{eventId},
+			#{orderPriority}
+		)
+	</insert>
+	
+	<delete id="deleteBanner">
+		DELETE
+		FROM BANNER
+		WHERE event_id = #{eventId}
+	</delete>
+	
+	<update id="updateBannerOrderPriority">
+		UPDATE BANNER
+		SET order_priority = #{orderPriority}
+		WHERE event_id = #{eventId}
+	</update>
+	
+	<!-- ********************************** -->
+	<!-- ********  Banner CRUD 끝   ******** -->
 	<!-- ********************************** -->
 </mapper>
