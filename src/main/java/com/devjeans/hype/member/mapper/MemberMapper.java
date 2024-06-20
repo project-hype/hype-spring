@@ -2,6 +2,7 @@ package com.devjeans.hype.member.mapper;
 
 import java.util.List;
 
+import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.member.domain.MemberCategoryVO;
 import com.devjeans.hype.member.domain.MemberVO;
 import com.devjeans.hype.member.dto.MemberUpdateRequest;
@@ -34,4 +35,7 @@ public interface MemberMapper {
 	public List<MemberCategoryVO> selectMemberCategoryListByMemberId(Long memberId); //
 	public int insertMemberCategory(MemberCategoryVO memberCategory);
 	public int deleteMemberCategories(Long memberId);
+	
+	// Favorite Event
+	public List<EventVO> selectMyFavoriteEvents(Long memberId);
 }
