@@ -3,7 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
  <!-- 
- * 메인페이지 행사 조회 Mybatis 매퍼
+ * 행사 조회 Mybatis 매퍼
  * @author 정은지
  * @since 2024.06.17 
  * @version 1.0
@@ -11,9 +11,11 @@
  * <pre>
  * 수정일        	수정자        수정내용
  * ==========  =========    =========
- * 2024.06.17   정은지         최초 생성
+ * 2024.06.17  정은지         최초 생성
+ * 2024.06.19  정은지         행사 상세 조회 추가
  * </pre>
  -->
+ 
 <mapper namespace="com.devjeans.hype.event.mapper.EventMapper">
 <!-- ************* Event resultMap start ************* -->
 	<resultMap type="EventTypeVO" id="eventType">
@@ -45,6 +47,23 @@
 		<collection property="event" resultMap="event"/>
 	</resultMap>
 	
+	<resultMap type="EventHashtagVO" id="eventHashtag">
+		<result column="event_id" property="eventId" />
+		<result column="hashtag_id" property="hashtagId" />
+	</resultMap>
+	
+	<resultMap type="HashtagVO" id="hashtag">
+		<result column="hashtag_id" property="hashtagId" />
+		<result column="hashtag_name" property="hashtagName" />
+	</resultMap>
+	
+	<resultMap type="StarScoreVO" id="starScore">
+		<result column="member_id" property="memberId" />
+		<result column="event_id" property="eventId" />
+		<result column="score" property="score" />
+		<result column="create_date" property="createDate" />
+	</resultMap>
+	
 	<resultMap type="EventVO" id="event">
 		<id column="event_id" property="eventId" />
 		<result column="title" property="title" />
@@ -60,6 +79,7 @@
 		<collection property="eventType" resultMap="eventType"/>
 		<collection property="branch" resultMap="branch"/>
 		<collection property="category" resultMap="category"/>
+		<collection property="eventHashtagList" resultMap="eventHashtag" />
 	</resultMap>
 	<!-- ************* Event resultMap end ************* -->
 	
@@ -101,7 +121,7 @@
 		           T1.view_count
 		FROM       EVENT T1
 				   LEFT JOIN BRANCH T2
-				ON         T2.branch_id = T1.branch_id
+		ON         T2.branch_id = T1.branch_id
 				   LEFT JOIN EVENT_TYPE T3
 		ON         T3.event_type_id = T1.event_type_id
 		WHERE      #{date} BETWEEN T1.start_date AND T1.end_date
@@ -147,6 +167,55 @@
 		SELECT event_id
 		FROM FAVORITE
 		WHERE member_id = #{memberId}
+	</select>
+	
+	
+	<!-- 행사 상세 정보 조회  --> 
+	<select id="getEventDetail" resultMap="event">
+		SELECT T1.event_id,
+		       T1.branch_id,
+		       T1.event_type_id,
+		       T1.image_url,
+		       T1.title,
+		       T1.content,
+		       T1.start_date,
+		       T1.end_date,
+		       T4.event_type_name,
+		       T1.view_count,
+		       T6.hashtag_name,
+		       T7.category_name,
+		       T3.city_name,
+		       T2.branch_name,
+		       T2.address,
+		       T1.detail_address
+		FROM   EVENT T1
+		       LEFT JOIN BRANCH T2
+		              ON T2.branch_id = T1.branch_id
+		       LEFT JOIN CITY T3
+		              ON T3.city_id = T2.city_id
+		       LEFT JOIN EVENT_TYPE T4
+		              ON T4.event_type_id = T1.event_type_id
+		       LEFT JOIN EVENT_HASHTAG T5
+		              ON T5.event_id = T1.event_id
+		       LEFT JOIN HASHTAG T6
+		              ON T6.hashtag_id = T5.hashtag_id
+		       LEFT JOIN CATEGORY T7
+		              ON T7.category_id = T1.category_id
+		WHERE  T1.event_id = #{eventId}
+	</select>
+	
+	<!-- 행사 별점 조회 -->
+	<select id="getEventStarScore">
+		SELECT score
+		FROM   EVENT T1
+		       LEFT JOIN STAR_SCORE T2
+		              ON T2.event_id = T1.event_id
+		WHERE  T2.event_id = #{eventId}
+	</select>
+	
+	<!-- 행사 해시태그 리스트 조회 -->
+	<select id="getEventHashtagList">
+		
 	</select>
 	
 </mapper>

@@ -20,6 +20,7 @@ import com.devjeans.hype.member.domain.FavoriteVO;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	정은지        최초 생성
+ * 2024.06.19   정은지  	    이벤트 상세 조회 추가
  * </pre>
  */
 public interface EventMapper {
@@ -47,5 +48,13 @@ public interface EventMapper {
 	public int deleteFavorite(@Param("memberId") Long memberId, @Param("eventId") Long eventId);
 
 	// 즐겨찾기 행사 ID 조회
-	public List<Long> getMyFavoriteEvent (@Param("memberId") Long memberId);
+	public List<Long> getMyFavoriteEvent(@Param("memberId") Long memberId);
+	
+	// 이벤트 상세 조회
+	public List<EventVO> getEventDetail(@Param("eventId") Long eventId);
+	
+	// 이벤트 별점 조회
+	public List<Double> getEventStarScore(@Param("eventId") Long eventId);
+	
+	
 }

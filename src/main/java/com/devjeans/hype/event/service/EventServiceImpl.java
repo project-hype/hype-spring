@@ -23,6 +23,7 @@ import lombok.extern.log4j.Log4j;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	정은지        최초 생성
+ * 2024.06.19   정은지        행사 상세 조회 추가
  * </pre>
  */
 @Log4j
@@ -78,12 +79,30 @@ public class EventServiceImpl implements EventService {
 	}
 
 	/**
-	 * 내가 즐겨찾기한 행사
+	 * 내가 즐겨찾기한 행사 조회 
 	 */
 	@Override
 	public List<Long> getMyFavoriteEvent(Long memberId) throws Exception {
 		
 		return mapper.getMyFavoriteEvent(memberId);
+	}
+
+	/**
+	 * 행사 상세 조회
+	 */
+	@Override
+	public List<EventVO> getEventDetail(Long eventId) throws Exception {
+		
+		return mapper.getEventDetail(eventId);
+	}
+
+	/**
+	 * 행사 별점 조회
+	 */
+	@Override
+	public List<Double> getEventStarScore(Long eventId) throws Exception {
+		
+		return mapper.getEventStarScore(eventId);
 	}
 
 
