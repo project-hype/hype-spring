@@ -30,7 +30,7 @@ public interface MemberMapper {
 	public int updateMember(MemberVO member); 	// 회원정보 수정
 	
 	// MemberCategory CRUD
-	public List<MemberCategoryVO> selectMemberCategoryListByMemberId(Long memberId);
+	public List<MemberCategoryVO> selectMemberCategoryListByMemberId(Long memberId); //
 	public int insertMemberCategory(MemberCategoryVO memberCategory);
 	public int deleteMemberCategory(MemberCategoryVO memberCategory);
 }

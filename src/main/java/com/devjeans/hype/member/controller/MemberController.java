@@ -46,18 +46,7 @@ public class MemberController {
 	private BCryptPasswordEncoder passwordEncoder;
 	private MemberService service;
 	
-	@GetMapping("/mypage")
-	public String doMember() {
-		log.info("logined member");
-		return "member/mypage";
-	}
-	
-	@GetMapping("/admin")
-	public String doAdmin() {
-		log.info("admin only");
-		return "member/admin";
-	}
-	
+	// 회원가입 시 중복 ID가 있는지 확인
 	@PostMapping("/checkLoginId")
 	public ResponseEntity<String> checkLoginId(@RequestBody MemberVO member) throws Exception {
 		log.info("loginId: "+member.getLoginId());
