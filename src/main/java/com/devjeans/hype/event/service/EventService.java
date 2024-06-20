@@ -3,8 +3,6 @@ package com.devjeans.hype.event.service;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 /**
  * 메인페이지 행사 서비스 인터페이스
  * @author 정은지 
@@ -21,9 +19,7 @@ import org.apache.ibatis.annotations.Param;
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
-import com.devjeans.hype.event.domain.HashtagVO;
-import com.devjeans.hype.event.domain.StarScoreVO;
-import com.devjeans.hype.member.domain.FavoriteVO;
+import com.devjeans.hype.event.dto.EventFilterRequest;
 
 /**
  * 메인페이지 행사조회 서비스 인터페이스
@@ -36,6 +32,7 @@ import com.devjeans.hype.member.domain.FavoriteVO;
  * ----------  --------    ---------------------------
  * 2024.06.17  	정은지        최초 생성
  * 2024.06.19   정은지 		이벤트 상세 조회 추가
+ * 2024.06.20   조영욱       이벤트 필터로 조회 추가
  * </pre>
  */
 
@@ -63,4 +60,5 @@ public interface EventService {
 	
 	boolean getEventFavoriteStatus(Long memberId, Long eventId) throws Exception;
 	
+	List<EventVO> getListWithFilter(EventFilterRequest dto) throws Exception;
 }
