@@ -18,6 +18,7 @@ import lombok.Data;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	정은지        최초 생성
+ * 2024.06.20   정은지        category_name 컬럼 추가
  * </pre>
  */
 
@@ -43,6 +44,7 @@ public class GetEventListResponse {
 		String startDate;
 		String endDate;
 		String branchName;
+		String categoryName;
 		String eventTypeName;
 		int viewCount;
 		boolean isFavorite;
@@ -59,6 +61,7 @@ public class GetEventListResponse {
 			this.endDate = format.format(event.getEndDate());
 			
 			this.branchName = event.getBranch().getBranchName();
+			this.categoryName = event.getCategory().getCategoryName();
 			this.eventTypeName = event.getEventType().getEventTypeName();
 			this.viewCount = event.getViewCount();
 			this.isFavorite = isFavorite;

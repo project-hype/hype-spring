@@ -6,9 +6,9 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.devjeans.hype.event.domain.BannerVO;
+import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.mapper.EventMapper;
-import com.devjeans.hype.member.domain.FavoriteVO;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -103,6 +103,33 @@ public class EventServiceImpl implements EventService {
 	public List<Double> getEventStarScore(Long eventId) throws Exception {
 		
 		return mapper.getEventStarScore(eventId);
+	}
+
+	/**
+	 * 행사 해시태그 리스트 조회
+	 */
+	@Override
+	public List<EventHashtagVO> getEventHashtagList(Long eventId) throws Exception {
+		
+		return mapper.getEventHashtagList(eventId);
+	}
+
+	/**
+	 * 행사 즐겨찾기 카운트 조회
+	 */
+	@Override
+	public int getEventFavoriteCount(Long eventId) throws Exception {
+
+		return mapper.getEventFavoriteCount(eventId);
+	}
+
+	/**
+	 * 행사 즐겨찾기 여부 조회 
+	 */
+	@Override
+	public boolean getEventFavoriteStatus(Long memberId, Long eventId) throws Exception {
+
+		return mapper.getEventFavoriteStatus(memberId, eventId);
 	}
 
 

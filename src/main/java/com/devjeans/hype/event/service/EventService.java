@@ -19,7 +19,10 @@ import org.apache.ibatis.annotations.Param;
  */
 
 import com.devjeans.hype.event.domain.BannerVO;
+import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
+import com.devjeans.hype.event.domain.HashtagVO;
+import com.devjeans.hype.event.domain.StarScoreVO;
 import com.devjeans.hype.member.domain.FavoriteVO;
 
 /**
@@ -53,4 +56,11 @@ public interface EventService {
 	List<EventVO> getEventDetail(Long eventId) throws Exception;
 	
 	List<Double> getEventStarScore(Long eventId) throws Exception;
+	
+	List<EventHashtagVO> getEventHashtagList(Long eventId) throws Exception;
+	
+	int getEventFavoriteCount(Long eventId) throws Exception;
+	
+	boolean getEventFavoriteStatus(Long memberId, Long eventId) throws Exception;
+	
 }

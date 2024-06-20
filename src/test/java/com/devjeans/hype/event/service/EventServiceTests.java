@@ -2,6 +2,7 @@ package com.devjeans.hype.event.service;
 
 import static org.junit.Assert.*;
 
+
 import java.util.Date;
 
 import org.junit.Test;
@@ -123,6 +124,38 @@ public class EventServiceTests {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	} 
+	}
+	
+	@Test
+	public void testGetEventHashtagList() {
+		
+		try {
+			service.getEventHashtagList(2L).forEach(hashtag->log.info(hashtag));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetEventFavoriteCount() {
+		
+		try {
+			int count = service.getEventFavoriteCount(2L);
+			assertEquals(count, 1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetEventFavoriteStatus() {
+		
+		try {
+			boolean status = service.getEventFavoriteStatus(1L, 2L);
+			assertTrue(status);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 }

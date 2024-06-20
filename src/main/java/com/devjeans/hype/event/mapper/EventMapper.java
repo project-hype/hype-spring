@@ -7,8 +7,9 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import com.devjeans.hype.event.domain.BannerVO;
+import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
-import com.devjeans.hype.member.domain.FavoriteVO;
+import com.devjeans.hype.event.domain.StarScoreVO;
 
 /**
  * 메인페이지 행사 매퍼 인터페이스
@@ -56,5 +57,15 @@ public interface EventMapper {
 	// 이벤트 별점 조회
 	public List<Double> getEventStarScore(@Param("eventId") Long eventId);
 	
+	// 이벤트 해시태그 리스트 조회
+	public List<EventHashtagVO> getEventHashtagList(@Param("eventId") Long eventId);
 	
+	// 이벤트 즐겨찾기 수 조회
+	public int getEventFavoriteCount(@Param("eventId") Long eventId);
+	
+	// 이벤트 즐겨찾기 여부 조회 
+	public boolean getEventFavoriteStatus(@Param("memberId") Long memberId, @Param("eventId") Long eventId);
+	
+	// 별점 작성
+	public int insertScore(StarScoreVO starScore); 
 }

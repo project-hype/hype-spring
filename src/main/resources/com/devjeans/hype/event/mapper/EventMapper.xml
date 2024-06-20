@@ -50,6 +50,7 @@
 	<resultMap type="EventHashtagVO" id="eventHashtag">
 		<result column="event_id" property="eventId" />
 		<result column="hashtag_id" property="hashtagId" />
+		<collection property="hashtag" resultMap="hashtag" />
 	</resultMap>
 	
 	<resultMap type="HashtagVO" id="hashtag">
@@ -88,65 +89,74 @@
 	</select>
 	
 	<select id="getTopViewEvents" resultMap="event">
-		SELECT T1.event_id,
-		       T1.branch_id,
-		       T1.event_type_id,
-		       T1.image_url,
-		       T1.title,
-		       T1.start_date,
-		       T1.end_date,
-		       T2.branch_name,
-		       T3.event_type_name,
-		       T1.view_count
-		FROM   EVENT T1
-		       LEFT JOIN BRANCH T2
-		               ON T2.branch_id = T1.branch_id
-		       LEFT JOIN EVENT_TYPE T3
-		               ON T3.event_type_id = T1.event_type_id
-		WHERE  TO_CHAR(sysdate, 'YYYY-MM-DD') BETWEEN T1.start_date AND T1.end_date
-		ORDER  BY T1.view_count DESC
-		FETCH FIRST 10 ROWS ONLY 
+		SELECT E.event_id,
+		       E.branch_id,
+		       E.event_type_id,
+		       E.image_url,
+		       E.title,
+		       E.start_date,
+		       E.end_date,
+		       B.branch_name,
+               C.category_name,
+		       ET.event_type_name,
+		       E.view_count
+		FROM   EVENT E
+		       LEFT JOIN BRANCH B
+		               ON B.branch_id = E.branch_id
+		       LEFT JOIN EVENT_TYPE ET
+		               ON ET.event_type_id = E.event_type_id
+               LEFT JOIN CATEGORY C
+                       ON C.category_id = E.category_id
+		WHERE  TO_CHAR(sysdate, 'YYYY-MM-DD') BETWEEN E.start_date AND E.end_date
+		ORDER  BY E.view_count DESC
+		FETCH FIRST 10 ROWS ONLY
 	</select>
 	
 	<select id="getEventsByDate" resultMap="event" parameterType="java.util.Date">
-		SELECT     T1.event_id,
-		           T1.branch_id,
-		           T1.event_type_id,
-		           T1.image_url,
-		           T1.title,
-		           T1.start_date,
-		           T1.end_date,
-		           T2.branch_name,
-		           T3.event_type_name,
-		           T1.view_count
-		FROM       EVENT T1
-				   LEFT JOIN BRANCH T2
-		ON         T2.branch_id = T1.branch_id
-				   LEFT JOIN EVENT_TYPE T3
-		ON         T3.event_type_id = T1.event_type_id
-		WHERE      #{date} BETWEEN T1.start_date AND T1.end_date
+		SELECT E.event_id,
+		       E.branch_id,
+		       E.event_type_id,
+		       E.image_url,
+		       E.title,
+		       E.start_date,
+		       E.end_date,
+		       B.branch_name,
+		       C.category_name,
+		       ET.event_type_name,
+		       E.view_count
+		FROM   EVENT E
+		       LEFT JOIN BRANCH B
+		              ON B.branch_id = E.branch_id
+		       LEFT JOIN EVENT_TYPE ET
+		              ON ET.event_type_id = E.event_type_id
+		       LEFT JOIN CATEGORY C
+		              ON C.category_id = E.category_id
+		WHERE  #{date} BETWEEN E.start_date AND E.end_date
 		FETCH FIRST 6 ROWS ONLY
 	</select>
 	
 	<select id="getBannerEvents" resultMap="banner">
-		SELECT T2.event_id,
-		       T2.branch_id,
-		       T2.event_type_id,
-		       T2.image_url,
-		       T2.title,
-		       T2.start_date,
-		       T2.end_date,
-		       T3.branch_name,
-		       T4.event_type_name,
-		       T1.order_priority
-		FROM   BANNER T1
-		       INNER JOIN EVENT T2
-		               ON T2.event_id = T1.event_id
-		       LEFT JOIN BRANCH T3
-		              ON T3.branch_id = T2.branch_id
-		       LEFT JOIN EVENT_TYPE T4
-		              ON T4.event_type_id = T2.event_type_id
-		ORDER  BY T1.order_priority 
+		SELECT E.event_id,
+		       E.branch_id,
+		       E.event_type_id,
+		       E.image_url,
+		       E.title,
+		       E.start_date,
+		       E.end_date,
+		       B.branch_name,
+               C.category_name,
+		       ET.event_type_name,
+		       B.order_priority
+		FROM   BANNER B
+		       INNER JOIN EVENT E
+		               ON E.event_id = B.event_id
+		       LEFT JOIN BRANCH B
+		              ON B.branch_id = E.branch_id
+		       LEFT JOIN EVENT_TYPE ET
+		              ON ET.event_type_id = E.event_type_id
+               LEFT JOIN CATEGORY C
+                      ON C.category_id = E.category_id
+		ORDER  BY B.order_priority
 	</select>
 	
 	<insert id="insertFavorite">
@@ -172,50 +182,77 @@
 	
 	<!-- 행사 상세 정보 조회  --> 
 	<select id="getEventDetail" resultMap="event">
-		SELECT T1.event_id,
-		       T1.branch_id,
-		       T1.event_type_id,
-		       T1.image_url,
-		       T1.title,
-		       T1.content,
-		       T1.start_date,
-		       T1.end_date,
-		       T4.event_type_name,
-		       T1.view_count,
-		       T6.hashtag_name,
-		       T7.category_name,
-		       T3.city_name,
-		       T2.branch_name,
-		       T2.address,
-		       T1.detail_address
-		FROM   EVENT T1
-		       LEFT JOIN BRANCH T2
-		              ON T2.branch_id = T1.branch_id
-		       LEFT JOIN CITY T3
-		              ON T3.city_id = T2.city_id
-		       LEFT JOIN EVENT_TYPE T4
-		              ON T4.event_type_id = T1.event_type_id
-		       LEFT JOIN EVENT_HASHTAG T5
-		              ON T5.event_id = T1.event_id
-		       LEFT JOIN HASHTAG T6
-		              ON T6.hashtag_id = T5.hashtag_id
-		       LEFT JOIN CATEGORY T7
-		              ON T7.category_id = T1.category_id
-		WHERE  T1.event_id = #{eventId}
+		SELECT E.event_id,
+		       E.branch_id,
+		       E.event_type_id,
+		       E.image_url,
+		       E.title,
+		       E.content,
+		       E.start_date,
+		       E.end_date,
+		       ET.event_type_name,
+		       E.view_count,
+		       CA.category_name,
+		       C.city_name,
+		       B.branch_name,
+		       B.address,
+		       E.detail_address
+		FROM   EVENT E
+		       LEFT JOIN BRANCH B
+		              ON B.branch_id = E.branch_id
+		       LEFT JOIN CITY C
+		              ON C.city_id = B.city_id
+		       LEFT JOIN EVENT_TYPE ET
+		              ON ET.event_type_id = E.event_type_id
+		       LEFT JOIN CATEGORY CA
+		              ON CA.category_id = E.category_id
+		WHERE  E.event_id = #{eventId}
 	</select>
 	
 	<!-- 행사 별점 조회 -->
 	<select id="getEventStarScore">
 		SELECT score
-		FROM   EVENT T1
-		       LEFT JOIN STAR_SCORE T2
-		              ON T2.event_id = T1.event_id
-		WHERE  T2.event_id = #{eventId}
+		FROM   EVENT E
+		       LEFT JOIN STAR_SCORE SS
+		              ON SS.event_id = E.event_id
+		WHERE  SS.event_id = #{eventId}
 	</select>
 	
 	<!-- 행사 해시태그 리스트 조회 -->
-	<select id="getEventHashtagList">
-		
+	<select id="getEventHashtagList" resultMap="eventHashtag">
+		SELECT H.hashtag_id, H.hashtag_name
+		FROM   EVENT E
+		       INNER JOIN EVENT_HASHTAG EH
+		               ON EH.event_id = E.event_id
+		       INNER JOIN HASHTAG H
+		               ON H.hashtag_id = EH.hashtag_id
+		WHERE  E.event_id = #{eventId} 
+	</select> 
+	
+	<!-- 행사 즐겨찾기 수 조회 -->
+	<select id="getEventFavoriteCount">
+		SELECT COUNT(*)
+		FROM   FAVORITE
+		WHERE  event_id = #{eventId}
 	</select>
+	
+	<!-- 행사 즐겨찾기 여부 조회 -->
+	<select id="getEventFavoriteStatus">
+		SELECT 
+		        CASE WHEN count(*) > 0 THEN 1
+		        ELSE 0
+		        END AS isFavorite
+		FROM FAVORITE
+		WHERE member_id = #{memberId} AND event_id = #{eventId}
+	</select>
+	
+	<!-- 별점 작성 -->
+<!-- 	<insert id="insertScore">
+		INSERT INTO STAR_SCORE
+		VALUES      (#{memberId},
+		             #{eventId},
+		             #{score},
+		             sysdate); 
+	</insert> -->
 	
 </mapper>
