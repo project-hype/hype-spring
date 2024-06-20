@@ -46,7 +46,10 @@ public class GetEventDetailResponse {
 		String imageUrl;
 		String startDate;
 		String endDate;
+		String cityName;
 		String branchName;
+		String address;
+		String detail_address;
 		String categoryName;
 		String eventTypeName;
 		int viewCount;
@@ -73,7 +76,11 @@ public class GetEventDetailResponse {
 			this.startDate = format.format(event.getStartDate());
 			this.endDate = format.format(event.getEndDate());
 
+			this.cityName = event.getBranch().getCity().getCityName();
 			this.branchName = event.getBranch().getBranchName();
+			this.address = event.getBranch().getAddress();
+			
+			this.detail_address = event.getDetailAddress();
 			this.categoryName = event.getCategory().getCategoryName();
 			this.eventTypeName = event.getEventType().getEventTypeName();
 			this.viewCount = event.getViewCount();
