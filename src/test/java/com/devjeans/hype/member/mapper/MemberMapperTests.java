@@ -147,10 +147,11 @@ public class MemberMapperTests {
 	 */
 	@Test
 	public void testDeleteMember() {
-		int result = mapper.deleteMember(1002L);
-		assertEquals(1, result);
+		mapper.deleteMemberCategories(1029L);
+        // 부모 레코드(MEMBER) 삭제
+        int result = mapper.deleteMember(1029L);
+        assertEquals(1, result);
 	}
-	
 	
 	/******************************
 	 ** MemberCategory CRUD Test **

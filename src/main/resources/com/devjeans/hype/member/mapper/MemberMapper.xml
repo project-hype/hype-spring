@@ -112,20 +112,11 @@
 			M.birthdate,
 			M.create_date,
 			M.city_id,
-				C.city_name,
 			M.prefer_branch_id,
-				B.branch_name,
-			MC.category_id,
-			CA.category_name
+			MC.category_id
 		FROM MEMBER M
-		LEFT JOIN CITY C
-			ON M.city_id = C.city_id
-		LEFT JOIN BRANCH B
-			ON M.prefer_branch_id = B.branch_id
 		LEFT JOIN MEMBER_CATEGORY MC
 			ON M.member_id = MC.member_id
-		LEFT JOIN CATEGORY CA
-			ON MC.category_id = CA.category_id
 		WHERE login_id = #{loginId}
 			AND password = #{password}
 	</select>

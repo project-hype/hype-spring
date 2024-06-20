@@ -14,6 +14,7 @@ import com.devjeans.hype.member.dto.MemberUpdateRequest;
  * ----------  --------    ---------------------------
  * 2024.06.17  	임원정        최초 생성
  * 2024.06.18  	임원정        로그인 기능 추가
+ * 2024.06.20	임원정        회원정보 수정, 삭제 기능 추가
  * </pre>
  */
 public interface MemberService {
@@ -21,7 +22,8 @@ public interface MemberService {
 	boolean isValidateLoginId(String loginId) throws Exception;	// ID 중복 확인
 	boolean join(MemberVO member);	// 회원가입
 	MemberVO login(MemberVO member);	// 로그인
-	String getUserPassword(String loginId);
+	String getUserPassword(String loginId);	//
 	MemberVO getMemberInfo(Long memberId);
 	boolean updateMemberInfo(MemberUpdateRequest request);
+	boolean deleteMember(Long memberId);
 }
