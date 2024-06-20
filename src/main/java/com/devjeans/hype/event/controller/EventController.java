@@ -18,9 +18,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.devjeans.hype.event.domain.BannerVO;
+import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
+import com.devjeans.hype.event.domain.StarScoreVO;
 import com.devjeans.hype.event.dto.CreateFavoriteEventRequest;
 import com.devjeans.hype.event.dto.GetBannerEventListResponse;
+import com.devjeans.hype.event.dto.GetEventDetailResponse;
 import com.devjeans.hype.event.dto.GetEventListResponse;
 import com.devjeans.hype.event.service.EventService;
 
@@ -88,5 +91,15 @@ public class EventController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
 		}
+	}
+	
+	@GetMapping("/{eventId}")
+	public GetEventDetailResponse getEventDetail(@PathVariable("eventId") Long eventId, @RequestParam(required = false) Long memberId) throws Exception {
+		List<EventVO> event = service.getEventDetail(eventId);
+		List<EventHashtagVO> hashtags = service.getEventHashtagList(eventId);
+		List<Double> scores = service.getEventStarScore(eventId);
+        int favoriteCount = service.getEventFavoriteCount(eventId);
+        boolean isFavorite = service.getEventFavoriteStatus(memberId, eventId);
+		return new GetEventDetailResponse(event, hashtags, scores, favoriteCount, isFavorite);
 	}
 }

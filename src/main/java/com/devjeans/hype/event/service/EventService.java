@@ -3,6 +3,8 @@ package com.devjeans.hype.event.service;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 /**
  * 메인페이지 행사 서비스 인터페이스
  * @author 정은지 
@@ -17,7 +19,10 @@ import java.util.List;
  */
 
 import com.devjeans.hype.event.domain.BannerVO;
+import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
+import com.devjeans.hype.event.domain.HashtagVO;
+import com.devjeans.hype.event.domain.StarScoreVO;
 import com.devjeans.hype.member.domain.FavoriteVO;
 
 /**
@@ -30,6 +35,7 @@ import com.devjeans.hype.member.domain.FavoriteVO;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	정은지        최초 생성
+ * 2024.06.19   정은지 		이벤트 상세 조회 추가
  * </pre>
  */
 
@@ -46,5 +52,15 @@ public interface EventService {
 	boolean deleteFavoriteEvent(Long memberId, Long eventId) throws Exception;
 	
 	List<Long> getMyFavoriteEvent(Long memberId) throws Exception;
+	
+	List<EventVO> getEventDetail(Long eventId) throws Exception;
+	
+	List<Double> getEventStarScore(Long eventId) throws Exception;
+	
+	List<EventHashtagVO> getEventHashtagList(Long eventId) throws Exception;
+	
+	int getEventFavoriteCount(Long eventId) throws Exception;
+	
+	boolean getEventFavoriteStatus(Long memberId, Long eventId) throws Exception;
 	
 }

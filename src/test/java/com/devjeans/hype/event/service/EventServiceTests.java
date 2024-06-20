@@ -2,6 +2,7 @@ package com.devjeans.hype.event.service;
 
 import static org.junit.Assert.*;
 
+
 import java.util.Date;
 
 import org.junit.Test;
@@ -23,6 +24,7 @@ import lombok.extern.log4j.Log4j;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	정은지        최초 생성
+ * 2024.06.19   정은지        행사 상세 조회 테스트 추가
  * </pre>
  */
 
@@ -102,6 +104,58 @@ public class EventServiceTests {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	@Test
+	public void testGetEventDetail() {
+		
+		try {
+			service.getEventDetail(3L).forEach(event->log.info(event));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetEventStarScore() {
+		
+		try {
+			service.getEventStarScore(1L).forEach(score->log.info(score));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetEventHashtagList() {
+		
+		try {
+			service.getEventHashtagList(2L).forEach(hashtag->log.info(hashtag));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetEventFavoriteCount() {
+		
+		try {
+			int count = service.getEventFavoriteCount(2L);
+			assertEquals(count, 1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetEventFavoriteStatus() {
+		
+		try {
+			boolean status = service.getEventFavoriteStatus(1L, 2L);
+			assertTrue(status);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
