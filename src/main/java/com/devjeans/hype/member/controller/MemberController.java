@@ -94,7 +94,7 @@ public class MemberController {
         }
     }
     
-    @GetMapping("/mypage/{memberId}")
+    @GetMapping("/getMemberInfo/{memberId}")
     public MemberVO getMember(@PathVariable("memberId") Long memberId) {
     	MemberVO member = service.getMemberInfo(memberId);
     	log.info(member);

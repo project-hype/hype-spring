@@ -103,7 +103,7 @@
 	</select>
 	
 	<select id="selectMemberByLoginIdAndPassword" resultMap="member">
-		SELECT member_id
+		SELECT member_id, is_admin
 		FROM MEMBER
 		WHERE login_id = #{loginId}
 			AND password = #{password}
