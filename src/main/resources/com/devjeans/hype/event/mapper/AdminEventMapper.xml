@@ -15,6 +15,7 @@
  * 2024.06.19  	조영욱        이벤트 타입, 카테고리, 해시태그 리스트 조회 추가
  * 2024.06.19  	조영욱        이미지 업로드 추가
  * 2024.06.20  	조영욱        배너 CRUD 추가
+ * 2024.06.21  	조영욱        페이지네이션의 더보기 출력 on/off를 위한 메소드 추가
  * </pre>
  -->
 <mapper namespace="com.devjeans.hype.event.mapper.AdminEventMapper">
@@ -130,6 +131,15 @@
 		ORDER BY event_id DESC
 		OFFSET (#{page}-1) * #{amount}
 		ROWS FETCH FIRST #{amount} ROWS ONLY
+	</select>
+	
+	<!-- 더보기 출력 on off를 위한 select -->
+	<select id="selectNextEvent">
+		SELECT E.event_id
+		FROM EVENT E
+		ORDER BY event_id DESC
+		OFFSET #{page} * #{amount}
+		ROWS FETCH FIRST 1 ROWS ONLY
 	</select>
 	
 	<insert id="insertEvent">

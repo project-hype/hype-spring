@@ -23,8 +23,13 @@ import com.devjeans.hype.event.dto.EventFilterRequest;
  * ----------  --------    ---------------------------
  * 2024.06.17  	정은지        최초 생성
  * 2024.06.19   정은지  	    이벤트 상세 조회 추가
+<<<<<<< HEAD
  * 2024.06.20   조영욱        이벤트 필터로 조회 추가
  * 2024.06.21   정은지        별점 작성, 조회수 증가 기능 추가 
+=======
+ * 2024.06.20   조영욱        이벤트 필터로 조회 추가, 카테고리/해시태그 검색 추가
+ * 2024.06.21   정은지        별점 작성 기능 추가 
+>>>>>>> dev
  * </pre>
  */
 public interface EventMapper {
@@ -80,4 +85,6 @@ public interface EventMapper {
 	
 	// 조회수 증가
 	public int updateViewCount(@Param("eventId") Long eventId);
+	
+	public Integer selectNextEvent(EventFilterRequest dto);
 }

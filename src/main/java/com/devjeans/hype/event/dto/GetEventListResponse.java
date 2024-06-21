@@ -25,6 +25,7 @@ import lombok.Data;
 @Data
 public class GetEventListResponse {
 	List<GetEventResponse> eventList = new ArrayList<>();
+	boolean isNextEventExist;
 
 	public GetEventListResponse(List<EventVO> eventVO, List<Long> favoriteEventIds) {
 		
@@ -32,6 +33,11 @@ public class GetEventListResponse {
 			boolean isFavorite = favoriteEventIds.contains(event.getEventId());
 			eventList.add(new GetEventResponse(event, isFavorite));
 		});
+	}
+	
+	public GetEventListResponse(List<EventVO> eventVO, List<Long> favoriteEventIds, boolean isNextEventExist) {
+		this(eventVO, favoriteEventIds);
+		this.isNextEventExist = isNextEventExist;
 	}
 
 	@Data
@@ -66,6 +72,5 @@ public class GetEventListResponse {
 			this.viewCount = event.getViewCount();
 			this.isFavorite = isFavorite;
 		}
-	
 	}
 }

@@ -18,19 +18,26 @@ import lombok.Data;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	조영욱        최초 생성
+ * 2024.06.21  	조영욱        행사 조회에 페이지네이션 출력 후 더 출력할 행사 있는지 반환 추가
  * </pre>
  */
 
 @Data
 public class AdminGetEventListResponse {
 	List<GetEventResponse> eventList = new ArrayList<>();
+	boolean isNextEventExist;
 
 	public AdminGetEventListResponse(List<EventVO> eventVOList) {
 		eventVOList.stream().forEach((event) -> {
 			eventList.add(new GetEventResponse(event));
 		});
-		
 	}
+	
+	public AdminGetEventListResponse(List<EventVO> eventVOList, boolean isNextEventExist) {
+		this(eventVOList);
+		this.isNextEventExist = isNextEventExist;
+	}
+	
 	
 	@Data
 	public static class GetEventResponse {

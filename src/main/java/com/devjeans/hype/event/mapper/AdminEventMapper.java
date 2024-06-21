@@ -26,6 +26,7 @@ import com.devjeans.hype.event.domain.HashtagVO;
  * 2024.06.19  	조영욱        이벤트 타입, 카테고리, 해시태그 리스트 조회 추가
  * 2024.06.19  	조영욱        이미지 업로드 추가
  * 2024.06.20  	조영욱        배너 CRUD 추가
+ * 2024.06.21  	조영욱        페이지네이션의 더보기 출력 on/off를 위한 메소드 추가
  * </pre>
  */
 public interface AdminEventMapper {
@@ -34,6 +35,7 @@ public interface AdminEventMapper {
 	// Event CRUD
 	public EventVO selectEventById(Long eventId);
 	public List<EventVO> selectEventListWithPaging(Criteria cri);
+	public Integer selectNextEvent(Criteria cri);
 	public int insertEvent(EventVO event);
 	public int updateEvent(EventVO event);
 	public int deleteEvent (Long eventId);
