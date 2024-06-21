@@ -57,6 +57,47 @@
 		<collection property="category" resultMap="category"/>
 	</resultMap>
 	
+	<!-- Event -->
+	<resultMap type="EventTypeVO" id="eventType">
+		<result column="event_type_id" property="eventTypeId" />
+		<result column="event_type_name" property="eventTypeName" />
+	</resultMap>
+	
+	<resultMap type="EventHashtagVO" id="eventHashtag">
+		<result column="event_id" property="eventId" />
+		<result column="hashtag_id" property="hashtagId" />
+		<collection property="hashtag" resultMap="hashtag" />
+	</resultMap>
+	
+	<resultMap type="HashtagVO" id="hashtag">
+		<result column="hashtag_id" property="hashtagId" />
+		<result column="hashtag_name" property="hashtagName" />
+	</resultMap>
+	
+	<resultMap type="StarScoreVO" id="starScore">
+		<result column="member_id" property="memberId" />
+		<result column="event_id" property="eventId" />
+		<result column="score" property="score" />
+		<result column="create_date" property="createDate" />
+	</resultMap>
+	
+	<resultMap type="EventVO" id="event">
+		<id column="event_id" property="eventId" />
+		<result column="title" property="title" />
+		<result column="content" property="content" />
+		<result column="image_url" property="imageUrl" />
+ 		<result column="branch_id" property="branchId" />
+ 		<result column="category_id" property="categoryId" />
+		<result column="event_type_id" property="eventTypeId" /> 
+		<result column="start_date" property="startDate" />
+		<result column="end_date" property="endDate" />
+		<result column="view_count" property="viewCount" />
+		<result column="detail_address" property="detailAddress" />
+		<collection property="eventType" resultMap="eventType"/>
+		<collection property="branch" resultMap="branch"/>
+		<collection property="category" resultMap="category"/>
+		<collection property="eventHashtagList" resultMap="eventHashtag" />
+	</resultMap>
 	<!-- ************* Member resultMap end ************* -->
 	
 	<!-- ********************************** -->
@@ -189,4 +230,36 @@
 	<!-- ********************************** -->
 	<!-- ****  MemberCategory CRUD 끝   *** -->
 	<!-- ********************************** -->
+	
+	<select id="selectMyFavoriteEvents" resultMap ="event">
+		SELECT E.event_id,
+		       E.branch_id,
+		       E.event_type_id,
+		       E.image_url,
+		       E.title,
+		       E.content,
+		       E.start_date,
+		       E.end_date,
+		       ET.event_type_name,
+		       E.view_count,
+		       CA.category_name,
+		       C.city_name,
+		       B.branch_name,
+		       B.address,
+		       E.detail_address
+		FROM   EVENT E
+		       JOIN FAVORITE F
+		       		ON E.event_id = F.event_id
+		       LEFT JOIN BRANCH B
+		       		ON B.branch_id = E.branch_id
+		       LEFT JOIN CITY C
+		       		ON C.city_id = B.city_id
+		       LEFT JOIN EVENT_TYPE ET
+		       		ON ET.event_type_id = E.event_type_id
+		       LEFT JOIN CATEGORY CA 
+		       		ON CA.category_id = E.category_id
+		WHERE  F.member_id = #{memberId}
+		FETCH FIRST 10 ROWS ONLY
+	</select>
+	
 </mapper>

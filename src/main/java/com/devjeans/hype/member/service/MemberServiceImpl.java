@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devjeans.hype.event.domain.CategoryVO;
+import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.member.domain.MemberCategoryVO;
 import com.devjeans.hype.member.domain.MemberVO;
 import com.devjeans.hype.member.dto.MemberUpdateRequest;
@@ -130,4 +131,11 @@ public class MemberServiceImpl implements MemberService {
 		// 부모 레코드(MEMBER) 삭제
 		return mapper.deleteMember(memberId) == 1;
 	}
+
+	@Override
+	public List<EventVO> getMyFavoriteEvents(Long memberId) {
+		return mapper.selectMyFavoriteEvents(memberId);
+	}
+	
+	
 }
