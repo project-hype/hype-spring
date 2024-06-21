@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,7 @@ import com.devjeans.hype.event.dto.EventFilterRequest;
 import com.devjeans.hype.event.dto.GetBannerEventListResponse;
 import com.devjeans.hype.event.dto.GetEventDetailResponse;
 import com.devjeans.hype.event.dto.GetEventListResponse;
+import com.devjeans.hype.event.dto.GetTopScoreCountEventResponse;
 import com.devjeans.hype.event.service.EventService;
 
 import lombok.AllArgsConstructor;
@@ -98,12 +100,18 @@ public class EventController {
 	}
 	
 	@GetMapping("/{eventId}")
+	@Transactional
 	public GetEventDetailResponse getEventDetail(@PathVariable("eventId") Long eventId, @RequestParam(required = false) Long memberId) throws Exception {
 		List<EventVO> event = service.getEventDetail(eventId);
 		List<EventHashtagVO> hashtags = service.getEventHashtagList(eventId);
 		List<Double> scores = service.getEventStarScore(eventId);
         int favoriteCount = service.getEventFavoriteCount(eventId);
         boolean isFavorite = service.getEventFavoriteStatus(memberId, eventId);
+        
+        if (service.plusViewCount(eventId)) {
+    		return new GetEventDetailResponse(event, hashtags, scores, favoriteCount, isFavorite);
+        };
+        
 		return new GetEventDetailResponse(event, hashtags, scores, favoriteCount, isFavorite);
 	}
 	
@@ -134,6 +142,13 @@ public class EventController {
 		List<EventVO> list = service.getListWithFilter(request);
 		List<Long> favoriteEventIds = service.getMyFavoriteEvent(null);
 		return new GetEventListResponse(list, favoriteEventIds);
+	}
+	
+	@GetMapping("/list/score")
+	public GetTopScoreCountEventResponse getTopScoreCountEvents () throws Exception{
+		
+		List<EventVO> list = service.getTopScoreCountEvents();
+		return new GetTopScoreCountEventResponse(list);
 	}
 
 }

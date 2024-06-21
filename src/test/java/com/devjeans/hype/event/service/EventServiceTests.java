@@ -174,4 +174,25 @@ public class EventServiceTests {
 		}
 	}
 	
+	@Test
+	public void testGetTopScoreCountEvents() {
+		
+		try {
+			service.getTopScoreCountEvents().forEach(event->log.info(event));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testPlusViewCount() {
+		
+		try {
+			boolean result = service.plusViewCount(1L);
+			assertTrue(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

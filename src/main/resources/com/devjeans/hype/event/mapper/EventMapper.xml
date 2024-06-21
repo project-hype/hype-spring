@@ -14,6 +14,7 @@
  * 2024.06.17  정은지         최초 생성
  * 2024.06.19  정은지         행사 상세 조회 추가
  * 2024.06.20   조영욱        이벤트 필터로 조회 추가
+ * 2024.06.21   정은지        별점 작성, 조회수 증가 기능 추가 
  * </pre>
  -->
  
@@ -292,4 +293,45 @@
 	             </if>
 	            
 	</select>
+	
+	<!-- 별점 카운트 높은 순서대로 조회 -->
+	<select id="getTopScoreCountEvents" resultMap="event">
+		WITH SCORE_COUNT
+		     AS (SELECT E.event_id,
+		                COUNT(*) AS count
+		         FROM   EVENT E
+		                LEFT JOIN STAR_SCORE S
+		                       ON S.event_id = E.event_id
+		         GROUP  BY E.event_id)
+		SELECT E.event_id,
+		       E.branch_id,
+		       E.event_type_id,
+		       E.image_url,
+		       E.title,
+		       E.start_date,
+		       E.end_date,
+		       B.branch_name,
+		       C.category_name,
+		       ET.event_type_name,
+		       E.view_count
+		FROM   EVENT E
+		       LEFT JOIN BRANCH B
+		              ON B.branch_id = E.branch_id
+		       LEFT JOIN EVENT_TYPE ET
+		              ON ET.event_type_id = E.event_type_id
+		       LEFT JOIN CATEGORY C
+		              ON C.category_id = E.category_id
+		       LEFT JOIN SCORE_COUNT S
+		              ON S.event_id = E.event_id
+		WHERE TO_CHAR(sysdate, 'YYYY-MM-DD') BETWEEN E.start_date AND E.end_date
+		ORDER BY S.count DESC
+		FETCH FIRST 10 ROWS ONLY
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateViewCount" >
+		UPDATE EVENT
+		SET view_count = view_count + 1
+		WHERE event_id = #{eventId}
+	</update>
 </mapper>

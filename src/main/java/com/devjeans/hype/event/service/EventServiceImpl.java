@@ -96,7 +96,7 @@ public class EventServiceImpl implements EventService {
 	 */
 	@Override
 	public List<EventVO> getEventDetail(Long eventId) throws Exception {
-		
+
 		return mapper.getEventDetail(eventId);
 	}
 
@@ -154,6 +154,25 @@ public class EventServiceImpl implements EventService {
 
 		return mapper.insertStarScore(starScore) == 1;
 	}
+
+	/**
+	 * 별점 많은 순 행사 리스트 조회
+	 */
+	@Override
+	public List<EventVO> getTopScoreCountEvents() throws Exception {
+		
+		return mapper.getTopScoreCountEvents();
+	}
+
+	/**
+	 * 조회수 증가 
+	 */
+	@Override
+	public boolean plusViewCount(Long eventId) throws Exception {
+		
+		return mapper.updateViewCount(eventId) == 1;
+	}
+
 
 
 }

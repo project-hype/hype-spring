@@ -65,4 +65,8 @@ public interface EventService {
 	boolean addEventStarScore(StarScoreVO starScore) throws Exception;
 	
 	List<EventVO> getListWithFilter(EventFilterRequest dto) throws Exception;
+	
+	List<EventVO> getTopScoreCountEvents() throws Exception;
+	
+	boolean plusViewCount(Long eventId) throws Exception;
 }
