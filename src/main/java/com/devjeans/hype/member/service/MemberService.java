@@ -1,5 +1,8 @@
 package com.devjeans.hype.member.service;
 
+import java.util.List;
+
+import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.member.domain.MemberVO;
 import com.devjeans.hype.member.dto.MemberUpdateRequest;
 
@@ -26,4 +29,5 @@ public interface MemberService {
 	MemberVO getMemberInfo(Long memberId);
 	boolean updateMemberInfo(MemberUpdateRequest request);
 	boolean deleteMember(Long memberId);
+	List<EventVO> getMyFavoriteEvents(Long memberId);
 }

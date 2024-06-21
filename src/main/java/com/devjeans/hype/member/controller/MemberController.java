@@ -1,5 +1,7 @@
 package com.devjeans.hype.member.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.devjeans.hype.event.domain.EventVO;
+import com.devjeans.hype.event.dto.GetEventListResponse;
+import com.devjeans.hype.event.service.EventService;
 import com.devjeans.hype.member.domain.MemberVO;
 import com.devjeans.hype.member.dto.MemberLoginRequest;
 import com.devjeans.hype.member.dto.MemberUpdateRequest;
@@ -49,6 +54,7 @@ import lombok.extern.log4j.Log4j;
 public class MemberController {
 	private BCryptPasswordEncoder passwordEncoder;
 	private MemberService service;
+	private EventService eservice;
 	
  	/**
 	 * 중복된 아이디 체크
@@ -163,21 +169,31 @@ public class MemberController {
 	 */	
 	@DeleteMapping("/delete/{memberId}")
     public ResponseEntity<String> deleteMember(@PathVariable Long memberId) throws Exception {
-		 try {
-	            // 회원 삭제 서비스 호출
-	            boolean deleted = service.deleteMember(memberId);
-	            if (deleted) {
-	                // 회원 삭제 성공 시, 세션 만료 처리
-	                return ResponseEntity.ok()
-	                        .header("Session-Expired", "true")
-	                        .body("success");
-	            } else {
-	                // 회원 삭제 실패 시, 클라이언트에게 에러 응답
-	                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-	                        .body("error");
-	            }
-	        } catch (Exception e) {
-	            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", e);
-	        }
+		try {
+			// 회원 삭제 서비스 호출
+			boolean deleted = service.deleteMember(memberId);
+			if (deleted) {
+				// 회원 삭제 성공 시, 세션 만료 처리
+				return ResponseEntity.ok().header("Session-Expired", "true").body("success");
+			} else {
+				// 회원 삭제 실패 시, 클라이언트에게 에러 응답
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error");
+			}
+		} catch (Exception e) {
+			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", e);
+		}
+    }
+	
+	/**
+	 * 즐겨찾기한 행사 조회
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */	
+	@GetMapping("/favorites/{memberId}")
+    public GetEventListResponse getFavoriteEvents(@PathVariable Long memberId) throws Exception {
+		List<EventVO> list = service.getMyFavoriteEvents(memberId);
+		List<Long> favoriteEventIds = eservice.getMyFavoriteEvent(memberId);
+		return new GetEventListResponse(list, favoriteEventIds);
     }
 }
