@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.devjeans.hype.member.domain.MemberCategoryVO;
 import com.devjeans.hype.member.domain.MemberVO;
+import com.devjeans.hype.member.dto.MemberUpdateRequest;
 
 /**
  * 회원 매퍼 인터페이스
@@ -27,10 +28,10 @@ public interface MemberMapper {
 	public MemberVO selectMemberByLoginIdAndPassword(MemberVO member);	// 로그인
 	public int insertMember(MemberVO member);	// 회원가입
 	public int deleteMember(Long memberId);		// 회원탈퇴
-	public int updateMember(MemberVO member); 	// 회원정보 수정
+	public int updateMember(MemberUpdateRequest request); 	// 회원정보 수정
 	
 	// MemberCategory CRUD
 	public List<MemberCategoryVO> selectMemberCategoryListByMemberId(Long memberId); //
 	public int insertMemberCategory(MemberCategoryVO memberCategory);
-	public int deleteMemberCategory(MemberCategoryVO memberCategory);
+	public int deleteMemberCategories(Long memberId);
 }

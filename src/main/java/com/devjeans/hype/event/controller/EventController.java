@@ -3,6 +3,8 @@ package com.devjeans.hype.event.controller;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.dto.CreateFavoriteEventRequest;
 import com.devjeans.hype.event.dto.CreateStarScoreRequest;
+import com.devjeans.hype.event.dto.EventFilterRequest;
 import com.devjeans.hype.event.dto.GetBannerEventListResponse;
 import com.devjeans.hype.event.dto.GetEventDetailResponse;
 import com.devjeans.hype.event.dto.GetEventListResponse;
@@ -119,4 +122,18 @@ public class EventController {
 
 	}
 	
+	@PostMapping("/list/filter")
+	public GetEventListResponse getListWithFilter(
+			@RequestBody @Valid EventFilterRequest request,
+			BindingResult bs) throws Exception {
+		if (bs.hasErrors()) {
+			log.info(bs);
+			return null;
+		}
+		
+		List<EventVO> list = service.getListWithFilter(request);
+		List<Long> favoriteEventIds = service.getMyFavoriteEvent(null);
+		return new GetEventListResponse(list, favoriteEventIds);
+	}
+
 }

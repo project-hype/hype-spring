@@ -1,7 +1,5 @@
 package com.devjeans.hype.event.dto;
 
-import java.util.Date;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -44,9 +42,9 @@ public class AdminModifyEventRequest {
 	@NotNull
 	private String content;
 	@NotNull
-	private Date startDate;
+	private String startDate;
 	@NotNull
-	private Date endDate;
+	private String endDate;
 	@NotNull
 	private String detailAddress;
 	

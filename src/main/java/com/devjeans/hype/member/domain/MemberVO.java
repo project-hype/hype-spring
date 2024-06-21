@@ -25,5 +25,4 @@ public class MemberVO {
 	private BranchVO branch;
 	private List<CategoryVO> category;
 	private List<MemberCategoryVO> memberCategory;
-	//private List<FavoriteVO> favoriteList;
 }

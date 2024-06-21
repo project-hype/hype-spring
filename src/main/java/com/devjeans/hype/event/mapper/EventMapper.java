@@ -10,6 +10,7 @@ import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.domain.StarScoreVO;
+import com.devjeans.hype.event.dto.EventFilterRequest;
 
 /**
  * 메인페이지 행사 매퍼 인터페이스
@@ -22,6 +23,8 @@ import com.devjeans.hype.event.domain.StarScoreVO;
  * ----------  --------    ---------------------------
  * 2024.06.17  	정은지        최초 생성
  * 2024.06.19   정은지  	    이벤트 상세 조회 추가
+ * 2024.06.20   조영욱        이벤트 필터로 조회 추가
+ * 2024.06.21   정은지        별점 작성 기능 추가 
  * </pre>
  */
 public interface EventMapper {
@@ -68,4 +71,7 @@ public interface EventMapper {
 	
 	// 별점 작성
 	public int insertStarScore(StarScoreVO starScore); 
+		
+	// 이벤트 필터로 조회
+	public List<EventVO> getEventWithFilter(EventFilterRequest dto);
 }

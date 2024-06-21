@@ -18,6 +18,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.devjeans.hype.member.domain.MemberCategoryVO;
 import com.devjeans.hype.member.domain.MemberVO;
+import com.devjeans.hype.member.dto.MemberUpdateRequest;
 
 import lombok.extern.log4j.Log4j;
 
@@ -130,14 +131,14 @@ public class MemberMapperTests {
 	 */
 	@Test
 	public void testUpdateMember() {
-		MemberVO member = new MemberVO();
+		MemberUpdateRequest request = new MemberUpdateRequest();
 		
-		member.setMemberId(2L);
-		member.setPassword("1234");
-		member.setCityId(1L);
-		member.setPreferBranchId(1L);
+		request.setMemberId(1030L);
+		request.setPassword("1234");
+		request.setCityId(16L);
+		request.setPreferBranchId(9L);
 		
-		int result = mapper.updateMember(member);
+		int result = mapper.updateMember(request);
 		assertEquals(1, result);
 	}
 	
@@ -146,10 +147,11 @@ public class MemberMapperTests {
 	 */
 	@Test
 	public void testDeleteMember() {
-		int result = mapper.deleteMember(1002L);
-		assertEquals(1, result);
+		mapper.deleteMemberCategories(1029L);
+        // 부모 레코드(MEMBER) 삭제
+        int result = mapper.deleteMember(1029L);
+        assertEquals(1, result);
 	}
-	
 	
 	/******************************
 	 ** MemberCategory CRUD Test **
@@ -175,8 +177,8 @@ public class MemberMapperTests {
 	@Test
 	public void testInsertMemberCategory() {
 		MemberCategoryVO memberCategory = new MemberCategoryVO();
-		memberCategory.setMemberId(9L);
-		memberCategory.setCategoryId(1L);
+		memberCategory.setMemberId(1030L);
+		memberCategory.setCategoryId(2L);
 		
 		int result = mapper.insertMemberCategory(memberCategory);
 		
@@ -188,11 +190,8 @@ public class MemberMapperTests {
 	 */
 	@Test
 	public void testDeleteMemberCategory() {
-		MemberCategoryVO memberCategory = new MemberCategoryVO();
-		memberCategory.setMemberId(9L);
-		memberCategory.setCategoryId(1L);
-		int result = mapper.deleteMemberCategory(memberCategory);
+		int result = mapper.deleteMemberCategories(1030L);
 		
-		assertEquals(1, result);
+		assertTrue(result>0);
 	}
 }
