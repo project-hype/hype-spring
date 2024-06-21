@@ -148,10 +148,17 @@ public class EventController {
 	}
 	
 	@GetMapping("/list/score")
-	public GetTopScoreCountEventResponse getTopScoreCountEvents () throws Exception{
+	public GetTopScoreCountEventResponse getTopScoreCountEvents() throws Exception{
 		
 		List<EventVO> list = service.getTopScoreCountEvents();
 		return new GetTopScoreCountEventResponse(list);
+	}
+	
+	@GetMapping("/list/like/{eventId}")
+	public GetEventListResponse getLikeEvents(@PathVariable("eventId") Long eventId) throws Exception {
+		
+		List<EventVO> list = service.getLikeEvents(eventId);
+		return new GetEventListResponse(list);
 	}
 
 }

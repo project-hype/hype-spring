@@ -2,20 +2,6 @@ package com.devjeans.hype.event.service;
 
 import java.util.Date;
 import java.util.List;
-
-/**
- * 메인페이지 행사 서비스 인터페이스
- * @author 정은지 
- * @since 2024.06.17
- * @version 1.0
- *
- * <pre>
- * 수정일        	수정자        수정내용
- * ----------  --------    ---------------------------
- * 2024.06.17  	정은지        최초 생성
- * </pre>
- */
-
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
@@ -72,5 +58,7 @@ public interface EventService {
 	boolean plusViewCount(Long eventId) throws Exception;
 
 	boolean isNextEventExist(EventFilterRequest dto) throws Exception;
+	
+	List<EventVO> getLikeEvents(Long eventId) throws Exception;
 
 }

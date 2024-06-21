@@ -29,6 +29,7 @@ import lombok.extern.log4j.Log4j;
  * 2024.06.20   조영욱        행사 리스트 필터로 조회 추가
  * 2024.06.21   정은지        별점 작성 기능 추가
  * 2024.06.21   조영욱        이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
+ * 2024.06.21   정은지  		유사한 행사 조회 추가
  * </pre>
  */
 @Log4j
@@ -155,7 +156,7 @@ public class EventServiceImpl implements EventService {
 		return mapper.insertStarScore(starScore) == 1;
 	}
 	
-	/*
+	/**
 	 * 다음 이벤트가 존재하는지 반환
 	 * 페이지네이션을 위한 메소드
 	 */
@@ -180,6 +181,15 @@ public class EventServiceImpl implements EventService {
 	public boolean plusViewCount(Long eventId) throws Exception {
 		
 		return mapper.updateViewCount(eventId) == 1;
+	}
+
+	/**
+	 * 유사한 이벤트 조회
+	 */
+	@Override
+	public List<EventVO> getLikeEvents(Long eventId) throws Exception {
+		
+		return mapper.getLikeEvents(eventId);
 	}
 
 
