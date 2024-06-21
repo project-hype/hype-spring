@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
-import com.devjeans.hype.event.domain.StarScoreVO;
 import com.devjeans.hype.event.dto.CreateFavoriteEventRequest;
+import com.devjeans.hype.event.dto.CreateStarScoreRequest;
 import com.devjeans.hype.event.dto.GetBannerEventListResponse;
 import com.devjeans.hype.event.dto.GetEventDetailResponse;
 import com.devjeans.hype.event.dto.GetEventListResponse;
@@ -102,4 +103,20 @@ public class EventController {
         boolean isFavorite = service.getEventFavoriteStatus(memberId, eventId);
 		return new GetEventDetailResponse(event, hashtags, scores, favoriteCount, isFavorite);
 	}
+	
+	@PostMapping("/starScore")
+	public ResponseEntity<String> addEventStarScore(@RequestBody CreateStarScoreRequest request,
+					BindingResult bs) throws Exception {
+		
+		if (bs.hasErrors()) {
+			log.info(bs);
+			return new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
+		}
+		
+		return service.addEventStarScore(request.toStarScoreVO())
+				? new ResponseEntity<String>("success", HttpStatus.OK)
+				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);		
+
+	}
+	
 }

@@ -67,5 +67,5 @@ public interface EventMapper {
 	public boolean getEventFavoriteStatus(@Param("memberId") Long memberId, @Param("eventId") Long eventId);
 	
 	// 별점 작성
-	public int insertScore(StarScoreVO starScore); 
+	public int insertStarScore(StarScoreVO starScore); 
 }

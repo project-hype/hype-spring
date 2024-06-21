@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
+import com.devjeans.hype.event.domain.StarScoreVO;
 import com.devjeans.hype.event.mapper.EventMapper;
 
 import lombok.AllArgsConstructor;
@@ -130,6 +131,12 @@ public class EventServiceImpl implements EventService {
 	public boolean getEventFavoriteStatus(Long memberId, Long eventId) throws Exception {
 
 		return mapper.getEventFavoriteStatus(memberId, eventId);
+	}
+
+	@Override
+	public boolean addEventStarScore(StarScoreVO starScore) throws Exception {
+
+		return mapper.insertStarScore(starScore) == 1;
 	}
 
 

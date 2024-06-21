@@ -63,4 +63,6 @@ public interface EventService {
 	
 	boolean getEventFavoriteStatus(Long memberId, Long eventId) throws Exception;
 	
+	boolean addEventStarScore(StarScoreVO starScore) throws Exception;
+	
 }

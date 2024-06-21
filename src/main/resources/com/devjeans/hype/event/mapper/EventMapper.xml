@@ -247,12 +247,12 @@
 	</select>
 	
 	<!-- 별점 작성 -->
-<!-- 	<insert id="insertScore">
+ 	<insert id="insertStarScore">
 		INSERT INTO STAR_SCORE
 		VALUES      (#{memberId},
 		             #{eventId},
 		             #{score},
-		             sysdate); 
-	</insert> -->
+		             sysdate)
+	</insert>
 	
 </mapper>

@@ -20,19 +20,19 @@ import lombok.Data;
 
 @Data
 public class GetEventDetailResponse {
-	List<GetEventResponse> eventList = new ArrayList<>();
+	List<GetEventResponse> event = new ArrayList<>();
 
 	public GetEventDetailResponse(List<EventVO> eventVOs,
 								  List<EventHashtagVO> eventHashtagList,
 								  List<Double> scoreList,
 								  int favoriteCount,
 								  boolean isFavorite) {
-		for (EventVO event : eventVOs) {
+		for (EventVO eventVo : eventVOs) {
 			List<HashtagVO> hashtags = eventHashtagList.stream()
 					.map(EventHashtagVO::getHashtag)
 					.collect(Collectors.toList());
 
-			eventList.add(new GetEventResponse(event, hashtags, scoreList, favoriteCount, isFavorite));
+			event.add(new GetEventResponse(eventVo, hashtags, scoreList, favoriteCount, isFavorite));
 		}
 	}
 
@@ -102,6 +102,7 @@ public class GetEventDetailResponse {
 	                                         .mapToDouble(Double::doubleValue)
 	                                         .average()
 	                                         .orElse(0.0);
+	            this.averageScore = Math.round(this.averageScore * 10) / 10.0;
 	        }
 		}
 	

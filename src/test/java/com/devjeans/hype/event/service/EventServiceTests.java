@@ -12,6 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.devjeans.hype.event.domain.StarScoreVO;
+
 import lombok.extern.log4j.Log4j;
 
 /**
@@ -153,6 +155,20 @@ public class EventServiceTests {
 		try {
 			boolean status = service.getEventFavoriteStatus(1L, 2L);
 			assertTrue(status);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testAddEventStarScore() {
+		StarScoreVO starScore = new StarScoreVO();
+		starScore.setEventId(3L);
+		starScore.setMemberId(3L);
+		starScore.setScore(3.5);
+		try {
+			boolean result = service.addEventStarScore(starScore);
+			assertEquals(true, result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
