@@ -82,4 +82,7 @@ public interface EventMapper {
 	public int updateViewCount(@Param("eventId") Long eventId);
 	
 	public Integer selectNextEvent(EventFilterRequest dto);
+	
+	// 유사한 이벤트 조회
+	public List<EventVO> getLikeEvents(@Param("eventId") Long eventId);
 }

@@ -26,6 +26,7 @@ import lombok.Data;
 public class GetEventListResponse {
 	List<GetEventResponse> eventList = new ArrayList<>();
 	boolean isNextEventExist;
+	long eventId;
 
 	public GetEventListResponse(List<EventVO> eventVO, List<Long> favoriteEventIds) {
 		
@@ -38,6 +39,12 @@ public class GetEventListResponse {
 	public GetEventListResponse(List<EventVO> eventVO, List<Long> favoriteEventIds, boolean isNextEventExist) {
 		this(eventVO, favoriteEventIds);
 		this.isNextEventExist = isNextEventExist;
+	}
+
+	public GetEventListResponse(List<EventVO> eventVO) {
+		eventVO.stream().forEach((event) -> {
+			eventList.add(new GetEventResponse(event));
+		});
 	}
 
 	@Data
@@ -72,5 +79,23 @@ public class GetEventListResponse {
 			this.viewCount = event.getViewCount();
 			this.isFavorite = isFavorite;
 		}
+		
+		public GetEventResponse(EventVO event) {
+			this.eventId = event.getEventId();
+			this.branchId = event.getBranchId();
+			this.eventTypeId = event.getEventTypeId();
+			this.title = event.getTitle();
+			this.imageUrl = event.getImageUrl();
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			this.startDate = format.format(event.getStartDate());
+			this.endDate = format.format(event.getEndDate());
+			
+			this.branchName = event.getBranch().getBranchName();
+			this.categoryName = event.getCategory().getCategoryName();
+			this.eventTypeName = event.getEventType().getEventTypeName();
+			this.viewCount = event.getViewCount();
+		}
+
 	}
 }

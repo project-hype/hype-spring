@@ -195,4 +195,14 @@ public class EventServiceTests {
 		}
 	}
 	
+	@Test
+	public void testGetLikeEvents() {
+		
+		try {
+			service.getLikeEvents(2L).forEach(event->log.info(event));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
