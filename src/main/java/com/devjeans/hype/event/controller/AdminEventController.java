@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.devjeans.hype.aop.Auth;
+import com.devjeans.hype.aop.Auth.Role;
 import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;
@@ -63,9 +65,11 @@ import lombok.extern.log4j.Log4j;
  * 2024.06.19  	조영욱        이미지 업로드 추가
  * 2024.06.20  	조영욱        배너 CRUD 추가
  * 2024.06.21  	조영욱        행사 조회에 페이지네이션 출력 후 더 출력할 행사 있는지 반환 추가
+ * 2024.06.22   조영욱        Interceptor를 통해 클래스 전체 ADMIN Role 유효성 검사
  * </pre>
  */
 
+@Auth(role = Role.ADMIN)
 @RestController
 @RequestMapping(
 		value="/admin/event",
