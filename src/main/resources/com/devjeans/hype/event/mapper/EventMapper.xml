@@ -14,7 +14,7 @@
  * 2024.06.17  정은지         최초 생성
  * 2024.06.19  정은지         행사 상세 조회 추가
  * 2024.06.20  조영욱         이벤트 필터로 조회 추가
- * 2024.06.21  조영욱         이벤트 검색,필터 조회에 페이지네이션 적용
+ * 2024.06.21  조영욱         이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
  * </pre>
  -->
  
@@ -259,7 +259,8 @@
 	
 	<!-- 이벤트 필터로 조회 -->
 	<select id="getEventWithFilter" resultMap="event">
-		SELECT E.event_id,
+		SELECT DISTINCT
+			   E.event_id,
 		       E.branch_id,
 		       E.event_type_id,
 		       E.image_url,
@@ -277,6 +278,10 @@
 		               ON ET.event_type_id = E.event_type_id
                    LEFT JOIN CATEGORY C
                        ON C.category_id = E.category_id
+                   LEFT JOIN EVENT_HASHTAG EH
+                       ON E.event_id = EH.event_id
+                   LEFT JOIN HASHTAG H
+                       ON EH.hashtag_id = H.hashtag_id
         
 		WHERE 1=1
 	    <if test="date!=null">
@@ -284,7 +289,9 @@
         </if>
 		
 	    <if test="keyword!=null">
-	        AND E.title LIKE '%'||#{keyword}||'%'
+	        AND (E.title LIKE '%'||#{keyword}||'%'
+	        	OR C.category_name LIKE '%'||#{keyword}||'%'
+	        	OR H.hashtag_name = #{keyword})
         </if>
         <if test="branchId!=null">
 	        AND E.branch_id = #{branchId}
