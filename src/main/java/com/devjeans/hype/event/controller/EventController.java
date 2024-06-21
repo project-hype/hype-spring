@@ -62,6 +62,7 @@ public class EventController {
 	
 	@GetMapping("/list/top")
 	public GetEventListResponse getListTopViewWithFavorite(@RequestParam(required = false) Long memberId) throws Exception {
+		int a = 0/0;
 		List<EventVO> list = service.getListTopView(memberId);
 		List<Long> favoriteEventIds = service.getMyFavoriteEvent(memberId);
 		return new GetEventListResponse(list, favoriteEventIds);

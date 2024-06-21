@@ -171,6 +171,7 @@ public class AdminEventController {
 	@DeleteMapping("/{eventId}")
 	public ResponseEntity<String> modifyEvent(
 			@PathVariable("eventId") Long eventId) throws Exception {
+//		throw new CustomException(null);
 		
 		return service.removeEvent(eventId)
 				? new ResponseEntity<String>("success", HttpStatus.OK)
