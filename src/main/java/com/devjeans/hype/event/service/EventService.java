@@ -19,6 +19,7 @@ import java.util.List;
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
+import com.devjeans.hype.event.domain.StarScoreVO;
 import com.devjeans.hype.event.dto.EventFilterRequest;
 
 /**
@@ -33,6 +34,7 @@ import com.devjeans.hype.event.dto.EventFilterRequest;
  * 2024.06.17  	정은지        최초 생성
  * 2024.06.19   정은지 		이벤트 상세 조회 추가
  * 2024.06.20   조영욱       이벤트 필터로 조회 추가
+ * 2024.06.21   정은지        별점 작성 기능 추가 
  * </pre>
  */
 
@@ -59,6 +61,8 @@ public interface EventService {
 	int getEventFavoriteCount(Long eventId) throws Exception;
 	
 	boolean getEventFavoriteStatus(Long memberId, Long eventId) throws Exception;
+	
+	boolean addEventStarScore(StarScoreVO starScore) throws Exception;
 	
 	List<EventVO> getListWithFilter(EventFilterRequest dto) throws Exception;
 }

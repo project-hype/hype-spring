@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
+import com.devjeans.hype.event.domain.StarScoreVO;
 import com.devjeans.hype.event.dto.EventFilterRequest;
 import com.devjeans.hype.event.mapper.EventMapper;
 
@@ -26,6 +27,7 @@ import lombok.extern.log4j.Log4j;
  * 2024.06.17  	정은지        최초 생성
  * 2024.06.19   정은지        행사 상세 조회 추가
  * 2024.06.20   조영욱        행사 리스트 필터로 조회 추가
+ * 2024.06.21   정은지        별점 작성 기능 추가 
  * </pre>
  */
 @Log4j
@@ -142,6 +144,15 @@ public class EventServiceImpl implements EventService {
 	public List<EventVO> getListWithFilter(EventFilterRequest dto) throws Exception {
 		
 		return mapper.getEventWithFilter(dto);
+	}
+
+	/**
+	 * 별점 추가
+	 */
+	@Override
+	public boolean addEventStarScore(StarScoreVO starScore) throws Exception {
+
+		return mapper.insertStarScore(starScore) == 1;
 	}
 
 

@@ -248,13 +248,13 @@
 	</select>
 	
 	<!-- 별점 작성 -->
-<!-- 	<insert id="insertScore">
+ 	<insert id="insertStarScore">
 		INSERT INTO STAR_SCORE
 		VALUES      (#{memberId},
 		             #{eventId},
 		             #{score},
-		             sysdate); 
-	</insert> -->
+		             sysdate)
+	</insert>
 	
 	<!-- 이벤트 필터로 조회 -->
 	<select id="getEventWithFilter" resultMap="event">
@@ -290,7 +290,6 @@
 	                     #{eventTypeId}
 	                 </foreach>
 	             </if>
-	            
 	            
 	</select>
 </mapper>

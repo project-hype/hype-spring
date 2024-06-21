@@ -24,6 +24,7 @@ import com.devjeans.hype.event.dto.EventFilterRequest;
  * 2024.06.17  	정은지        최초 생성
  * 2024.06.19   정은지  	    이벤트 상세 조회 추가
  * 2024.06.20   조영욱        이벤트 필터로 조회 추가
+ * 2024.06.21   정은지        별점 작성 기능 추가 
  * </pre>
  */
 public interface EventMapper {
@@ -69,8 +70,8 @@ public interface EventMapper {
 	public boolean getEventFavoriteStatus(@Param("memberId") Long memberId, @Param("eventId") Long eventId);
 	
 	// 별점 작성
-	public int insertScore(StarScoreVO starScore); 
-	
+	public int insertStarScore(StarScoreVO starScore); 
+		
 	// 이벤트 필터로 조회
 	public List<EventVO> getEventWithFilter(EventFilterRequest dto);
 }
