@@ -38,6 +38,7 @@ public interface AdminEventService {
 	boolean modifyEvent(EventVO event, MultipartFile file) throws Exception;
 	boolean removeEvent(Long eventId) throws Exception; 
 	List<EventVO> getEventListSummary() throws Exception;
+	public boolean isNextEventExist(Criteria cri) throws Exception;
 	
 	// 카테고리 CRUD
 	List<CategoryVO> getCategoryList() throws Exception;

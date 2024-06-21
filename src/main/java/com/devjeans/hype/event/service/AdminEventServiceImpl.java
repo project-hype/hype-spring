@@ -57,6 +57,15 @@ public class AdminEventServiceImpl implements AdminEventService {
 		return mapper.selectEventListWithPaging(cri);
 	}
 	
+	/*
+	 * 다음 이벤트가 존재하는지 반환
+	 * 페이지네이션을 위한 메소드
+	 */
+	@Override
+	public boolean isNextEventExist(Criteria cri) throws Exception {
+		return mapper.selectNextEvent(cri) != null ? true : false;
+	}
+	
 	/**
 	 * 이벤트 요약 정보 조회
 	 * eventId와 title만 조회

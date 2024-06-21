@@ -13,7 +13,8 @@
  * ==========  =========    =========
  * 2024.06.17  정은지         최초 생성
  * 2024.06.19  정은지         행사 상세 조회 추가
- * 2024.06.20   조영욱        이벤트 필터로 조회 추가
+ * 2024.06.20  조영욱         이벤트 필터로 조회 추가
+ * 2024.06.21  조영욱         이벤트 검색,필터 조회에 페이지네이션 적용
  * </pre>
  -->
  
@@ -266,30 +267,61 @@
 		       E.start_date,
 		       E.end_date,
 		       B.branch_name,
-               C.category_name,
-		       ET.event_type_name,
-		       E.view_count
+                   C.category_name,
+		           ET.event_type_name,
+		           E.view_count
 		FROM   EVENT E
-		       LEFT JOIN BRANCH B
+		           LEFT JOIN BRANCH B
 		               ON B.branch_id = E.branch_id
-		       LEFT JOIN EVENT_TYPE ET
+		           LEFT JOIN EVENT_TYPE ET
 		               ON ET.event_type_id = E.event_type_id
-               LEFT JOIN CATEGORY C
+                   LEFT JOIN CATEGORY C
                        ON C.category_id = E.category_id
         
-		WHERE  TO_CHAR(#{date}, 'YYYY-MM-DD') BETWEEN E.start_date AND E.end_date+1
-				<if test="keyword!=null">
-			   		AND E.title LIKE '%'||#{keyword}||'%'
-			   </if>
-			    <if test="branchId!=null">
-			   		AND E.branch_id = #{branchId}
-			    </if>
-			    <if test="!eventTypeIdList.isEmpty()">
-			   		AND E.event_type_id IN
-				     <foreach item="eventTypeId" collection="eventTypeIdList" open="(" separator="," close=")">
-	                     #{eventTypeId}
-	                 </foreach>
-	             </if>
-	            
+		WHERE 1=1
+	    <if test="date!=null">
+	        AND #{date} BETWEEN E.start_date AND E.end_date
+        </if>
+		
+	    <if test="keyword!=null">
+	        AND E.title LIKE '%'||#{keyword}||'%'
+        </if>
+        <if test="branchId!=null">
+	        AND E.branch_id = #{branchId}
+        </if>
+        <if test="!eventTypeIdList.isEmpty()">
+        	AND E.event_type_id IN
+	   	    <foreach item="eventTypeId" collection="eventTypeIdList" open="(" separator="," close=")">
+	              #{eventTypeId}
+	        </foreach>
+        </if>
+        ORDER BY E.event_id DESC
+        OFFSET (#{page}-1) * #{amount}
+        ROWS FETCH FIRST #{amount} ROWS ONLY
+	</select>
+	
+	<select id="selectNextEvent">
+		SELECT E.event_id
+		FROM EVENT E
+		WHERE 1=1
+	    <if test="date!=null">
+	        AND #{date} BETWEEN E.start_date AND E.end_date
+        </if>
+		
+	    <if test="keyword!=null">
+	        AND E.title LIKE '%'||#{keyword}||'%'
+        </if>
+        <if test="branchId!=null">
+	        AND E.branch_id = #{branchId}
+        </if>
+        <if test="!eventTypeIdList.isEmpty()">
+        	AND E.event_type_id IN
+	   	    <foreach item="eventTypeId" collection="eventTypeIdList" open="(" separator="," close=")">
+	              #{eventTypeId}
+	        </foreach>
+        </if>
+		ORDER BY E.event_id DESC
+        OFFSET #{page} * #{amount}
+        ROWS FETCH FIRST 1 ROWS ONLY
 	</select>
 </mapper>

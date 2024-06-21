@@ -1,6 +1,5 @@
 package com.devjeans.hype.event.dto;
 
-import java.util.Date;
 import java.util.List;
 
 import lombok.Data;
@@ -15,6 +14,7 @@ import lombok.Data;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.20  	조영욱        최초 생성
+ * 2024.06.21   조영욱        이벤트 검색,필터 조회에 페이지네이션 적용
  * </pre>
  */
 
@@ -22,7 +22,9 @@ import lombok.Data;
 public class EventFilterRequest {
 
 	private String keyword;
-	private Date date;
+	private int page;
+	private int amount;
+	private String date;
 	private Long branchId;
 	private List<Long> eventTypeIdList;
 }

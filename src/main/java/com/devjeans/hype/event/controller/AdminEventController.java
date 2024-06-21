@@ -85,7 +85,8 @@ public class AdminEventController {
 	@GetMapping("/list")
 	public AdminGetEventListResponse getEventList(Criteria cri) throws Exception {
 		List<EventVO> eventList = service.getEventListWithPaging(cri);
-		return new AdminGetEventListResponse(eventList);
+		boolean isNextEventExist = service.isNextEventExist(cri);
+		return new AdminGetEventListResponse(eventList, isNextEventExist);
 	}
 	
 	/**

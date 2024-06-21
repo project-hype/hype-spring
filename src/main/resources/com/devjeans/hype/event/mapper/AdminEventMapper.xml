@@ -132,6 +132,14 @@
 		ROWS FETCH FIRST #{amount} ROWS ONLY
 	</select>
 	
+	<select id="selectNextEvent">
+		SELECT E.event_id
+		FROM EVENT E
+		ORDER BY event_id DESC
+		OFFSET #{page} * #{amount}
+		ROWS FETCH FIRST 1 ROWS ONLY
+	</select>
+	
 	<insert id="insertEvent">
 		INSERT INTO EVENT (
 			event_id,

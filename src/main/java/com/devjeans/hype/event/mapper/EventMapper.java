@@ -74,4 +74,6 @@ public interface EventMapper {
 		
 	// 이벤트 필터로 조회
 	public List<EventVO> getEventWithFilter(EventFilterRequest dto);
+	
+	public Integer selectNextEvent(EventFilterRequest dto);
 }

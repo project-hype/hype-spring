@@ -34,6 +34,7 @@ public interface AdminEventMapper {
 	// Event CRUD
 	public EventVO selectEventById(Long eventId);
 	public List<EventVO> selectEventListWithPaging(Criteria cri);
+	public Integer selectNextEvent(Criteria cri);
 	public int insertEvent(EventVO event);
 	public int updateEvent(EventVO event);
 	public int deleteEvent (Long eventId);

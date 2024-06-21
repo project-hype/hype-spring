@@ -24,13 +24,19 @@ import lombok.Data;
 @Data
 public class AdminGetEventListResponse {
 	List<GetEventResponse> eventList = new ArrayList<>();
+	boolean isNextEventExist;
 
 	public AdminGetEventListResponse(List<EventVO> eventVOList) {
 		eventVOList.stream().forEach((event) -> {
 			eventList.add(new GetEventResponse(event));
 		});
-		
 	}
+	
+	public AdminGetEventListResponse(List<EventVO> eventVOList, boolean isNextEventExist) {
+		this(eventVOList);
+		this.isNextEventExist = isNextEventExist;
+	}
+	
 	
 	@Data
 	public static class GetEventResponse {
