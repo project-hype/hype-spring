@@ -31,6 +31,7 @@ import com.devjeans.hype.event.dto.GetBannerEventListResponse;
 import com.devjeans.hype.event.dto.GetEventDetailResponse;
 import com.devjeans.hype.event.dto.GetEventListResponse;
 import com.devjeans.hype.event.dto.GetTopScoreCountEventResponse;
+import com.devjeans.hype.event.dto.StarScoreRequest;
 import com.devjeans.hype.event.service.EventService;
 
 import lombok.AllArgsConstructor;
@@ -48,6 +49,7 @@ import lombok.extern.log4j.Log4j;
  * 2024.06.17   정은지         최초 생성
  * 2024.06.20   조영욱         이벤트 필터로 조회 추가
  * 2024.06.21   조영욱         이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
+ * 2024.06.22   정은지 
  * </pre>
  */
 
@@ -161,5 +163,13 @@ public class EventController {
 		List<EventVO> list = service.getLikeEvents(eventId);
 		return new GetEventListResponse(list);
 	}
+	
+	@PostMapping("/score")
+	public void manageStarScore(@RequestBody StarScoreRequest request) throws Exception {
+		
+		service.manageStarScore(request.eventId, request.memberId, request.action, request.score);
+		
+	}
+	
 
 }

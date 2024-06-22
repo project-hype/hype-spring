@@ -30,6 +30,7 @@ import lombok.extern.log4j.Log4j;
  * 2024.06.21   정은지        별점 작성 기능 추가
  * 2024.06.21   조영욱        이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
  * 2024.06.21   정은지  		유사한 행사 조회 추가
+ * 2024.06.22   정은지        별점 추가/수정/삭제 프로시저 호출 기능 추가 
  * </pre>
  */
 @Log4j
@@ -201,6 +202,13 @@ public class EventServiceImpl implements EventService {
 		return mapper.getMyEventScore(memberId, eventId);
 	}
 
-
+	/**
+	 * 별점 추가/수정/삭제 프로시저 호출
+	 */
+	@Override
+	public void manageStarScore(Long eventId, Long memberId, String action, Double score) throws Exception {
+		mapper.callManageStarProcedure(eventId, memberId, action, score);
+		
+	}
 
 }

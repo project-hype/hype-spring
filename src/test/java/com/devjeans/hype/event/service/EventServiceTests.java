@@ -215,4 +215,13 @@ public class EventServiceTests {
 		}
 	}
 	
+	@Test
+	public void testManageStarScore() {
+		try {
+			service.manageStarScore(50L, 50L, "INSERT", 1.5);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

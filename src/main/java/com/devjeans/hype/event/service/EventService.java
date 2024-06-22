@@ -62,5 +62,7 @@ public interface EventService {
 	List<EventVO> getLikeEvents(Long eventId) throws Exception;
 	
 	Double getMyEventScore(Long memberId, Long eventId) throws Exception;
+	
+	void manageStarScore(Long eventId, Long memberId, String action, Double score) throws Exception;
 
 }

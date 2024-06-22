@@ -88,4 +88,10 @@ public interface EventMapper {
 	
 	// 회원 이벤트 별점 조회
 	public Double getMyEventScore(@Param("memberId") Long memberId, @Param("eventId") Long eventId);
+	
+	// 별점 생성/수정/삭제 프로시저 호출
+	public void callManageStarProcedure(@Param("eventId") Long eventId,
+								        @Param("memberId") Long memberId,
+								        @Param("action") String action,
+								        @Param("score") Double score);
 }
