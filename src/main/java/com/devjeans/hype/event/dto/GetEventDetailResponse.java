@@ -26,13 +26,14 @@ public class GetEventDetailResponse {
 								  List<EventHashtagVO> eventHashtagList,
 								  List<Double> scoreList,
 								  int favoriteCount,
-								  boolean isFavorite) {
+								  boolean isFavorite,
+								  Double myScore) {
 		for (EventVO eventVo : eventVOs) {
 			List<HashtagVO> hashtags = eventHashtagList.stream()
 					.map(EventHashtagVO::getHashtag)
 					.collect(Collectors.toList());
 
-			event.add(new GetEventResponse(eventVo, hashtags, scoreList, favoriteCount, isFavorite));
+			event.add(new GetEventResponse(eventVo, hashtags, scoreList, favoriteCount, isFavorite, myScore));
 		}
 	}
 
@@ -58,12 +59,14 @@ public class GetEventDetailResponse {
 		List<String> hashtags;
 		List<Double> scores;
 		Double averageScore;
+		Double myScore;
 
 		public GetEventResponse(EventVO event,
 								List<HashtagVO> hashtagList,
 								List<Double> scoreList,
 								int favoriteCount,
-								boolean isFavorite) {
+								boolean isFavorite,
+								Double myScore) {
 
 			this.eventId = event.getEventId();
 			this.branchId = event.getBranchId();
@@ -104,6 +107,8 @@ public class GetEventDetailResponse {
 	                                         .orElse(0.0);
 	            this.averageScore = Math.round(this.averageScore * 10) / 10.0;
 	        }
+	        
+	        this.myScore = myScore;
 		}
 	
 	}

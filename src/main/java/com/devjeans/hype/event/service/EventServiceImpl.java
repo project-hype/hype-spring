@@ -192,6 +192,15 @@ public class EventServiceImpl implements EventService {
 		return mapper.getLikeEvents(eventId);
 	}
 
+	/**
+	 * 회원 이벤트 별점 조회 
+	 */
+	@Override
+	public Double getMyEventScore(Long memberId, Long eventId) throws Exception {
+
+		return mapper.getMyEventScore(memberId, eventId);
+	}
+
 
 
 }

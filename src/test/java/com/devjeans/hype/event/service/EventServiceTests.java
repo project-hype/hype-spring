@@ -203,6 +203,16 @@ public class EventServiceTests {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	} 
+	
+	@Test
+	public void testGetMyEventScore() {
+		try {
+			Double score = service.getMyEventScore(2L, 40L);
+			log.info(score);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

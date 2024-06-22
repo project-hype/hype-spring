@@ -85,4 +85,7 @@ public interface EventMapper {
 	
 	// 유사한 이벤트 조회
 	public List<EventVO> getLikeEvents(@Param("eventId") Long eventId);
+	
+	// 회원 이벤트 별점 조회
+	public Double getMyEventScore(@Param("memberId") Long memberId, @Param("eventId") Long eventId);
 }

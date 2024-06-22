@@ -60,5 +60,7 @@ public interface EventService {
 	boolean isNextEventExist(EventFilterRequest dto) throws Exception;
 	
 	List<EventVO> getLikeEvents(Long eventId) throws Exception;
+	
+	Double getMyEventScore(Long memberId, Long eventId) throws Exception;
 
 }

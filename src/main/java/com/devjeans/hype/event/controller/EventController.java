@@ -109,12 +109,13 @@ public class EventController {
 		List<Double> scores = service.getEventStarScore(eventId);
         int favoriteCount = service.getEventFavoriteCount(eventId);
         boolean isFavorite = service.getEventFavoriteStatus(memberId, eventId);
+        Double myScore = service.getMyEventScore(memberId, eventId);
         
         if (service.plusViewCount(eventId)) {
-    		return new GetEventDetailResponse(event, hashtags, scores, favoriteCount, isFavorite);
+    		return new GetEventDetailResponse(event, hashtags, scores, favoriteCount, isFavorite, myScore);
         };
         
-		return new GetEventDetailResponse(event, hashtags, scores, favoriteCount, isFavorite);
+		return new GetEventDetailResponse(event, hashtags, scores, favoriteCount, isFavorite, myScore);
 	}
 	
 	@PostMapping("/starScore")
