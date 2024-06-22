@@ -400,10 +400,11 @@
 		               ON EH.event_id = E.event_id
 		       INNER JOIN HASHTAG H
 		               ON H.hashtag_id = EH.hashtag_id
-				<![CDATA[
+<!-- 				<![CDATA[
 		WHERE  TO_CHAR(sysdate, 'YYYY-MM-DD') <= E.end_date
 		 		]]>	
-		       AND H.hashtag_id IN (SELECT EH.hashtag_id
+		       AND H.hashtag_id IN (SELECT EH.hashtag_id -->
+		       WHERE H.hashtag_id IN (SELECT EH.hashtag_id
 		                            FROM   EVENT E
 		                                   INNER JOIN EVENT_HASHTAG EH
 		                                           ON EH.event_id = E.event_id
