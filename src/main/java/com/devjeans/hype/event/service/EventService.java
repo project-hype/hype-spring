@@ -2,6 +2,7 @@ package com.devjeans.hype.event.service;
 
 import java.util.Date;
 import java.util.List;
+
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
@@ -22,6 +23,7 @@ import com.devjeans.hype.event.dto.EventFilterRequest;
  * 2024.06.20   조영욱        이벤트 필터로 조회 추가
  * 2024.06.21   정은지        별점 작성 기능 추가
  * 2024.06.21   조영욱        이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
+ * 2024.06.22   조영욱        개인 별 추천 행사 조회 추가
  * </pre>
  */
 
@@ -64,5 +66,7 @@ public interface EventService {
 	Double getMyEventScore(Long memberId, Long eventId) throws Exception;
 	
 	void manageStarScore(Long eventId, Long memberId, String action, Double score) throws Exception;
+	
+	List<EventVO> getRecommendEventList(Long memberId) throws Exception;
 
 }

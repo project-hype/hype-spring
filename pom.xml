@@ -265,6 +265,14 @@
             <artifactId>hibernate-validator</artifactId>
             <version>6.2.0.Final</version>
         </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.5.13</version>
+		</dependency>
+        
 	
 	<!-- ==================  dependiney 끝  =========================== -->
 	<!-- ==================  dependiney 끝  =========================== -->
