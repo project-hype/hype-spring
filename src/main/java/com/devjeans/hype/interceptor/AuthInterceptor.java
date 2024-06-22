@@ -59,12 +59,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
     	if (auth == null) {
     		return true;
     	}
-        
+
         if (session != null) {
             Long memberId =  (Long) session.getAttribute("memberId");
+
             if (memberId != null) {
             	MemberVO member = memberService.getMemberInfo(memberId);
-            	
+
             	// 멤버 권한
             	if (auth.role().compareTo(Role.MEMBER) == 0) {
             		if (member != null) {
