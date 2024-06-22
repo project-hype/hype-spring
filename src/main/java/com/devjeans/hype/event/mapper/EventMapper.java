@@ -25,6 +25,7 @@ import com.devjeans.hype.event.dto.EventFilterRequest;
  * 2024.06.19   정은지  	    이벤트 상세 조회 추가
  * 2024.06.20   조영욱        이벤트 필터로 조회 추가, 카테고리/해시태그 검색 추가
  * 2024.06.21   정은지        별점 작성, 조회수 증가 기능 추가
+ * 2024.06.22   조영욱        개인 별 추천 행사 조회 추가
  * </pre>
  */
 public interface EventMapper {
@@ -94,4 +95,7 @@ public interface EventMapper {
 								        @Param("memberId") Long memberId,
 								        @Param("action") String action,
 								        @Param("score") Double score);
+	
+	// 행사 아이디 리스트로 행사 조회
+	public List<EventVO> getEventsByIdList(List<Long> eventIdList);
 }

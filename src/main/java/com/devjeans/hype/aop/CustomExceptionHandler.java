@@ -1,5 +1,8 @@
 package com.devjeans.hype.aop;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +37,13 @@ public class CustomExceptionHandler {
 	 */
 	@ExceptionHandler(Exception.class)
 	protected ResponseEntity<String> handleCustomException(Exception e) {
-		
 		log.warn("===========================");
 		log.warn("========== 예외필터 =========");
 		log.warn(e);
+		StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        log.warn(sw.toString());
 		log.warn("===========================");
 		
 		// 클라이언트에게 메시지 반환
