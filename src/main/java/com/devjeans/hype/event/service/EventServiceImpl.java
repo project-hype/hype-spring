@@ -225,7 +225,16 @@ public class EventServiceImpl implements EventService {
 	 */
 	@Override
 	public void manageStarScore(Long eventId, Long memberId, String action, Double score) throws Exception {
+		
 		mapper.callManageStarProcedure(eventId, memberId, action, score);
+		
+		// 추천 서버 데이터셋 트레이닝 요청
+		CloseableHttpClient httpClient = HttpClients.createDefault();
+		HttpGet request = new HttpGet(cfServerUrl + "train");
+		request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+		
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		httpClient.execute(request, responseHandler);
 		
 	}
 	
