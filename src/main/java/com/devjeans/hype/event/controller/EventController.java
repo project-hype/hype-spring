@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.devjeans.hype.aop.LoginId;
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
@@ -46,10 +47,12 @@ import lombok.extern.log4j.Log4j;
  * <pre>
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
- * 2024.06.17   정은지         최초 생성
- * 2024.06.20   조영욱         이벤트 필터로 조회 추가
- * 2024.06.21   조영욱         이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
- * 2024.06.22   정은지 		  
+ * 2024.06.17   정은지        최초 생성
+ * 2024.06.20   조영욱        이벤트 필터로 조회 추가
+ * 2024.06.21   조영욱        이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
+ * 2024.06.22   정은지 
+ * 2024.06.21   조영욱        LoginId 어노테이션 적용
+ * 2024.06.22   조영욱        개인 별 추천 행사 조회 추가
  * </pre>
  */
 
@@ -171,5 +174,18 @@ public class EventController {
 		
 	}
 	
+	/**
+	 * 개인 별 추천 행사 조회
+	 * @param memberId
+	 * @return
+	 * @throws Exception
+	 */
+	@GetMapping("/list/recommend")
+	public GetEventListResponse getRecommendEventList(
+			@LoginId Long memberId) throws Exception {
+		List<EventVO> list = service.getRecommendEventList(memberId);
+		List<Long> favoriteEventIds = service.getMyFavoriteEvent(memberId);
+		return new GetEventListResponse(list, favoriteEventIds);
+	}
 
 }
