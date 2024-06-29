@@ -313,15 +313,23 @@
 	</select>
 	
 	<select id="selectNextEvent">
-		SELECT E.event_id
+		SELECT DISTINCT E.event_id
 		FROM EVENT E
+			LEFT JOIN CATEGORY C
+                ON C.category_id = E.category_id
+            LEFT JOIN EVENT_HASHTAG EH
+                ON E.event_id = EH.event_id
+            LEFT JOIN HASHTAG H
+                ON EH.hashtag_id = H.hashtag_id
 		WHERE 1=1
 	    <if test="date!=null">
 	        AND #{date} BETWEEN E.start_date AND E.end_date
         </if>
 		
 	    <if test="keyword!=null">
-	        AND E.title LIKE '%'||#{keyword}||'%'
+	        AND (E.title LIKE '%'||#{keyword}||'%'
+	        	OR C.category_name LIKE '%'||#{keyword}||'%'
+	        	OR H.hashtag_name = #{keyword})
         </if>
         <if test="branchId!=null">
 	        AND E.branch_id = #{branchId}
