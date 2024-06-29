@@ -9,6 +9,8 @@ import java.util.Properties;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -19,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
-import com.devjeans.hype.event.domain.StarScoreVO;
 import com.devjeans.hype.event.dto.EventFilterRequest;
 import com.devjeans.hype.event.dto.StarScoreRequest;
 import com.devjeans.hype.event.mapper.EventMapper;
@@ -51,12 +52,14 @@ public class EventServiceImpl implements EventService {
 	
 	private final EventMapper mapper;
 	private String cfServerUrl;
+	private String cfServerSecretKey;
 	
 	public EventServiceImpl(EventMapper mapper) throws Exception {
 		this.mapper = mapper;
     	Properties properties = new Properties();
 		properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
 		cfServerUrl = properties.getProperty("cf_server_url");
+		cfServerSecretKey = properties.getProperty("cf_server_secret_key");
     }
 
 	/**
@@ -222,12 +225,26 @@ public class EventServiceImpl implements EventService {
 		
 		mapper.callManageStarScoreProcedure(dto);
 		// 추천 서버 데이터셋 트레이닝 요청
-		CloseableHttpClient httpClient = HttpClients.createDefault();
-		HttpGet request = new HttpGet(cfServerUrl + "train");
-		request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
-		
-		ResponseHandler<String> responseHandler = new BasicResponseHandler();
-		httpClient.execute(request, responseHandler);
+		try {
+			CloseableHttpClient httpClient = HttpClients.createDefault();
+			HttpPost request = new HttpPost(cfServerUrl + "add-train");
+			request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+			 Map<String, Object> jsonMap = new HashMap<>();
+		        jsonMap.put("memberId", dto.getMemberId().intValue());
+		        jsonMap.put("eventId", dto.getEventId().intValue());
+		        jsonMap.put("score", dto.getScore().doubleValue());
+		        jsonMap.put("secretKey", cfServerSecretKey);
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        String json = objectMapper.writeValueAsString(jsonMap);
+	        StringEntity entity = new StringEntity(json, "UTF-8");
+	        request.setEntity(entity);
+			
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			httpClient.execute(request, responseHandler);
+		} catch (Exception e) {
+			// 추천 서버 문제여도 별점 관련 로직엔 문제 없게 처리
+			log.info(e);
+		}
 	}
 	
 	/**

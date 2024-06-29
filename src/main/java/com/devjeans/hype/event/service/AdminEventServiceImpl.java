@@ -1,7 +1,9 @@
 package com.devjeans.hype.event.service;
 
+import java.io.File;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +47,8 @@ public class AdminEventServiceImpl implements AdminEventService {
 
 	private final AdminEventMapper mapper;
 	private final FileStore fileStore;
+	@Value("${file_directory}")
+	private String fileDir;
 	
 	/**
 	 * 행사 최근 순 리스트로 조회
@@ -106,6 +110,10 @@ public class AdminEventServiceImpl implements AdminEventService {
 		
 		if (file != null) {
 			UploadFile uploadFile = fileStore.storeFile(file);
+			
+			File image = new File(fileDir + event.getImageUrl().substring(10));
+			image.delete();
+			
 			event.setImageUrl(uploadFile.getStoredFilePath());
 		}
 		
@@ -116,6 +124,9 @@ public class AdminEventServiceImpl implements AdminEventService {
 	 * 행사 삭제
 	 */
 	public boolean removeEvent(Long eventId) throws Exception {
+		EventVO existEvent = mapper.selectEventById(eventId); 
+		File image = new File(fileDir + existEvent.getImageUrl().substring(10));
+		image.delete();
 		return mapper.deleteEvent(eventId) == 1;
 	}
 
