@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -14,6 +13,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +26,7 @@ import com.devjeans.hype.event.dto.StarScoreRequest;
 import com.devjeans.hype.event.mapper.EventMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 /**
@@ -48,19 +49,14 @@ import lombok.extern.log4j.Log4j;
  */
 @Log4j
 @Service
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 	
 	private final EventMapper mapper;
+	@Value("${CF_SERVER_URL}")
 	private String cfServerUrl;
+	@Value("${CF_SERVER_SECRET_KEY}")
 	private String cfServerSecretKey;
-	
-	public EventServiceImpl(EventMapper mapper) throws Exception {
-		this.mapper = mapper;
-    	Properties properties = new Properties();
-		properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
-		cfServerUrl = properties.getProperty("cf_server_url");
-		cfServerSecretKey = properties.getProperty("cf_server_secret_key");
-    }
 
 	/**
 	 * 조회수 높은 순 행사 리스트 조회 
