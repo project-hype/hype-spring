@@ -14,19 +14,21 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.event.domain.StarScoreVO;
 import com.devjeans.hype.event.dto.EventFilterRequest;
+import com.devjeans.hype.event.dto.StarScoreRequest;
 import com.devjeans.hype.event.mapper.EventMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.log4j.Log4j;
 
 /**
- * 메인페이지 행사조회 서비스 구현체
+ * 행사 관련 서비스 구현체
  * @author 정은지 
  * @since 2024.06.17
  * @version 1.0
@@ -37,9 +39,8 @@ import lombok.extern.log4j.Log4j;
  * 2024.06.17  	정은지        최초 생성
  * 2024.06.19   정은지        행사 상세 조회 추가
  * 2024.06.20   조영욱        행사 리스트 필터로 조회 추가
- * 2024.06.21   정은지        별점 작성 기능 추가
  * 2024.06.21   조영욱        이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
- * 2024.06.21   정은지  		유사한 행사 조회 추가
+ * 2024.06.21   정은지        조회수 증가, 별점순 조회, 유사한 이벤트 조회, 사용자 별점 조회 추가
  * 2024.06.22   정은지        별점 추가/수정/삭제 프로시저 호출 기능 추가 
  * 2024.06.22   조영욱        개인 별 추천 행사 조회 추가
  * </pre>
@@ -116,8 +117,9 @@ public class EventServiceImpl implements EventService {
 	 * 행사 상세 조회
 	 */
 	@Override
+	@Transactional
 	public List<EventVO> getEventDetail(Long eventId) throws Exception {
-		// 조회수 업데이트 
+
 		return mapper.getEventDetail(eventId);
 	}
 
@@ -167,15 +169,6 @@ public class EventServiceImpl implements EventService {
 	}
 
 	/**
-	 * 별점 추가
-	 */
-	@Override
-	public boolean addEventStarScore(StarScoreVO starScore) throws Exception {
-
-		return mapper.insertStarScore(starScore) == 1;
-	}
-	
-	/**
 	 * 다음 이벤트가 존재하는지 반환
 	 * 페이지네이션을 위한 메소드
 	 */
@@ -192,23 +185,24 @@ public class EventServiceImpl implements EventService {
 		
 		return mapper.getTopScoreCountEvents();
 	}
+	
 
 	/**
 	 * 조회수 증가 
 	 */
 	@Override
-	public boolean plusViewCount(Long eventId) throws Exception {
+	public void plusViewCount(Long eventId) throws Exception {
 		
-		return mapper.updateViewCount(eventId) == 1;
+		mapper.updateViewCount(eventId);
 	}
 
 	/**
 	 * 유사한 이벤트 조회
 	 */
 	@Override
-	public List<EventVO> getLikeEvents(Long eventId) throws Exception {
+	public List<EventVO> getSimilarEvents(Long eventId) throws Exception {
 		
-		return mapper.getLikeEvents(eventId);
+		return mapper.getSimilarEvents(eventId);
 	}
 
 	/**
@@ -224,10 +218,9 @@ public class EventServiceImpl implements EventService {
 	 * 별점 추가/수정/삭제 프로시저 호출
 	 */
 	@Override
-	public void manageStarScore(Long eventId, Long memberId, String action, Double score) throws Exception {
+	public void manageStarScore(StarScoreRequest dto) throws Exception {	
 		
-		mapper.callManageStarProcedure(eventId, memberId, action, score);
-		
+		mapper.callManageStarScoreProcedure(dto);
 		// 추천 서버 데이터셋 트레이닝 요청
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		HttpGet request = new HttpGet(cfServerUrl + "train");
@@ -235,7 +228,6 @@ public class EventServiceImpl implements EventService {
 		
 		ResponseHandler<String> responseHandler = new BasicResponseHandler();
 		httpClient.execute(request, responseHandler);
-		
 	}
 	
 	/**

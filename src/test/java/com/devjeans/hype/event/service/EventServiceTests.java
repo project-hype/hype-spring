@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.devjeans.hype.event.domain.StarScoreVO;
+import com.devjeans.hype.event.dto.StarScoreRequest;
 
 import lombok.extern.log4j.Log4j;
 
@@ -27,6 +28,8 @@ import lombok.extern.log4j.Log4j;
  * ----------  --------    ---------------------------
  * 2024.06.17  	정은지        최초 생성
  * 2024.06.19   정은지        행사 상세 조회 테스트 추가
+ * 2024.06.21   정은지        조회수 증가, 별점순 조회, 유사한 이벤트 조회, 사용자 별점 조회 테스트 추가
+ * 2024.06.22   정은지        별점 추가/수정/삭제 프로시저 호출 테스트 추가 
  * </pre>
  */
 
@@ -161,20 +164,6 @@ public class EventServiceTests {
 	}
 	
 	@Test
-	public void testAddEventStarScore() {
-		StarScoreVO starScore = new StarScoreVO();
-		starScore.setEventId(3L);
-		starScore.setMemberId(3L);
-		starScore.setScore(3.5);
-		try {
-			boolean result = service.addEventStarScore(starScore);
-			assertEquals(true, result);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
 	public void testGetTopScoreCountEvents() {
 		
 		try {
@@ -185,21 +174,10 @@ public class EventServiceTests {
 	}
 	
 	@Test
-	public void testPlusViewCount() {
+	public void testGetSimilarEvents() {
 		
 		try {
-			boolean result = service.plusViewCount(1L);
-			assertTrue(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void testGetLikeEvents() {
-		
-		try {
-			service.getLikeEvents(2L).forEach(event->log.info(event));
+			service.getSimilarEvents(2L).forEach(event->log.info(event));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -217,8 +195,15 @@ public class EventServiceTests {
 	
 	@Test
 	public void testManageStarScore() {
+		
+		StarScoreRequest request = new StarScoreRequest();
+		request.setEventId(55L);
+		request.setMemberId(55L);
+		request.setAction("INSERT");
+		request.setScore(3.5);
+		
 		try {
-			service.manageStarScore(50L, 50L, "INSERT", 1.5);
+			service.manageStarScore(request);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

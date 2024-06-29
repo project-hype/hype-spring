@@ -96,12 +96,12 @@ public class GetEventDetailResponse {
 
 			this.scores = new ArrayList<>(scoreList);
 			
-	        // 점수 평균 계산
+	        // 별점 평균 계산
 	        if (scoreList == null || scoreList.isEmpty()) {
 	            this.averageScore = null;
 	        } else {
 	            this.averageScore = scoreList.stream()
-	                                         .filter(score -> score != null)  // null 값 필터링
+	                                         .filter(score -> score != null) 
 	                                         .mapToDouble(Double::doubleValue)
 	                                         .average()
 	                                         .orElse(0.0);
