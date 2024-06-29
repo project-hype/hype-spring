@@ -117,7 +117,7 @@ public class EventServiceImpl implements EventService {
 	 */
 	@Override
 	public List<EventVO> getEventDetail(Long eventId) throws Exception {
-
+		// 조회수 업데이트 
 		return mapper.getEventDetail(eventId);
 	}
 
