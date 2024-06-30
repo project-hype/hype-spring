@@ -47,7 +47,7 @@ public class AdminEventServiceImpl implements AdminEventService {
 
 	private final AdminEventMapper mapper;
 	private final FileStore fileStore;
-	@Value("${file_directory}")
+	@Value("${FILE_DIRECTORY}")
 	private String fileDir;
 	
 	/**
