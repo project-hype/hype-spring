@@ -46,6 +46,8 @@
  		<property name="dataSource" ref="dataSource"></property>
  	</bean>
  	
+ 	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+ 	
  	<tx:annotation-driven />
 	
 	<mybatis-spring:scan base-package="com.devjeans.hype.**.mapper"/>
