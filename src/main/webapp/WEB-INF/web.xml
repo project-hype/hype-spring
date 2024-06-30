@@ -20,7 +20,7 @@
       <servlet-name>appServlet</servlet-name>
    </filter-mapping>
 	
-	<!-- <filter>
+	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
@@ -28,7 +28,7 @@
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/*</url-pattern>
-	</filter-mapping> -->
+	</filter-mapping>
 	
 	<!-- CORS Filter -->
     <filter>
@@ -66,6 +66,7 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
 			/WEB-INF/spring/root-context.xml
+			/WEB-INF/spring/security-context.xml
 		</param-value>
 	</context-param>
 	
