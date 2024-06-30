@@ -16,7 +16,9 @@
  * </pre>
  -->
 <mapper namespace="com.devjeans.hype.member.mapper.MemberMapper">
+
 	<!-- ************* Member resultMap start ************* -->
+	<!-- Member -->
 	<resultMap type="MemberVO" id="member">
 		<id column="member_id" property="memberId" />
 		<result column="is_admin" property="isAdmin" />
@@ -231,22 +233,15 @@
 	<!-- ****  MemberCategory CRUD 끝   *** -->
 	<!-- ********************************** -->
 	
+	<!-- 즐겨찾기한 이벤트 리스트  -->
 	<select id="selectMyFavoriteEvents" resultMap ="event">
 		SELECT E.event_id,
-		       E.branch_id,
-		       E.event_type_id,
 		       E.image_url,
 		       E.title,
-		       E.content,
 		       E.start_date,
 		       E.end_date,
 		       ET.event_type_name,
-		       E.view_count,
-		       CA.category_name,
-		       C.city_name,
-		       B.branch_name,
-		       B.address,
-		       E.detail_address
+		       B.branch_name
 		FROM   EVENT E
 		       JOIN FAVORITE F
 		       		ON E.event_id = F.event_id
@@ -259,7 +254,6 @@
 		       LEFT JOIN CATEGORY CA 
 		       		ON CA.category_id = E.category_id
 		WHERE  F.member_id = #{memberId}
-		FETCH FIRST 10 ROWS ONLY
 	</select>
 	
 </mapper>

@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.devjeans.hype.aop.Auth;
+import com.devjeans.hype.aop.LoginId;
 import com.devjeans.hype.event.domain.EventVO;
-import com.devjeans.hype.event.dto.GetEventListResponse;
 import com.devjeans.hype.event.service.EventService;
 import com.devjeans.hype.member.domain.MemberVO;
 import com.devjeans.hype.member.dto.MemberLoginRequest;
@@ -43,6 +43,7 @@ import lombok.extern.log4j.Log4j;
  * 2024.06.18  	임원정        로그인 기능 추가
  * 2024.06.19	임원정        회원가입 관련 기능 수정
  * 2024.06.20	임원정        회원정보 수정, 삭제 기능 추가
+ * 2024.06.21	임원정
  * </pre>
  */
 
@@ -57,15 +58,15 @@ public class MemberController {
 	private EventService eservice;
 	
  	/**
-	 * 중복된 아이디 체크
-	 * @param request
-	 * @return
-	 * @throws Exception
-	 */	    
-	@PostMapping("/checkLoginId")
-	public ResponseEntity<String> checkLoginId(@RequestBody MemberVO member) throws Exception {
-		log.info("loginId: "+member.getLoginId());
-		return service.isValidateLoginId(member.getLoginId())
+ 	 * ID 중복확인
+ 	 * @param member
+ 	 * @return
+ 	 * @throws Exception
+ 	 */
+	@GetMapping("/checkLoginId")
+	public ResponseEntity<String> checkLoginId(@RequestBody String loginId) throws Exception {
+		log.info("loginId: "+loginId);
+		return service.isValidateLoginId(loginId)
 				? new ResponseEntity<String>("success", HttpStatus.OK)
 				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 	}
@@ -114,24 +115,24 @@ public class MemberController {
         }
     }
     
-    /**
-	 * 로그인 상태 확인
-	 * @param request
-	 * @return
-	 * @throws Exception
-	 */	
-    @GetMapping("/checkSession")
-    public ResponseEntity<MemberVO> getSessionInfo(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            Long memberId =  (Long) session.getAttribute("memberId");
-            if (memberId != null) {
-                MemberVO member = service.getMemberInfo(memberId);
-                return ResponseEntity.ok(member);
-            }
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
+//    /**
+//	 * 로그인 상태 확인
+//	 * @param request
+//	 * @return
+//	 * @throws Exception
+//	 */	
+//    @GetMapping("/checkSession")
+//    public ResponseEntity<MemberVO> getSessionInfo(HttpServletRequest request) throws Exception {
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            Long memberId =  (Long) session.getAttribute("memberId");
+//            if (memberId != null) {
+//                MemberVO member = service.getMemberInfo(memberId);
+//                return ResponseEntity.ok(member);
+//            }
+//        }
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//    }
     
     /**
 	 * 로그아웃
@@ -140,7 +141,7 @@ public class MemberController {
 	 * @throws Exception
 	 */	
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest request) {
+    public ResponseEntity<Void> logout(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate(); // 세션 무효화
@@ -154,6 +155,7 @@ public class MemberController {
 	 * @return
 	 * @throws Exception
 	 */	
+    @Auth()
 	@PutMapping("/update")
 	public ResponseEntity<String> updateMemberInfo(@RequestBody MemberUpdateRequest request) throws Exception {
 		return service.updateMemberInfo(request) 
@@ -167,8 +169,9 @@ public class MemberController {
 	 * @return
 	 * @throws Exception
 	 */	
-	@DeleteMapping("/delete/{memberId}")
-    public ResponseEntity<String> deleteMember(@PathVariable Long memberId) throws Exception {
+    @Auth()
+	@DeleteMapping("/delete")
+    public ResponseEntity<String> deleteMember(@LoginId Long memberId) throws Exception {
 		try {
 			// 회원 삭제 서비스 호출
 			boolean deleted = service.deleteMember(memberId);
@@ -190,10 +193,12 @@ public class MemberController {
 	 * @return
 	 * @throws Exception
 	 */	
-	@GetMapping("/favorites/{memberId}")
-    public GetEventListResponse getFavoriteEvents(@PathVariable Long memberId) throws Exception {
+    @Auth()
+	@GetMapping("/favorites")
+    public ResponseEntity<List<EventVO>> getFavoriteEvents(@LoginId Long memberId) throws Exception {
 		List<EventVO> list = service.getMyFavoriteEvents(memberId);
-		List<Long> favoriteEventIds = eservice.getMyFavoriteEvent(memberId);
-		return new GetEventListResponse(list, favoriteEventIds);
+		return list != null
+				? new ResponseEntity<List<EventVO>>(list, HttpStatus.OK)
+				: new ResponseEntity<List<EventVO>>(list, HttpStatus.BAD_REQUEST);
     }
 }

@@ -23,11 +23,11 @@ import com.devjeans.hype.member.dto.MemberUpdateRequest;
 public interface MemberService {
 	// 회원 CRUD
 	boolean isValidateLoginId(String loginId) throws Exception;	// ID 중복 확인
-	boolean join(MemberVO member);	// 회원가입
-	MemberVO login(MemberVO member);	// 로그인
-	String getUserPassword(String loginId);	//
-	MemberVO getMemberInfo(Long memberId);
-	boolean updateMemberInfo(MemberUpdateRequest request);
-	boolean deleteMember(Long memberId);
-	List<EventVO> getMyFavoriteEvents(Long memberId);
+	boolean join(MemberVO member) throws Exception;	// 회원가입
+	MemberVO login(MemberVO member) throws Exception;	// 로그인
+	String getUserPassword(String loginId) throws Exception;	//
+	MemberVO getMemberInfo(Long memberId) throws Exception;
+	boolean updateMemberInfo(MemberUpdateRequest request) throws Exception;
+	boolean deleteMember(Long memberId) throws Exception;
+	List<EventVO> getMyFavoriteEvents(Long memberId) throws Exception;
 }
