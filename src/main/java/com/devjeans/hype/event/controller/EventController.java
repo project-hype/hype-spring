@@ -59,6 +59,7 @@ import lombok.extern.log4j.Log4j;
  * 2024.06.21   조영욱        LoginId 어노테이션 적용
  * 2024.06.22   정은지        별점 추가/수정/삭제 프로시저 호출 기능 추가 
  * 2024.06.22   조영욱        개인 별 추천 행사 조회 추가
+ * 2024.06.29   정은지 		조회수 로직 변경 및 @LoginId, @Auth 적용 
  * </pre>
  */
 
@@ -238,6 +239,7 @@ public class EventController {
 	/**
 	 * 별점 추가/수정/삭제 
 	 * @param request
+	 * @param memberId
 	 * @throws Exception
 	 */
 	@Auth
