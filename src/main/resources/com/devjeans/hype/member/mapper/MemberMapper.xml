@@ -153,7 +153,6 @@
 			M.name,
 			M.gender,
 			M.birthdate,
-			M.create_date,
 			M.city_id,
 			M.prefer_branch_id,
 			MC.category_id
@@ -241,14 +240,13 @@
 		       E.start_date,
 		       E.end_date,
 		       ET.event_type_name,
-		       B.branch_name
+		       B.branch_name,
+		       CA.category_name
 		FROM   EVENT E
 		       JOIN FAVORITE F
 		       		ON E.event_id = F.event_id
 		       LEFT JOIN BRANCH B
 		       		ON B.branch_id = E.branch_id
-		       LEFT JOIN CITY C
-		       		ON C.city_id = B.city_id
 		       LEFT JOIN EVENT_TYPE ET
 		       		ON ET.event_type_id = E.event_type_id
 		       LEFT JOIN CATEGORY CA 

@@ -16,15 +16,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import com.devjeans.hype.member.domain.FavoriteVO;
+import com.devjeans.hype.event.domain.EventVO;
 import com.devjeans.hype.member.domain.MemberCategoryVO;
 import com.devjeans.hype.member.domain.MemberVO;
-import com.devjeans.hype.member.dto.MemberUpdateRequest;
 
 import lombok.extern.log4j.Log4j;
 
 /**
- * 회원 테스트 클래스
+ * 회원 Mapper 테스트
  * @author 임원정
  * @since 2024.06.17
  * @version 1.0
@@ -33,6 +32,8 @@ import lombok.extern.log4j.Log4j;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	임원정        최초 생성
+ * 2024.06.19	임원정        회원 CRUD, 관심 카테고리 CRUD 테스트 추가
+ * 2024.06.21	임원정        즐겨찾기 테스트 추가
  * </pre>
  */
 
@@ -132,14 +133,14 @@ public class MemberMapperTests {
 	 */
 	@Test
 	public void testUpdateMember() {
-		MemberUpdateRequest request = new MemberUpdateRequest();
+		MemberVO member = new MemberVO();
 		
-		request.setMemberId(1030L);
-		request.setPassword("1234");
-		request.setCityId(16L);
-		request.setPreferBranchId(9L);
+		member.setMemberId(1091L);
+		member.setPassword("1234");
+		member.setCityId(16L);
+		member.setPreferBranchId(9L);
 		
-		int result = mapper.updateMember(request);
+		int result = mapper.updateMember(member);
 		assertEquals(1, result);
 	}
 	
@@ -196,5 +197,14 @@ public class MemberMapperTests {
 		assertTrue(result>0);
 	}
 	
-	
+	/**
+	 *  즐겨찾기한 행사 조회
+	 */
+	@Test
+	public void testSelectMyFavoriteEvents() {
+		List<EventVO> list = mapper.selectMyFavoriteEvents(1071L);
+		
+		log.info(list);
+		assertEquals(7, list.size());
+	}
 }

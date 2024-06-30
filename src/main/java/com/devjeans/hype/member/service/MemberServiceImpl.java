@@ -26,8 +26,11 @@ import lombok.extern.log4j.Log4j;
  * 수정일        	수정자        수정내용
  * ----------  --------    ---------------------------
  * 2024.06.17  	임원정        최초 생성
- * 2024.06.18  	임원정        로그인 기능 추가
- * 2024.06.20	임원정        회원정보 수정, 삭제 기능 추가
+ * 2024.06.18  	임원정        회원가입 관련 기능 추가
+ * 2024.06.19	임원정        로그인 기능 추가, 회원가입 수정
+ * 2024.06.20	임원정        회원정보 조회, 수정 기능 추가
+ * 2024.06.21	임원정        로그인 부분 수정, 회원탈퇴/즐겨찾기 조회 기능 추가	
+ * 2024.06.30	임원정        코드 리팩토링(로그인, 회원 수정)
  * </pre>
  */
 
@@ -53,7 +56,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	@Transactional
 	public boolean join(MemberVO member) throws Exception {
-		// password bcrypt encoding
+		// 비밀번호 bcrypt encoding
 		if(member!=null) {
 			member.setPassword(passwordEncoder.encode(member.getPassword()));
 		}
@@ -71,15 +74,8 @@ public class MemberServiceImpl implements MemberService {
 				mapper.insertMemberCategory(mc);
 			}
 		}
+		
 		return result == 1;
-	}
-	
-	/**
-	 * 비밀번호 조회
-	 */
-	@Override
-	public String getUserPassword(String loginId) throws Exception {
-		return mapper.selectPasswordByLoginId(loginId);
 	}
 	
 	/**
@@ -87,7 +83,19 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public MemberVO login(MemberVO member) throws Exception {
-		return mapper.selectMemberByLoginIdAndPassword(member);
+		
+		// DB에 저장된 암호화된 패스워드 가져오기
+        String storedPasswordHash = mapper.selectPasswordByLoginId(member.getLoginId());
+
+        // 입력된 비밀번호와 암호화된 비밀번호 비교
+        boolean passwordMatches = passwordEncoder.matches(member.getPassword(), storedPasswordHash);
+        
+        if(passwordMatches) {
+        	member.setPassword(storedPasswordHash);
+        	return mapper.selectMemberByLoginIdAndPassword(member);
+        }
+        
+        return null;
 	}
 	
 	/**
@@ -102,22 +110,26 @@ public class MemberServiceImpl implements MemberService {
 	 * 회원 정보 수정
 	 */
 	@Transactional
-    public boolean updateMemberInfo(MemberUpdateRequest request) throws Exception {
-		request.setPassword(passwordEncoder.encode(request.getPassword()));
-        int updateResult = mapper.updateMember(request);
+    public MemberVO updateMemberInfo(MemberUpdateRequest request, Long memberId) throws Exception {
+		MemberVO member = request.toMemberVO();
+		member.setMemberId(memberId);
+		member.setPassword(passwordEncoder.encode(member.getPassword()));
+		
+		// 회원 정보 수정
+        int updateResult = mapper.updateMember(member);
         
-        // 기존 관심 카테고리 삭제
-        int deleteResult = mapper.deleteMemberCategories(request.getMemberId());
+        // 회원 카테고리 수정
+        int deleteResult = mapper.deleteMemberCategories(memberId); // 기존 관심 카테고리 삭제
         
-        // 새로운 관심 카테고리 추가
-        for (Long categoryId : request.getCategory()) {
+        for (Long categoryId : request.getCategory()) { 
         	MemberCategoryVO mc = new MemberCategoryVO();
-        	mc.setMemberId(request.getMemberId());
+        	mc.setMemberId(memberId);
         	mc.setCategoryId(categoryId);
-            int insertResult = mapper.insertMemberCategory(mc);
+            int insertResult = mapper.insertMemberCategory(mc); // 새로운 관심 카테고리 추가
         }
         
-        return updateResult==1;
+        // 회원이 수정됐다면 수정된 정보 반환
+        return updateResult == 1 ? mapper.selectMemberById(memberId) : null;
     }
 	
 	/**
@@ -131,11 +143,12 @@ public class MemberServiceImpl implements MemberService {
 		// 부모 레코드(MEMBER) 삭제
 		return mapper.deleteMember(memberId) == 1;
 	}
-
+	
+	/**
+	 * 즐겨찾기한 행사 조회
+	 */
 	@Override
 	public List<EventVO> getMyFavoriteEvents(Long memberId) throws Exception {
 		return mapper.selectMyFavoriteEvents(memberId);
 	}
-	
-	
 }
