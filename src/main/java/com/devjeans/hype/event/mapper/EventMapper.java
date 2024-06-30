@@ -28,6 +28,7 @@ import com.devjeans.hype.event.dto.StarScoreRequest;
  * 2024.06.21   정은지        조회수 증가 기능, 별점순 조회, 유사한 행사 조회, 사용자 별점 조회 추가
  * 2024.06.22   정은지 	    별점 추가/수정/삭제 프로시저 호출 추가
  * 2024.06.22   조영욱        개인 별 추천 행사 조회 추가
+ * 2024.06.29   정은지 		주석 추가
  * </pre>
  */
 public interface EventMapper {
