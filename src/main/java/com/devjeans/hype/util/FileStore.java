@@ -24,9 +24,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileStore {
 
-	@Value("${FILE_DIRECTORY}")
+	@Value("${file_directory}")
     private String fileDir;
-	@Value("${FRONT_FILE_DIRECTORY}")
+	@Value("${front_file_directory}")
     private String frontFileDir;
 
 		// MultipartFile을 받아서 파일을 저장한 다음에 UploadFile로 반환해줌
