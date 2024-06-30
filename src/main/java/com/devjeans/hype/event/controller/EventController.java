@@ -118,8 +118,10 @@ public class EventController {
 	 */
 	@Auth
 	@PostMapping("/favorite")
-	public ResponseEntity<String> addFavoriteEvent(@RequestBody CreateFavoriteEventRequest request) {
+	public ResponseEntity<String> addFavoriteEvent(@RequestBody CreateFavoriteEventRequest request, @LoginId Long memberId) {
+		
 		try {
+			request.setMemberId(memberId); 
 			service.addFavoriteEvent(request.getMemberId(), request.getEventId());
 			return ResponseEntity.ok("success");
 		} catch (Exception e) {
@@ -137,7 +139,7 @@ public class EventController {
 	public ResponseEntity<String> deleteFavoriteEvent(@PathVariable("eventId") Long eventId, 
 														@LoginId Long memberId) {
 		try {
-			service.deleteFavoriteEvent(eventId, memberId);
+			service.deleteFavoriteEvent(memberId, eventId);
 			return ResponseEntity.ok("success");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
@@ -240,8 +242,9 @@ public class EventController {
 	 */
 	@Auth
 	@PostMapping("/score")
-	public void manageStarScore(@RequestBody StarScoreRequest request) throws Exception {
+	public void manageStarScore(@RequestBody StarScoreRequest request, @LoginId Long memberId) throws Exception {
 		
+		request.setMemberId(memberId); 
 		service.manageStarScore(request);
 	}
 	
