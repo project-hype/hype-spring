@@ -5,28 +5,32 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;
-import com.devjeans.hype.event.domain.StarScoreVO;
 import com.devjeans.hype.event.dto.EventFilterRequest;
+import com.devjeans.hype.event.dto.StarScoreRequest;
 import com.devjeans.hype.event.mapper.EventMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 /**
- * 메인페이지 행사조회 서비스 구현체
+ * 행사 관련 서비스 구현체
  * @author 정은지 
  * @since 2024.06.17
  * @version 1.0
@@ -37,26 +41,22 @@ import lombok.extern.log4j.Log4j;
  * 2024.06.17  	정은지        최초 생성
  * 2024.06.19   정은지        행사 상세 조회 추가
  * 2024.06.20   조영욱        행사 리스트 필터로 조회 추가
- * 2024.06.21   정은지        별점 작성 기능 추가
  * 2024.06.21   조영욱        이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
- * 2024.06.21   정은지  		유사한 행사 조회 추가
+ * 2024.06.21   정은지        조회수 증가, 별점순 조회, 유사한 이벤트 조회, 사용자 별점 조회 추가
  * 2024.06.22   정은지        별점 추가/수정/삭제 프로시저 호출 기능 추가 
  * 2024.06.22   조영욱        개인 별 추천 행사 조회 추가
  * </pre>
  */
 @Log4j
 @Service
+@RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
 	
 	private final EventMapper mapper;
+	@Value("${CF_SERVER_URL}")
 	private String cfServerUrl;
-	
-	public EventServiceImpl(EventMapper mapper) throws Exception {
-		this.mapper = mapper;
-    	Properties properties = new Properties();
-		properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
-		cfServerUrl = properties.getProperty("cf_server_url");
-    }
+	@Value("${CF_SERVER_SECRET_KEY}")
+	private String cfServerSecretKey;
 
 	/**
 	 * 조회수 높은 순 행사 리스트 조회 
@@ -116,6 +116,7 @@ public class EventServiceImpl implements EventService {
 	 * 행사 상세 조회
 	 */
 	@Override
+	@Transactional
 	public List<EventVO> getEventDetail(Long eventId) throws Exception {
 
 		return mapper.getEventDetail(eventId);
@@ -167,15 +168,6 @@ public class EventServiceImpl implements EventService {
 	}
 
 	/**
-	 * 별점 추가
-	 */
-	@Override
-	public boolean addEventStarScore(StarScoreVO starScore) throws Exception {
-
-		return mapper.insertStarScore(starScore) == 1;
-	}
-	
-	/**
 	 * 다음 이벤트가 존재하는지 반환
 	 * 페이지네이션을 위한 메소드
 	 */
@@ -192,23 +184,24 @@ public class EventServiceImpl implements EventService {
 		
 		return mapper.getTopScoreCountEvents();
 	}
+	
 
 	/**
 	 * 조회수 증가 
 	 */
 	@Override
-	public boolean plusViewCount(Long eventId) throws Exception {
+	public void plusViewCount(Long eventId) throws Exception {
 		
-		return mapper.updateViewCount(eventId) == 1;
+		mapper.updateViewCount(eventId);
 	}
 
 	/**
 	 * 유사한 이벤트 조회
 	 */
 	@Override
-	public List<EventVO> getLikeEvents(Long eventId) throws Exception {
+	public List<EventVO> getSimilarEvents(Long eventId) throws Exception {
 		
-		return mapper.getLikeEvents(eventId);
+		return mapper.getSimilarEvents(eventId);
 	}
 
 	/**
@@ -224,9 +217,30 @@ public class EventServiceImpl implements EventService {
 	 * 별점 추가/수정/삭제 프로시저 호출
 	 */
 	@Override
-	public void manageStarScore(Long eventId, Long memberId, String action, Double score) throws Exception {
-		mapper.callManageStarProcedure(eventId, memberId, action, score);
+	public void manageStarScore(StarScoreRequest dto) throws Exception {	
 		
+		mapper.callManageStarScoreProcedure(dto);
+		// 추천 서버 데이터셋 트레이닝 요청
+		try {
+			CloseableHttpClient httpClient = HttpClients.createDefault();
+			HttpPost request = new HttpPost(cfServerUrl + "add-train");
+			request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+			 Map<String, Object> jsonMap = new HashMap<>();
+		        jsonMap.put("memberId", dto.getMemberId().intValue());
+		        jsonMap.put("eventId", dto.getEventId().intValue());
+		        jsonMap.put("score", dto.getScore().doubleValue());
+		        jsonMap.put("secretKey", cfServerSecretKey);
+	        ObjectMapper objectMapper = new ObjectMapper();
+	        String json = objectMapper.writeValueAsString(jsonMap);
+	        StringEntity entity = new StringEntity(json, "UTF-8");
+	        request.setEntity(entity);
+			
+			ResponseHandler<String> responseHandler = new BasicResponseHandler();
+			httpClient.execute(request, responseHandler);
+		} catch (Exception e) {
+			// 추천 서버 문제여도 별점 관련 로직엔 문제 없게 처리
+			log.info(e);
+		}
 	}
 	
 	/**

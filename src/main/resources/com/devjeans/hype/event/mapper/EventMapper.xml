@@ -11,13 +11,13 @@
  * <pre>
  * 수정일        	수정자        수정내용
  * ==========  =========    =========
- * 2024.06.17  정은지         최초 생성
- * 2024.06.19  정은지         행사 상세 조회 추가
- * 2024.06.20  조영욱         이벤트 필터로 조회 추가
- * 2024.06.21  정은지         별점 작성, 조회수 증가 기능, 별점순 조회, 유사한 행사 조회 추가
- * 2024.06.21  조영욱         이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
- * 2024.06.22  정은지 	     별점 작성/수정/삭제 프로시저 호출 추가
- * 2024.06.22   조영욱        개인 별 추천 행사 조회 추가
+ * 2024.06.17   정은지         최초 생성
+ * 2024.06.19   정은지         이벤트 상세 정보 조회 추가
+ * 2024.06.20   조영욱         이벤트 필터로 조회 추가
+ * 2024.06.21   정은지         조회수 증가 기능, 별점순 조회, 유사한 이벤트 조회, 사용자 별점 조회 추가
+ * 2024.06.21   조영욱         이벤트 검색,필터 조회에 페이지네이션 적용, 카테고리/해시태그 검색 추가
+ * 2024.06.22   정은지 	     별점 추가/수정/삭제 프로시저 호출 추가
+ * 2024.06.22   조영욱         개인 별 추천 행사 조회 추가
  * 
  * </pre>
  -->
@@ -90,12 +90,7 @@
 	</resultMap>
 	<!-- ************* Event resultMap end ************* -->
 	
-	<!-- For Database Connection Test -->
-	<select id="getDual2" resultType="Object">
-		SELECT dummy FROM DUAL
-	</select>
-	
-	<select id="getTopViewEvents" resultMap="event">
+	<sql id="selectEvents">
 		SELECT E.event_id,
 		       E.branch_id,
 		       E.event_type_id,
@@ -114,34 +109,24 @@
 		               ON ET.event_type_id = E.event_type_id
                LEFT JOIN CATEGORY C
                        ON C.category_id = E.category_id
+	</sql>
+	
+	<!-- 조회수 순 이벤트 조회 -->
+	<select id="getTopViewEvents" resultMap="event">
+		<include refid="selectEvents" />
 		WHERE  TO_CHAR(sysdate, 'YYYY-MM-DD') BETWEEN E.start_date AND E.end_date
 		ORDER  BY E.view_count DESC
 		FETCH FIRST 10 ROWS ONLY
 	</select>
 	
+	<!-- 날짜별 이벤트 조회 -->
 	<select id="getEventsByDate" resultMap="event" parameterType="java.util.Date">
-		SELECT E.event_id,
-		       E.branch_id,
-		       E.event_type_id,
-		       E.image_url,
-		       E.title,
-		       E.start_date,
-		       E.end_date,
-		       B.branch_name,
-		       C.category_name,
-		       ET.event_type_name,
-		       E.view_count
-		FROM   EVENT E
-		       LEFT JOIN BRANCH B
-		              ON B.branch_id = E.branch_id
-		       LEFT JOIN EVENT_TYPE ET
-		              ON ET.event_type_id = E.event_type_id
-		       LEFT JOIN CATEGORY C
-		              ON C.category_id = E.category_id
+		<include refid="selectEvents" />
 		WHERE  #{date} BETWEEN E.start_date AND E.end_date
 		FETCH FIRST 6 ROWS ONLY
 	</select>
 	
+	<!-- 배너 이벤트 조회 -->
 	<select id="getBannerEvents" resultMap="banner">
 		SELECT E.event_id,
 		       E.branch_id,
@@ -166,6 +151,7 @@
 		ORDER  BY B.order_priority
 	</select>
 	
+	<!-- 즐겨찾기 추가 -->
 	<insert id="insertFavorite">
 		INSERT INTO FAVORITE
 		            (member_id,
@@ -174,20 +160,21 @@
 		              #{eventId}) 
 	</insert>
 	
+	<!-- 즐겨찾기 제거 -->
 	<delete id="deleteFavorite">
 		DELETE FROM FAVORITE
 		WHERE  member_id = #{memberId}
 		       AND event_id = #{eventId} 
 	</delete>
 	
+	<!-- 사용자 즐겨찾기 이벤트 조회 -->
 	<select id="getMyFavoriteEvent">
 		SELECT event_id
 		FROM FAVORITE
 		WHERE member_id = #{memberId}
 	</select>
 	
-	
-	<!-- 행사 상세 정보 조회  --> 
+	<!-- 이벤트 상세 정보 조회  --> 
 	<select id="getEventDetail" resultMap="event">
 		SELECT E.event_id,
 		       E.branch_id,
@@ -216,18 +203,17 @@
 		WHERE  E.event_id = #{eventId}
 	</select>
 	
-	<!-- 행사 별점 조회 -->
+	<!-- 이벤트 별점 조회 -->
 	<select id="getEventStarScore">
 		SELECT score
-		FROM   EVENT E
-		       LEFT JOIN STAR_SCORE SS
-		              ON SS.event_id = E.event_id
-		WHERE  SS.event_id = #{eventId}
+		FROM   STAR_SCORE
+		WHERE  event_id = #{eventId}
 	</select>
 	
-	<!-- 행사 해시태그 리스트 조회 -->
+	<!-- 이벤트 해시태그 리스트 조회 -->
 	<select id="getEventHashtagList" resultMap="eventHashtag">
-		SELECT H.hashtag_id, H.hashtag_name
+		SELECT H.hashtag_id,
+		 	   H.hashtag_name
 		FROM   EVENT E
 		       INNER JOIN EVENT_HASHTAG EH
 		               ON EH.event_id = E.event_id
@@ -236,14 +222,14 @@
 		WHERE  E.event_id = #{eventId} 
 	</select> 
 	
-	<!-- 행사 즐겨찾기 수 조회 -->
+	<!-- 이벤트 즐겨찾기 수 조회 -->
 	<select id="getEventFavoriteCount">
 		SELECT COUNT(*)
 		FROM   FAVORITE
 		WHERE  event_id = #{eventId}
 	</select>
 	
-	<!-- 행사 즐겨찾기 여부 조회 -->
+	<!-- 이벤트 즐겨찾기 여부 조회 -->
 	<select id="getEventFavoriteStatus">
 		SELECT 
 		        CASE WHEN count(*) > 0 THEN 1
@@ -252,15 +238,6 @@
 		FROM FAVORITE
 		WHERE member_id = #{memberId} AND event_id = #{eventId}
 	</select>
-	
-	<!-- 별점 작성 -->
- 	<insert id="insertStarScore">
-		INSERT INTO STAR_SCORE
-		VALUES      (#{memberId},
-		             #{eventId},
-		             #{score},
-		             sysdate)
-	</insert>
 	
 	<!-- 이벤트 필터로 조회 -->
 	<select id="getEventWithFilter" resultMap="event">
@@ -313,15 +290,23 @@
 	</select>
 	
 	<select id="selectNextEvent">
-		SELECT E.event_id
+		SELECT DISTINCT E.event_id
 		FROM EVENT E
+			LEFT JOIN CATEGORY C
+                ON C.category_id = E.category_id
+            LEFT JOIN EVENT_HASHTAG EH
+                ON E.event_id = EH.event_id
+            LEFT JOIN HASHTAG H
+                ON EH.hashtag_id = H.hashtag_id
 		WHERE 1=1
 	    <if test="date!=null">
 	        AND #{date} BETWEEN E.start_date AND E.end_date
         </if>
 		
 	    <if test="keyword!=null">
-	        AND E.title LIKE '%'||#{keyword}||'%'
+	        AND (E.title LIKE '%'||#{keyword}||'%'
+	        	OR C.category_name LIKE '%'||#{keyword}||'%'
+	        	OR H.hashtag_name = #{keyword})
         </if>
         <if test="branchId!=null">
 	        AND E.branch_id = #{branchId}
@@ -346,24 +331,7 @@
 		                LEFT JOIN STAR_SCORE S
 		                       ON S.event_id = E.event_id
 		         GROUP  BY E.event_id)
-		SELECT E.event_id,
-		       E.branch_id,
-		       E.event_type_id,
-		       E.image_url,
-		       E.title,
-		       E.start_date,
-		       E.end_date,
-		       B.branch_name,
-		       C.category_name,
-		       ET.event_type_name,
-		       E.view_count
-		FROM   EVENT E
-		       LEFT JOIN BRANCH B
-		              ON B.branch_id = E.branch_id
-		       LEFT JOIN EVENT_TYPE ET
-		              ON ET.event_type_id = E.event_type_id
-		       LEFT JOIN CATEGORY C
-		              ON C.category_id = E.category_id
+		<include refid="selectEvents" />
 		       LEFT JOIN SCORE_COUNT S
 		              ON S.event_id = E.event_id
 		WHERE TO_CHAR(sysdate, 'YYYY-MM-DD') BETWEEN E.start_date AND E.end_date
@@ -378,8 +346,8 @@
 		WHERE event_id = #{eventId}
 	</update>
 	
-	<!-- 유사한 행사 조회 -->
-	<select id="getLikeEvents" resultMap="event">
+	<!-- 유사한 이벤트 조회 -->
+	<select id="getSimilarEvents" resultMap="event">
 		SELECT DISTINCT E.event_id,
 		                E.branch_id,
 		                E.event_type_id,
@@ -414,6 +382,7 @@
 		       AND E.event_id != #{eventId}
 	</select>
 	
+	<!-- 사용자 별점 조회 -->
 	<select id="getMyEventScore">
 		SELECT score
 		FROM   STAR_SCORE
@@ -421,15 +390,14 @@
        		   AND event_id = #{eventId}
 	</select>
 	
-    <select id="callManageStarProcedure" statementType="CALLABLE">
-    	{
-        	CALL PROC_MANAGE_STAR(
-           	 	#{eventId, jdbcType=INTEGER},
-            	#{memberId, jdbcType=INTEGER},
-            	#{action, jdbcType=VARCHAR},
-            	#{score, jdbcType=DOUBLE}
-        	)
-        }
+	<!-- 별점 프로시저 호출 -->
+    <select id="callManageStarScoreProcedure" statementType="CALLABLE">
+       {CALL PROC_MANAGE_STAR_SCORE(
+            #{eventId, mode=IN, jdbcType=BIGINT},
+            #{memberId, mode=IN, jdbcType=BIGINT},
+            #{action, mode=IN, jdbcType=VARCHAR},
+            #{score, mode=IN, jdbcType=DOUBLE}
+        )}
     </select>
     
     <select id="getEventsByIdList" resultMap="event" parameterType="java.util.List">

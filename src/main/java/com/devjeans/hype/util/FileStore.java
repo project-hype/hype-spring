@@ -2,9 +2,9 @@ package com.devjeans.hype.util;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,15 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Component
 public class FileStore {
 
-    private final String fileDir;
-    private final String frontFileDir;
-    
-    public FileStore() throws Exception {
-    	Properties properties = new Properties();
-		properties.load(getClass().getClassLoader().getResourceAsStream("application.properties"));
-    	fileDir = properties.getProperty("file_directory");
-    	frontFileDir = properties.getProperty("front_file_directory");
-    }
+	@Value("${FILE_DIRECTORY}")
+    private String fileDir;
+	@Value("${FRONT_FILE_DIRECTORY}")
+    private String frontFileDir;
 
 		// MultipartFile을 받아서 파일을 저장한 다음에 UploadFile로 반환해줌
     public UploadFile storeFile(MultipartFile multipartFile) throws IOException { // 한 개 업로드
