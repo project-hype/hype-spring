@@ -133,10 +133,11 @@ public class EventController {
 	 * @return
 	 */
 	@Auth
-	@DeleteMapping("/favorite")
-	public ResponseEntity<String> deleteFavoriteEvent(@RequestBody CreateFavoriteEventRequest request) {
+	@DeleteMapping("/favorite/{eventId}")
+	public ResponseEntity<String> deleteFavoriteEvent(@PathVariable("eventId") Long eventId, 
+														@LoginId Long memberId) {
 		try {
-			service.deleteFavoriteEvent(request.getMemberId(), request.getEventId());
+			service.deleteFavoriteEvent(eventId, memberId);
 			return ResponseEntity.ok("success");
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("fail");
