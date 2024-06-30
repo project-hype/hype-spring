@@ -113,7 +113,6 @@ public class MemberController {
      * @return
      * @throws Exception
      */
-    @Auth()
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession(false);
