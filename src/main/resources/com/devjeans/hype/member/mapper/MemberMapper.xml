@@ -13,6 +13,8 @@
  * ==========  =========    =========
  * 2024.06.17  	임원정        최초 생성
  * 2024.06.18  	임원정        로그인 기능 추가
+ * 2024.06.19	임원정        회원 CRUD, 관심 카테고리 CRUD 추가
+ * 2024.06.21	임원정        즐겨찾기 조회 추가
  * </pre>
  -->
 <mapper namespace="com.devjeans.hype.member.mapper.MemberMapper">
