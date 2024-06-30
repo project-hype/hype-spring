@@ -44,7 +44,7 @@ public class MemberServiceTests {
 	}
 	
 	@Test
-	public void testJoin() {
+	public void testJoin() throws Exception {
 		MemberVO member = new MemberVO();
 		String bdate = "2000-01-01";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

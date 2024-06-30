@@ -21,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
 import com.devjeans.hype.aop.Auth;
 import com.devjeans.hype.aop.LoginId;
 import com.devjeans.hype.event.domain.EventVO;
-import com.devjeans.hype.event.dto.GetEventListResponse;
 import com.devjeans.hype.event.service.EventService;
 import com.devjeans.hype.member.domain.MemberVO;
 import com.devjeans.hype.member.dto.MemberLoginRequest;
@@ -64,10 +63,10 @@ public class MemberController {
  	 * @return
  	 * @throws Exception
  	 */
-	@PostMapping("/checkLoginId")
-	public ResponseEntity<String> checkLoginId(@RequestBody MemberVO member) throws Exception {
-		log.info("loginId: "+member.getLoginId());
-		return service.isValidateLoginId(member.getLoginId())
+	@GetMapping("/checkLoginId")
+	public ResponseEntity<String> checkLoginId(@RequestBody String loginId) throws Exception {
+		log.info("loginId: "+loginId);
+		return service.isValidateLoginId(loginId)
 				? new ResponseEntity<String>("success", HttpStatus.OK)
 				: new ResponseEntity<String>("error", HttpStatus.BAD_REQUEST);
 	}
@@ -116,24 +115,24 @@ public class MemberController {
         }
     }
     
-    /**
-	 * 로그인 상태 확인
-	 * @param request
-	 * @return
-	 * @throws Exception
-	 */	
-    @GetMapping("/checkSession")
-    public ResponseEntity<MemberVO> getSessionInfo(HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            Long memberId =  (Long) session.getAttribute("memberId");
-            if (memberId != null) {
-                MemberVO member = service.getMemberInfo(memberId);
-                return ResponseEntity.ok(member);
-            }
-        }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
+//    /**
+//	 * 로그인 상태 확인
+//	 * @param request
+//	 * @return
+//	 * @throws Exception
+//	 */	
+//    @GetMapping("/checkSession")
+//    public ResponseEntity<MemberVO> getSessionInfo(HttpServletRequest request) throws Exception {
+//        HttpSession session = request.getSession(false);
+//        if (session != null) {
+//            Long memberId =  (Long) session.getAttribute("memberId");
+//            if (memberId != null) {
+//                MemberVO member = service.getMemberInfo(memberId);
+//                return ResponseEntity.ok(member);
+//            }
+//        }
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//    }
     
     /**
 	 * 로그아웃
@@ -196,9 +195,10 @@ public class MemberController {
 	 */	
     @Auth()
 	@GetMapping("/favorites")
-    public GetEventListResponse getFavoriteEvents(@LoginId Long memberId) throws Exception {
+    public ResponseEntity<List<EventVO>> getFavoriteEvents(@LoginId Long memberId) throws Exception {
 		List<EventVO> list = service.getMyFavoriteEvents(memberId);
-		List<Long> favoriteEventIds = eservice.getMyFavoriteEvent(memberId);	// 삭제
-		return new GetEventListResponse(list, favoriteEventIds);	// VO로 반환
+		return list != null
+				? new ResponseEntity<List<EventVO>>(list, HttpStatus.OK)
+				: new ResponseEntity<List<EventVO>>(list, HttpStatus.BAD_REQUEST);
     }
 }

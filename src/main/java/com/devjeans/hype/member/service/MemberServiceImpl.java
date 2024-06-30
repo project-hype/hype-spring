@@ -42,7 +42,7 @@ public class MemberServiceImpl implements MemberService {
 	 * ID 중복확인
 	 */
 	@Override
-	public boolean isValidateLoginId(String loginId) {
+	public boolean isValidateLoginId(String loginId) throws Exception {
 		// member가 존재하지 않으면 true, 존재하면 false
 		return mapper.selectLoginIdByLoginId(loginId) == null;
 	}
@@ -52,7 +52,7 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	@Transactional
-	public boolean join(MemberVO member) {
+	public boolean join(MemberVO member) throws Exception {
 		// password bcrypt encoding
 		if(member!=null) {
 			member.setPassword(passwordEncoder.encode(member.getPassword()));
@@ -78,7 +78,7 @@ public class MemberServiceImpl implements MemberService {
 	 * 비밀번호 조회
 	 */
 	@Override
-	public String getUserPassword(String loginId) {
+	public String getUserPassword(String loginId) throws Exception {
 		return mapper.selectPasswordByLoginId(loginId);
 	}
 	
@@ -86,7 +86,7 @@ public class MemberServiceImpl implements MemberService {
 	 * 로그인
 	 */
 	@Override
-	public MemberVO login(MemberVO member) {
+	public MemberVO login(MemberVO member) throws Exception {
 		return mapper.selectMemberByLoginIdAndPassword(member);
 	}
 	
@@ -94,7 +94,7 @@ public class MemberServiceImpl implements MemberService {
 	 * 회원정보 조회
 	 */
 	@Override
-	public MemberVO getMemberInfo(Long memberId) {
+	public MemberVO getMemberInfo(Long memberId) throws Exception {
 		return mapper.selectMemberById(memberId);
 	}
 
@@ -102,7 +102,7 @@ public class MemberServiceImpl implements MemberService {
 	 * 회원 정보 수정
 	 */
 	@Transactional
-    public boolean updateMemberInfo(MemberUpdateRequest request) {
+    public boolean updateMemberInfo(MemberUpdateRequest request) throws Exception {
 		request.setPassword(passwordEncoder.encode(request.getPassword()));
         int updateResult = mapper.updateMember(request);
         
@@ -124,7 +124,7 @@ public class MemberServiceImpl implements MemberService {
 	 * 회원 삭제
 	 */
 	@Transactional
-	public boolean deleteMember(Long memberId) {
+	public boolean deleteMember(Long memberId) throws Exception {
 		// 자식 레코드(MEMBER_CATEGORY)를 먼저 삭제
 		mapper.deleteMemberCategories(memberId);
         
@@ -133,7 +133,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public List<EventVO> getMyFavoriteEvents(Long memberId) {
+	public List<EventVO> getMyFavoriteEvents(Long memberId) throws Exception {
 		return mapper.selectMyFavoriteEvents(memberId);
 	}
 	

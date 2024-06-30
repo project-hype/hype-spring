@@ -16,7 +16,9 @@
  * </pre>
  -->
 <mapper namespace="com.devjeans.hype.member.mapper.MemberMapper">
+
 	<!-- ************* Member resultMap start ************* -->
+	<!-- Member -->
 	<resultMap type="MemberVO" id="member">
 		<id column="member_id" property="memberId" />
 		<result column="is_admin" property="isAdmin" />
