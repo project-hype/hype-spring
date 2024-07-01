@@ -1,4 +1,4 @@
-package com.devjeans.hype.aop;
+package com.devjeans.hype.common.resolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -9,6 +9,8 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import com.devjeans.hype.common.annotation.LoginId;
 
 /**
  * 현재 로그인 아이디 반환 리졸버

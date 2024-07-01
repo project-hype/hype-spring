@@ -1,4 +1,4 @@
-package com.devjeans.hype.interceptor;
+package com.devjeans.hype.common.interceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.devjeans.hype.aop.Auth;
-import com.devjeans.hype.aop.Auth.Role;
+import com.devjeans.hype.common.annotation.Auth;
+import com.devjeans.hype.common.annotation.Auth.Role;
 import com.devjeans.hype.member.domain.MemberVO;
 import com.devjeans.hype.member.service.MemberService;
 

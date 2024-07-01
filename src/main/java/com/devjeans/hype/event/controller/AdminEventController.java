@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.devjeans.hype.aop.Auth;
-import com.devjeans.hype.aop.Auth.Role;
+import com.devjeans.hype.common.annotation.Auth;
+import com.devjeans.hype.common.annotation.Auth.Role;
 import com.devjeans.hype.event.domain.BranchVO;
 import com.devjeans.hype.event.domain.CategoryVO;
 import com.devjeans.hype.event.domain.Criteria;

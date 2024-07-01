@@ -1,4 +1,4 @@
-package com.devjeans.hype.aop;
+package com.devjeans.hype.common.aop;
 
 import java.util.Arrays;
 

@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.devjeans.hype.aop.Auth;
-import com.devjeans.hype.aop.LoginId;
+import com.devjeans.hype.common.annotation.Auth;
+import com.devjeans.hype.common.annotation.LoginId;
 import com.devjeans.hype.event.domain.BannerVO;
 import com.devjeans.hype.event.domain.EventHashtagVO;
 import com.devjeans.hype.event.domain.EventVO;

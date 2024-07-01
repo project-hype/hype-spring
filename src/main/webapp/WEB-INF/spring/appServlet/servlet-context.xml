@@ -15,7 +15,7 @@
 	<annotation-driven >
 		<!-- custom argument resolvers -->
         <argument-resolvers>
-            <beans:bean class="com.devjeans.hype.aop.LoginIdArgumentResolver"/>
+            <beans:bean class="com.devjeans.hype.common.resolver.LoginIdArgumentResolver"/>
         </argument-resolvers>
 	</annotation-driven>
 	
@@ -49,7 +49,7 @@
 	<interceptors>
 		<interceptor>
 			<mapping path="/**"/>
-			<beans:bean id="authInterceptor" class="com.devjeans.hype.interceptor.AuthInterceptor"/>
+			<beans:bean id="authInterceptor" class="com.devjeans.hype.common.interceptor.AuthInterceptor"/>
 		</interceptor>
 	</interceptors>
 	
